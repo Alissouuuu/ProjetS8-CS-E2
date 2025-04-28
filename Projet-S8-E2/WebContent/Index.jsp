@@ -1,5 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="fr.esigelec.models.Club" %>
+<%@ page import="java.util.ArrayList" %>
+<% ArrayList<Club> clubs = null;
+boolean listeVide = false;
+clubs = (ArrayList<Club>) request.getAttribute("clubs"); 
+if(clubs == null)
+	clubs = new ArrayList<>();
+
+if(clubs.size() == 0)
+	listeVide = true;
+
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,6 +38,7 @@
 		<div>
 			<label for="zone">Type de zone géographique</label>
 			<select id="zone" name="zone">
+				<option value="commune">Tout</option>
 				<option value="commune">Commune</option>
 				<option value="departement">Département</option>
 				<option value="region">Région</option>
@@ -34,5 +47,14 @@
 		</div>
 		<button type="submit">Rechercher</button>
 	</form>
+	<% if(!listeVide){
+		for(Club club : clubs){
+			%>
+			<div>
+				<h2><%=club.getNom() %></h2>
+			</div>
+		<%}
+		
+	}%>
 </body>
 </html>
