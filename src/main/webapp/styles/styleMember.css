@@ -1,0 +1,115 @@
+@charset "UTF-8";
+
+:root {
+	--primary-color: #e1000f; /* rouge du dreapeau français*/
+	--dark-blue: #000091; /* bleu du dreapeau français*/
+	--darker-blue: #060d2a;
+}
+
+.hero-section {
+	background: linear-gradient(rgba(0, 0, 42, 0.7), rgba(0, 0, 42, 0.8)),
+		url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1905&q=80');
+	background-size: cover;
+	background-position: center;
+	color: white;
+	padding: 100px 0;
+	min-height: 500px;
+	display: flex;
+	align-items: center;
+}
+
+.hero-content {
+	background-color: rgba(6, 13, 42, 0.85);
+	padding: 40px;
+	border-radius: 8px;
+}
+
+.hero-title {
+	color: var(--primary-color);
+	font-size: 3rem;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.hero-subtitle2 {
+	font-size: 1.2rem;
+	margin-bottom: 30px;
+}
+
+.hero-subtitle {
+	font-size: 1.5rem;
+}
+
+.btn-primary {
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+	padding: 10px 25px;
+	font-weight: 600;
+	font-size: 1.2rem;
+}
+
+.btn-primary:hover {
+	background-color: #c61c21;
+	border-color: #c61c21;
+}
+
+.btn-outline-light {
+	padding: 10px 25px;
+	font-weight: 600;
+}
+
+.feature-card {
+	background-color: white;
+	border-radius: 8px;
+	padding: 30px;
+	margin-bottom: 30px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+	height: 100%;
+}
+
+.feature-title {
+	color: var(--dark-blue);
+	font-weight: bold;
+	font-size: 1.5rem;
+	margin-bottom: 15px;
+	text-align: center;
+}
+
+.feature-text {
+	text-align: center;
+	color: #555;
+	margin-bottom: 20px;
+}
+
+.feature-link {
+	color: var(--primary-color);
+	text-decoration: none;
+	font-weight: 500;
+	display: block;
+	text-align: center;
+}
+
+.feature-link:hover {
+	text-decoration: underline;
+}
+
+.features-section {
+	padding: 60px 0;
+	background-color: #f8f9fa;
+	margin-top: -50px;
+}
+
+.btn-3 {
+	height: 5vh;
+	display: flex;
+	text-align: center !important;
+	align-items: center;
+	justify-content: center
+}
+
+footer {
+	background-color: var(--dark-blue) !important;
+	color: white;
+	padding: 20px 0;
+	text-align: center;
+}

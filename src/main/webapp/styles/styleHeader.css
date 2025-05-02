@@ -1,0 +1,64 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+/*-----header------*/
+
+.top-header {
+    background-color: #000091;
+    color: white;
+    padding: 15px 0;
+   
+    top: 0px;
+   
+}
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-diamond {
+    width: 50px;
+    height: 50px;
+    background-color: #e1000f;
+    transform: rotate(45deg);
+    margin-right: 15px;
+    position: relative;
+}
+
+.logo-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    color: white;
+    font-weight: bold;
+}
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 10px;
+}
+
+.nav-link {
+    color: white !important;
+    margin: 0 5px;
+    padding: 8px 15px !important;
+    border-radius: 20px;
+    transition: all 0.3s;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.phone-number {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.row{
+    justify-content: space-around;
+}
