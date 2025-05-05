@@ -26,15 +26,15 @@
                                     <a class="nav-link" href="indexMembre.jsp">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">Statistiques licenciés</a>
+                                    <a class="nav-link" href="statistiques.jsp">Statistiques licenciés</a>
                                 </li>
                                
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">Classement zones</a>
+                                    <a class="nav-link" href="classement.jsp">Classement zones</a>
                                 </li>
                                
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">Déconnexion</a>
+                                    <a class="nav-link" href="../index.jsp">Déconnexion</a>
                                 </li>
                             </ul>
                         </div>

@@ -26,15 +26,15 @@
                                     <a class="nav-link" href="indexMembre.jsp">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">Ajouter un évenement</a>
+                                    <a class="nav-link" href="createEvent.jsp">Ajouter un évenement</a>
                                 </li>
                                
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">Partagez une actualité</a>
+                                    <a class="nav-link" href="partagerActu.jsp">Partagez une actualité</a>
                                 </li>
                                
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">Déconnexion</a>
+                                    <a class="nav-link" href="../index.jsp">Déconnexion</a>
                                 </li>
                             </ul>
                         </div>

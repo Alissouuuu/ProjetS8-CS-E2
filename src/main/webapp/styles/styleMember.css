@@ -5,7 +5,10 @@
 	--dark-blue: #000091; /* bleu du dreapeau français*/
 	--darker-blue: #060d2a;
 }
-
+body{
+	 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
 .hero-section {
 	background: linear-gradient(rgba(0, 0, 42, 0.7), rgba(0, 0, 42, 0.8)),
 		url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1905&q=80');

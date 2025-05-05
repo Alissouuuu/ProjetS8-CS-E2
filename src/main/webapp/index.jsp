@@ -29,7 +29,7 @@
 				<p class="hero-slogan">Découvrez votre sport, trouvez votre
 					club, où que vous soyez</p>
 				<div class="hero-buttons">
-					<a href="#" class="btn btn-access me-3">Accéder sans compte</a> <a
+					<a href="visiteur/indexVisiteur.jsp" class="btn btn-access me-3">Accéder sans compte</a> <a
 						href="connexion/login.jsp" class="btn btn-member">Espace réservé aux
 						membres</a>
 				</div>

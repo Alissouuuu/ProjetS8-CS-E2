@@ -75,9 +75,8 @@
 				<!-- Feature 1 -->
 				<div class="col-md-4">
 					<div class="feature-card">
-						<h3 class="feature-title">Événements à venir</h3>
-						<p class="feature-text">Découvrez les prochains événements
-							sportifs près de chez vous</p>
+						<h3 class="feature-title">Événements passés</h3>
+						<p class="feature-text">Revoir vos événements passés </p>
 						<a href="#" class="feature-link">Voir plus</a>
 					</div>
 				</div>
@@ -85,9 +84,8 @@
 				<!-- Feature 2 -->
 				<div class="col-md-4">
 					<div class="feature-card">
-						<h3 class="feature-title">Clubs populaires</h3>
-						<p class="feature-text">Explorez les clubs sportifs les mieux
-							notés dans votre région</p>
+						<h3 class="feature-title">Événement  à venir 1</h3>
+						<p class="feature-text">bla bla bla </p>
 						<a href="#" class="feature-link">Voir plus</a>
 					</div>
 				</div>
@@ -95,9 +93,8 @@
 				<!-- Feature 3 -->
 				<div class="col-md-4">
 					<div class="feature-card">
-						<h3 class="feature-title">Sports tendance</h3>
-						<p class="feature-text">Découvrez les sports qui gagnent en
-							popularité cette saison</p>
+						<h3 class="feature-title">Événement  à venir 2</h3>
+						<p class="feature-text">bla bla bla bla </p>
 						<a href="#" class="feature-link">Voir plus</a>
 					</div>
 				</div>

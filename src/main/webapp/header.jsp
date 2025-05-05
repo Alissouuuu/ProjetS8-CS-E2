@@ -23,18 +23,18 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav mx-auto gap-3">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">Home</a>
+                                    <a class="nav-link" href="../index.jsp">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">A propos de Nous</a>
-                                </li>
-                               
-                                <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">Trouvez votre Club</a>
+                                    <a class="nav-link" href="../index.jsp">A propos de Nous</a>
                                 </li>
                                
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.jsp">Contact</a>
+                                    <a class="nav-link" href="../visiteur/indexVisiteur.jsp">Trouvez un club sportif</a>
+                                </li>
+                               
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../index.jsp">Contact</a>
                                 </li>
                             </ul>
                         </div>
