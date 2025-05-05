@@ -1,8 +1,11 @@
 package view;
 
 import model.Club;
+
 import view.BackgroundPanel;
 import view.AdminDashboardView;
+import utils.NavigationHelper;
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -47,8 +50,8 @@ public class ClubSearchView extends JFrame {
         labelPanel.setOpaque(true);
         labelPanel.setBackground(new Color(255, 255, 255, 200));
         labelPanel.add(new JLabel("Fédération :", SwingConstants.LEFT));
-        labelPanel.add(new JLabel("Département :", SwingConstants.LEFT));
         labelPanel.add(new JLabel("Commune :", SwingConstants.LEFT));
+        labelPanel.add(new JLabel("Département :", SwingConstants.LEFT));
         labelPanel.add(new JLabel("Région :", SwingConstants.LEFT));
         labelPanel.add(new JLabel("Rayon (km) :", SwingConstants.LEFT));
 
@@ -73,11 +76,11 @@ public class ClubSearchView extends JFrame {
         
         
         cityField = new JTextField();
-        radiusSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 500, 1));
+        radiusSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 1000, 1));
 
         fieldPanel.add(federationComboBox);
-        fieldPanel.add(departementComboBox);
         fieldPanel.add(cityField);
+        fieldPanel.add(departementComboBox);
         fieldPanel.add(regionComboBox);
         fieldPanel.add(radiusSpinner);
 
@@ -94,9 +97,9 @@ public class ClubSearchView extends JFrame {
         backgroundPanel.add(filterPanel, BorderLayout.NORTH);
 
         resultsTable = new JTable(new DefaultTableModel(
-                new Object[][] {},
-                new String[] {"Nom", "Code commune", "Commune", "Fédération"}
-        )) {
+        	    new Object[][] {},
+        	    new String[] {"Nom", "Commune", "Département", "Région", "Fédération"}
+        	)) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -136,8 +139,7 @@ public class ClubSearchView extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
-                new AdminDashboardView(null).setVisible(true);
+            	NavigationHelper.retourDashboard(ClubSearchView.this);
             }
         });
 
@@ -158,8 +160,9 @@ public class ClubSearchView extends JFrame {
                 for (Club club : clubs) {
                     model.addRow(new Object[]{
                         club.getNom(),
-                        club.getCodeCommune(),
                         club.getCommune(),
+                        club.getDepartement(),
+                        club.getRegion(),
                         club.getFederation()
                     });
                 }
@@ -170,13 +173,14 @@ public class ClubSearchView extends JFrame {
         });
     }
 
+    
     public static void main(String[] args) {
-    	SwingUtilities.invokeLater(new Runnable() {
-    	    @Override
-    	    public void run() {
-    	        new ClubSearchView().setVisible(true);
-    	    }
-    	});
-
+        SwingUtilities.invokeLater(() -> {
+        	ClubSearchView frame = new ClubSearchView();
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            frame.setVisible(true);
+        });
     }
+
+  
 }

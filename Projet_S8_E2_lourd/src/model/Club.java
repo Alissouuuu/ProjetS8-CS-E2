@@ -6,14 +6,16 @@ public class Club {
     private String commune;
     private String departement;
     private String federation;
-    private int codeCommune;
+ 
+    private String region;
 
-    public Club(int id, String nom, int codeCommune,String commune, String departement, String federation) {
+
+    public Club(int id, String nom, String commune, String departement, String region, String federation) {
         this.id = id;
         this.nom = nom;
         this.commune = commune;
         this.federation = federation;
-        this.codeCommune=codeCommune;
+        this.region=region;
         this.departement=departement;
     }
 
@@ -37,13 +39,10 @@ public class Club {
 		return departement;
 	}
     
-    public int getCodeCommune() {
-    	return codeCommune;
+    public String getRegion() {
+        return region;
     }
-    
-    public void setCodeCommune(int codeCommune) {
-    	this.codeCommune=codeCommune;
-    }
+
     
     public String getCommune() {
         return commune;
@@ -66,9 +65,10 @@ public class Club {
         return "Club{" +
                 "id=" + id +
                 ", nom='" + nom + '\'' +
-                ", codeCommune='" + codeCommune + '\'' +
+                
                 ", commune='" + commune + '\'' +
-                //", departement='" + departement + '\'' +
+                ", departement='" + departement + '\'' +
+                ", region='" + region + '\'' +
                 ", federation='" + federation + '\'' +
                 '}';
  

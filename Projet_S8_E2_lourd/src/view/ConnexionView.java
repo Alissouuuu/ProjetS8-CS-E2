@@ -2,6 +2,9 @@ package view;
 
 
 import java.awt.EventQueue;
+import utils.NavigationHelper;
+
+import utils.Session; 
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -24,6 +27,7 @@ public class ConnexionView extends JFrame {
             public void run() {
                 try {
                     ConnexionView frame = new ConnexionView();
+                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -91,17 +95,16 @@ public class ConnexionView extends JFrame {
             	String password = new String(passwordField.getPassword());
 
             	Utilisateur user = DAOUtilisateur.connexion(email, password);
-            	if (user != null) {
-            		if(user.getRole()==1) {
-	            	    dispose();
-	            	    new AdminDashboardView(user.getNomComplet()).setVisible(true);
-            		}else {
-            			LabelMsgErreur.setText("Identifiants incorrects");
-   
-            		}
+            	
+
+            	if (user != null && user.getRole() == 1) {
+            	    Session.setUtilisateur(user); // 🔐 on enregistre l’utilisateur connecté
+            	    dispose();
+            	    NavigationHelper.afficherFenetre(ConnexionView.this, new AdminDashboardView());
             	} else {
             	    LabelMsgErreur.setText("Identifiants incorrects");
             	}
+
 
             }
         });

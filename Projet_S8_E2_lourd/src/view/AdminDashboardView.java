@@ -1,11 +1,17 @@
 package view;
 
 import java.awt.EventQueue;
+import utils.NavigationHelper;
+
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import utils.Session;
+import model.Utilisateur;
 
 public class AdminDashboardView extends JFrame {
 
@@ -16,7 +22,8 @@ public class AdminDashboardView extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    AdminDashboardView frame = new AdminDashboardView("Admin");
+                    AdminDashboardView frame = new AdminDashboardView();
+                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -25,7 +32,7 @@ public class AdminDashboardView extends JFrame {
         });
     }
 
-    public AdminDashboardView(String nomAdmin) {
+    public AdminDashboardView() {
         setTitle("Dashboard Administrateur");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1000, 550);
@@ -38,6 +45,8 @@ public class AdminDashboardView extends JFrame {
         // Panel pour le message de bienvenue
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         titlePanel.setOpaque(false);
+        Utilisateur user = Session.getUtilisateur();
+        String nomAdmin = (user != null) ? user.getNomComplet() : "Admin";
         JLabel lblTitre = new JLabel("Bienvenue sur ton tableau de bord administrateur " + nomAdmin, SwingConstants.CENTER);
         lblTitre.setFont(new Font("Times New Roman", Font.BOLD, 28));
         lblTitre.setForeground(Color.WHITE);
@@ -50,10 +59,12 @@ public class AdminDashboardView extends JFrame {
         btnDeconnexion.setFont(new Font("Calibri", Font.PLAIN, 16));
         btnDeconnexion.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                Session.clear(); //  on vide la session
                 dispose();
                 ConnexionView.main(null);
             }
         });
+
         logoutPanel.add(btnDeconnexion);
 
         // Panel combiné nord avec disposition verticale
@@ -86,7 +97,7 @@ public class AdminDashboardView extends JFrame {
         btnGererUtilisateurs.setPreferredSize(new Dimension(220, 130));
         btnGererUtilisateurs.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Ouverture de la gestion des utilisateurs");
+            	NavigationHelper.afficherFenetre(AdminDashboardView.this, new UserListView());
             }
         });
         gbc.gridx = 0;
@@ -119,10 +130,11 @@ public class AdminDashboardView extends JFrame {
         btnRechercheClubs.setIcon(new ImageIcon(imgRechClubs));
         btnRechercheClubs.setHorizontalTextPosition(SwingConstants.CENTER);
         btnRechercheClubs.setVerticalTextPosition(SwingConstants.BOTTOM);
+        
         btnRechercheClubs.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	 dispose();
-                 new ClubSearchView().setVisible(true);
+            	NavigationHelper.afficherFenetre(AdminDashboardView.this, new ClubSearchView());
+                 
             }
         });
         gbc.gridx = 2;
