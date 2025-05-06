@@ -24,7 +24,7 @@
 <body>
 	<!-- header-->
 
-	<%@include file="/header.jsp"%>
+ <jsp:include page="/vues/header.jsp" />
 
 	<!-- Registration Form -->
 	<div class="container my-5">

@@ -23,9 +23,9 @@
 				<div class="footer-links">
 					<h5>Liens</h5>
 					<ul>
-						<li><a href="index.jsp">Accueil</a></li>
-						<li><a href="index.jsp">À propos</a></li>
-						<li><a href="index.jsp">Clubs</a></li>
+						<li><a href="${pageContext.request.contextPath}/vues/index.jsp">Accueil</a></li>
+						<li><a href="${pageContext.request.contextPath}/vues/index.jsp">À propos</a></li>
+						<li><a href="${pageContext.request.contextPath}/vues/index.jsp">Clubs</a></li>
 					</ul>
 				</div>
 			</div>

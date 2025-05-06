@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row align-items-center w-100">
                 <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
-                      <a class="navbar-brand d-flex align-items-center" href="index.jsp">
+                      <a class="navbar-brand d-flex align-items-center" href="${pageContext.request.contextPath}/vues/index.jsp">
                 
                     <div class="logo-container">
                         <div class="logo-diamond">
@@ -23,18 +23,18 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav mx-auto gap-3">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../index.jsp">Home</a>
+                                    <a class="nav-link" href="${pageContext.request.contextPath}/vues/index.jsp">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../index.jsp">A propos de Nous</a>
-                                </li>
-                               
-                                <li class="nav-item">
-                                    <a class="nav-link" href="../visiteur/indexVisiteur.jsp">Trouvez un club sportif</a>
+                                    <a class="nav-link" href="${pageContext.request.contextPath}/vues/index.jsp">A propos de Nous</a>
                                 </li>
                                
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../index.jsp">Contact</a>
+                                    <a class="nav-link" href="${pageContext.request.contextPath}/vues/visiteur/indexVisiteur.jsp">Trouvez un club sportif</a>
+                                </li>
+                               
+                                <li class="nav-item">
+                                    <a class="nav-link" href="${pageContext.request.contextPath}/vues/index.jsp">Contact</a>
                                 </li>
                             </ul>
                         </div>

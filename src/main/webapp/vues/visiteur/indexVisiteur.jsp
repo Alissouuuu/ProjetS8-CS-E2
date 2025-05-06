@@ -17,8 +17,8 @@
 </head>
 <body>
 	<!-- header-->
-
-	<%@include file="../header.jsp"%>
+<jsp:include page="/vues/header.jsp" />
+	
 	<!-- Formulaire de recherche -->
 	<main>
 		<div class="container">
