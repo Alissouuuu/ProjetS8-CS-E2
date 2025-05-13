@@ -24,6 +24,7 @@ if(clubs.size() == 0)
 		<div>
 			<label for="federation">Fédération</label>
 			<select id="federation" name="federation">
+				<option value="tout">Tout</option>
 				<option value="football">Football</option>
 				<option value="basketball">Basketball</option>
 				<option value="tennis">Tennis</option>
