@@ -37,8 +37,9 @@ public class Carte extends HttpServlet {
 		String searchDepartement = request.getParameter("searchDepartement");
 		String searchRegion = request.getParameter("searchRegion");
 		String searchFederation = request.getParameter("searchFederation");
-		String searchRayon = request.getParameter("rayon");
+		
 		double rayon = 0.0;
+		String searchRayon = request.getParameter("rayon");
 		
 //		System.out.println("Ville : " + searchVille);
 //		System.out.println("Département : " + searchDepartement);
@@ -145,7 +146,7 @@ public class Carte extends HttpServlet {
 		departements.add(new Departement("Val-de-Marne", 48.8000, 2.4500));
 		departements.add(new Departement("Val-d'Oise", 49.0500, 2.2000));
 		
-		// On créer une liste de département pour pouvoir gérer le centrage de la carte (à mettre dans la BDD)
+		// On créer une liste de régions pour pouvoir gérer le centrage de la carte (à mettre dans la BDD)
 		List<Region> regions = new ArrayList<>();
 
 		regions.add(new Region("Auvergne-Rhône-Alpes", 45.7640, 4.8357));      // Lyon
@@ -189,8 +190,8 @@ public class Carte extends HttpServlet {
 			rayon = Double.parseDouble(searchRayon);
 		}
 		
-		request.setAttribute("input", searchVille + searchDepartement + searchRegion + searchFederation);
-		//request.setAttribute("input", searchVille);
+		// Déboggage
+		request.setAttribute("input", searchVille + searchDepartement + searchRegion + searchFederation + rayon);
 
 //-----------------------------------------------------------------------------------------------------------
 		
@@ -258,7 +259,7 @@ public class Carte extends HttpServlet {
 		
 		// Affichage de tous les clubs de France par fédération
 		
-		if(searchVille == null && searchDepartement == null && searchRegion == null) {
+		if(searchVille == null && searchDepartement == null && searchRegion == null && rayon == 0) {
 			
 			try {
 
@@ -286,7 +287,7 @@ public class Carte extends HttpServlet {
 		
 		// Affichage de tous les clubs d'une ville par fédération
 		
-		if( searchDepartement == null && searchRegion == null) { // On vérifie qu'aucun département ni aucune région
+		if( searchDepartement == null && searchRegion == null && rayon == 0) { // On vérifie qu'aucun département ni aucune région
 																// n'est sélectionné
 			
 			try {
@@ -331,7 +332,8 @@ public class Carte extends HttpServlet {
 
 		// Affichage de tous les clubs d'une ville 
 		
-		if( searchDepartement == null && searchRegion == null && searchFederation == null) { // On vérifie qu'aucun département ni aucune région
+		if( searchDepartement == null && searchRegion == null && searchFederation == null && rayon == 0) { 
+																// On vérifie qu'aucun département ni aucune région
 																// n'est sélectionné
 			
 			try {
@@ -617,7 +619,7 @@ public class Carte extends HttpServlet {
 					double lat = 0;
 					double lon = 0;
 					
-					// System.out.println(">> Appel à searchClubByREgion en cours");
+//					 System.out.println(">> Appel à searchClubByREgion en cours");
 					List<ClubDAO> clubs = dao.searchClubByRegion(searchRegion);
 					
 					// On récupère la latitude et la longitude du département depuis la liste
@@ -628,9 +630,8 @@ public class Carte extends HttpServlet {
 						}
 					}
 					
-//					for(ClubDAO club : clubsFiltred) {
-//						System.out.println(club.getLibelle_club() +" / "+  club.getCommune()
-//						+" / "+ club.getLat() +" / "+ club.getLon());
+//					for(ClubDAO club : clubs) {
+//						System.out.println("Ok");
 //					}
 					
 					request.setAttribute("clubs", clubs);

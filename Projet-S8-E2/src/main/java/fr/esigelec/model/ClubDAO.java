@@ -1,21 +1,25 @@
 package fr.esigelec.model;
 
 public class ClubDAO {
-	
+
 	private int id_club;
 	private String libelle_club;
 	private String commune;
 	private String federation;
+	private int totalH;
+	private int totalF;
 	private double lat;
 	private double lon;
 	
-	
-	public ClubDAO(int id_club, String libelle_club, String commune, String federation, double lat, double lon) {
+	public ClubDAO(int id_club, String libelle_club, String commune, String federation, int totalH, int totalF,
+			double lat, double lon) {
 		super();
 		this.id_club = id_club;
 		this.libelle_club = libelle_club;
 		this.commune = commune;
 		this.federation = federation;
+		this.totalH = totalH;
+		this.totalF = totalF;
 		this.lat = lat;
 		this.lon = lon;
 	}
@@ -44,6 +48,18 @@ public class ClubDAO {
 	public void setFederation(String federation) {
 		this.federation = federation;
 	}
+	public int getTotalH() {
+		return totalH;
+	}
+	public void setTotalH(int totalH) {
+		this.totalH = totalH;
+	}
+	public int getTotalF() {
+		return totalF;
+	}
+	public void setTotalF(int totalF) {
+		this.totalF = totalF;
+	}
 	public double getLat() {
 		return lat;
 	}
@@ -56,6 +72,9 @@ public class ClubDAO {
 	public void setLon(double lon) {
 		this.lon = lon;
 	}
+	
+	
+
 	
 	
 }

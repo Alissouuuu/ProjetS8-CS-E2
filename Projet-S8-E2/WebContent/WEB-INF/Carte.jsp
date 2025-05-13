@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- taglib : équivalent des import en html ici JSTL -->
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -7,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>OpenStreetMap</title>
+        <title>Sportizone</title>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
         crossorigin=""/>
@@ -89,19 +90,20 @@
 				        <ul class="dropdown-menu p-3">
 				          <li>
 				            <label for="customRange3" class="form-label">Choisissez le rayon autour d'une ville : <span id="rayonValue">0</span> km</label>
-				            <input type="range" class="form-range" min="0" max="50" step="10" id="rayon" value="0">
+				            <!-- Balise span = div sans saut de ligne, balise inline -->
+				            <input type="range" class="form-range" min="0" max="50" step="5" name="rayon" id="rayon" value="0">
 				          </li>
 				          
 				          <script>
-							  const slider = document.getElementById("rayon");
-							  const output = document.getElementById("rayonValue");
+							  const slider = document.getElementById("rayon"); // On récupère l'input du rayon
+							  const output = document.getElementById("rayonValue");// On récupère la valeur du slider
 							
 							  // Affiche la valeur initiale
 							  output.textContent = slider.value;
 							
 							  // Met à jour la valeur affichée à chaque mouvement
-							  slider.addEventListener("input", function () {
-							    output.textContent = this.value;
+							  slider.addEventListener("input", function () { // On écoute l'input 
+							    output.textContent = this.value; // On met à jour la valeur du span avec la valeur du slider
 							  });
 						</script>
 				          
@@ -120,8 +122,9 @@
 				
 			</div>
 
-		      <p>${input}</p>
 		      
+		      <!--  Déboggage <p>${input}</p> -->
+
 
 		      
 		    </div>
@@ -133,9 +136,10 @@
 
 		
 		<script>
-		  $(document).ready(function() {
-		    $('.js-select2').select2({
-		      allowClear: true
+		  $(document).ready(function() { // Permet d'excécuter ce qu'il y a à l'interieur une fois que la page est chargée
+		    $('.js-select2').select2({ // Permet de cibler tous les éléments qui ont le tag select2
+		    						// select2 composant JQuery qui permet de mettre une barre de recherche dynamique
+		      allowClear: true // Petite croix
 		    });
 		  });
 		</script>
@@ -144,26 +148,27 @@
         	<div id="divCarte" ></div>
         </div>
         
-        <!-- Fichiers JavaScript -->
+        <!-- Fichiers JavaScript Leaflet -->
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
         <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
         
-        <!-- On vérifie que ce qui est envoyé par le servlet n'est pas null -->
+
 		<%
 		    Object latObj = request.getAttribute("lat");
 		    Object lonObj = request.getAttribute("lon");
 		    Object communeObj = request.getAttribute("commune");
 		    Object clubsObj = request.getAttribute("clubs");
-		    // boolean hasData = (latObj != null && lonObj != null && communeObj != null);
+		    
+		    // On verifie que la liste des clubs n'est pas null
 		    boolean hasData = (clubsObj != null);
 		    
 		%> 
 		
         <script>
         	
-        	// Si les variables ne sont pas nulles 
+        	// Si la liste des clubs n'est pas null
 	        <% if (hasData) { %>
 	        
 <%-- 	        // On récupère la valeur des objets dans des constantes
@@ -197,8 +202,11 @@
 	                    nom: "${club.libelle_club}",
 	                    lat: ${club.lat},
 	                    lon: ${club.lon},
+	                    partH: ${club.totalH},
+	                    partF: ${club.totalF},
 	                    commune: "${club.commune}"
-	                }<c:if test="${!loop.last}">,</c:if>
+	                }<c:if test="${!loop.last}">,</c:if> // Si ce n'est pas le dernier élément de la boucle, on ajoute une virgule
+	                									// pour séparer les objets
 	                </c:forEach>
 	            ];
 	            
@@ -207,7 +215,12 @@
 	            clubs.forEach((club) => { // => fonction fléchée car forEach prend en paramètre une fonction
 	            						// car forEach exécute une fonction pour chaque élément du tableau 
 	                var marqueur = L.marker([club.lat, club.lon]) // .addTo(carte); Pas besoin quand on utilise les clusters
-	                marqueur.bindPopup("<strong>" + club.nom + "</strong><br>" + club.commune);
+	                marqueur.bindPopup(
+	                		  "<strong>" + club.nom + "<br>" + 
+	                		  "Hommes : " + club.partH + "<br>" +
+	                		  "Femmes : " + club.partF
+	                		);
+
 	                marqueurs.addLayer(marqueur); // On ajoute le marqueur au groupe de clusters
 	            });
 
@@ -233,6 +246,8 @@
 	                    nom: "${club.libelle_club}",
 	                    lat: ${club.lat},
 	                    lon: ${club.lon},
+	                    partH: ${club.totalH},
+	                    partF: ${club.totalF},
 	                    commune: "${club.commune}"
 	                }<c:if test="${!loop.last}">,</c:if>
 	                </c:forEach>
@@ -251,7 +266,11 @@
 	            clubs.forEach((club) => { // => fonction fléchée car forEach prend en paramètre une fonction
 	            						// car forEach exécute une fonction pour chaque élément du tableau 
 	                var marqueur = L.marker([club.lat, club.lon]) // .addTo(carte); Pas besoin quand on utilise les clusters
-	                marqueur.bindPopup("<strong>" + club.nom + "</strong><br>" + club.commune);
+	                marqueur.bindPopup(
+	                		  "<strong>" + club.nom + "<br>" + 
+	                		  "Hommes : " + club.partH + "<br>" +
+	                		  "Femmes : " + club.partF
+	                		);
 	                marqueurs.addLayer(marqueur); // On ajoute le marqueur au groupe de clusters
 	            });
 
@@ -277,6 +296,8 @@
 	                    nom: "${club.libelle_club}",
 	                    lat: ${club.lat},
 	                    lon: ${club.lon},
+	                    partH: ${club.totalH},
+	                    partF: ${club.totalF},
 	                    commune: "${club.commune}"
 	                }<c:if test="${!loop.last}">,</c:if>
 	                </c:forEach>
@@ -295,7 +316,11 @@
 	            clubs.forEach((club) => { // => fonction fléchée car forEach prend en paramètre une fonction
 	            						// car forEach exécute une fonction pour chaque élément du tableau 
 	                var marqueur = L.marker([club.lat, club.lon]) // .addTo(carte); Pas besoin quand on utilise les clusters
-	                marqueur.bindPopup("<strong>" + club.nom + "</strong><br>" + club.commune);
+	                marqueur.bindPopup(
+	                		  "<strong>" + club.nom + "<br>" + 
+	                		  "Hommes : " + club.partH + "<br>" +
+	                		  "Femmes : " + club.partF
+	                		);
 	                marqueurs.addLayer(marqueur); // On ajoute le marqueur au groupe de clusters
 	            });
 
@@ -307,44 +332,50 @@
 			// On vérifie qu'on veuille afficher les clubs d'une région
             <% if ("Region".equals(request.getAttribute("zoneGeo"))) { %>
             
-            	// On récupère les constantes pour le centrage de la carte
-		        const lat = <%= latObj %>;
-		        const lon = <%= lonObj %>;
+        	// On récupère les constantes pour le centrage de la carte
+	        const lat = <%= latObj %>;
+	        const lon = <%= lonObj %>;
+        
+            // Tableau qui va contenir le groupe de marqueurs
+            var marqueurs = L.markerClusterGroup();
+
+            // On récupère la liste des clubs à afficher dans un tableau
+            var clubs = [
+                <c:forEach var="club" items="${clubs}" varStatus="loop">
+                {
+                    nom: "${club.libelle_club}",
+                    lat: ${club.lat},
+                    lon: ${club.lon},
+                    partH: ${club.totalH},
+                    partF: ${club.totalF},
+                    commune: "${club.commune}"
+                }<c:if test="${!loop.last}">,</c:if>
+                </c:forEach>
+            ];
             
-	            // Tableau qui va contenir le groupe de marqueurs
-	            var marqueurs = L.markerClusterGroup();
+        	// Comme on regarde dans un département, on affiche la carte centrée sur le département
+            var carte = L.map('divCarte').setView([lat, lon], 9);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                minZoom: 3,
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(carte);
+            
+            
+            // On parcourt le "tableau" clubs et on affiche le marqueur de chaque club contenu dans la liste
+            clubs.forEach((club) => { // => fonction fléchée car forEach prend en paramètre une fonction
+            						// car forEach exécute une fonction pour chaque élément du tableau 
+                var marqueur = L.marker([club.lat, club.lon]) // .addTo(carte); Pas besoin quand on utilise les clusters
+                marqueur.bindPopup(
+              		  "<strong>" + club.nom + "<br>" + 
+              		  "Hommes : " + club.partH + "<br>" + 
+              		  "Femmes : " + club.partF
+              		);
+                marqueurs.addLayer(marqueur); // On ajoute le marqueur au groupe de clusters
+            });
 
-	            // On récupère la liste des clubs à afficher dans un tableau
-	            var clubs = [
-	                <c:forEach var="club" items="${clubs}" varStatus="loop">
-	                {
-	                    nom: "${club.libelle_club}",
-	                    lat: ${club.lat},
-	                    lon: ${club.lon},
-	                    commune: "${club.commune}"
-	                }<c:if test="${!loop.last}">,</c:if>
-	                </c:forEach>
-	            ];
-	            
-            	// Comme on regarde dans une région, on affiche la carte centrée sur la région
-	            var carte = L.map('divCarte').setView([lat, lon], 9);
-	            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	                minZoom: 3,
-	                maxZoom: 19,
-	                attribution: '&copy; OpenStreetMap'
-	            }).addTo(carte);
-	            
-	            
-	            // On parcourt le "tableau" clubs et on affiche le marqueur de chaque club contenu dans la liste
-	            clubs.forEach((club) => { // => fonction fléchée car forEach prend en paramètre une fonction
-	            						// car forEach exécute une fonction pour chaque élément du tableau 
-	                var marqueur = L.marker([club.lat, club.lon]) // .addTo(carte); Pas besoin quand on utilise les clusters
-	                marqueur.bindPopup("<strong>" + club.nom + "</strong><br>" + club.commune);
-	                marqueurs.addLayer(marqueur); // On ajoute le marqueur au groupe de clusters
-	            });
-
-	            // On ajoute le groupe de clusters à la carte
-	            carte.addLayer(marqueurs);
+            // On ajoute le groupe de clusters à la carte
+            carte.addLayer(marqueurs);
 	            
 			<% } %>
 
@@ -365,6 +396,7 @@
                 maxZoom: 19,
                 attribution: '&copy; OpenStreetMap'
             }).addTo(carte);
+            
         <% } %>
             
             //var tableauMarqueurs = [];
