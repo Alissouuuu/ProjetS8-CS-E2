@@ -1,8 +1,7 @@
 package dao;
 
 import model.Utilisateur;
-
-//import org.mindrot.jbcrypt.BCrypt;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,11 +9,10 @@ import java.util.List;
 
 public class DAOUtilisateur {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/SportiZone";
+    private static final String URL = "jdbc:mysql://localhost:3306/sportizone";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
 
-    
     public static String convertirIntEnRole(int code) {
         switch (code) {
             case 1:
@@ -38,42 +36,55 @@ public class DAOUtilisateur {
         }
     }
 
-    
-    
     public static Utilisateur connexion(String email, String password) {
         Utilisateur user = null;
-
         String sql = "SELECT * FROM user WHERE email = ?";
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-            stmt.setString(1, email);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    String hashedPassword = rs.getString("mdp");
+            try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-                    if (password.equals(hashedPassword)) {
-                        int id = rs.getInt("id_user");
-                        String nom = rs.getString("nom");
-                        String prenom = rs.getString("prenom");
-                        int role = rs.getInt("role");
-                        String fonction=rs.getString("fontion");
+                stmt.setString(1, email);
 
-                        user = new Utilisateur(id, nom, prenom, email, role, fonction);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        String hashedPassword = rs.getString("mdp");
+
+                        // Debug
+                        System.out.println("Hash récupéré depuis la BDD : " + hashedPassword);
+                        System.out.println("Mot de passe saisi          : " + password);
+                        boolean match = BCrypt.checkpw(password, hashedPassword);
+                        System.out.println("Résultat checkpw            : " + match);
+
+                        if (match) {
+                            int id = rs.getInt("id_user");
+                            String nom = rs.getString("nom");
+                            String prenom = rs.getString("prenom");
+                            int role = rs.getInt("role");
+                            String fonction = rs.getString("fontion");
+
+                            user = new Utilisateur(id, nom, prenom, email, role, fonction);
+                        } else {
+                            System.out.println("Mot de passe incorrect pour : " + email);
+                        }
+                    } else {
+                        System.out.println("Aucun utilisateur trouvé avec l’email : " + email);
                     }
                 }
             }
 
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Erreur SQL lors de la connexion : " + e.getMessage());
             e.printStackTrace();
         }
 
         return user;
     }
-    
+
     public List<Utilisateur> findUser(String nom, String roleStr, String fonction) {
-        List<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
+        List<Utilisateur> utilisateurs = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM user WHERE 1=1");
 
         if (nom != null && !nom.trim().isEmpty()) {
@@ -123,9 +134,8 @@ public class DAOUtilisateur {
         return utilisateurs;
     }
 
-    
     public List<String> findAllRoleLabels() {
-        List<String> roles = new ArrayList<String>();
+        List<String> roles = new ArrayList<>();
         String sql = "SELECT DISTINCT role FROM user";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -166,7 +176,7 @@ public class DAOUtilisateur {
             e.printStackTrace();
         }
     }
-    
+
     public int addUser(String nom, String prenom, String email, String hashedPassword, int role, String fonction) {
         String sql = "INSERT INTO user (nom, prenom, email, mdp, role, fontion) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -188,7 +198,7 @@ public class DAOUtilisateur {
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
-                    return rs.getInt(1); // ID généré
+                    return rs.getInt(1);
                 }
             }
 
@@ -198,7 +208,6 @@ public class DAOUtilisateur {
 
         return -1;
     }
-
 
     public boolean deleteUser(int id) {
         String sql = "DELETE FROM user WHERE id_user = ?";
@@ -215,8 +224,6 @@ public class DAOUtilisateur {
         }
     }
 
-
-    
     public boolean emailExiste(String email) {
         String sql = "SELECT id_user FROM user WHERE email = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -224,15 +231,30 @@ public class DAOUtilisateur {
 
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // email déjà trouvé
+                return rs.next();
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return true; // par précaution, on bloque si erreur
+            return true;
         }
     }
 
+    public static int getUserIdByEmail(String email) {
+        String sql = "SELECT id_user FROM user WHERE email = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_user");
+                }
+            }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

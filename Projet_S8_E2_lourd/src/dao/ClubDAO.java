@@ -12,9 +12,9 @@ import java.util.List;
 
 public class ClubDAO {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/SportiZone";
+    private static final String URL = "jdbc:mysql://localhost:3306/sportizone";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
 
     public List<Club> findAllWithDetails() {
         List<Club> clubs = new ArrayList<>();

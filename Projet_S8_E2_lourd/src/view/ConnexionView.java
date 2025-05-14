@@ -1,15 +1,14 @@
 package view;
 
-
 import java.awt.EventQueue;
 import utils.NavigationHelper;
-
-import utils.Session; 
+import utils.Session;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import dao.DAOUtilisateur;
+import dao.LogConnexionDAO;
 import model.Utilisateur;
 
 import java.awt.*;
@@ -23,15 +22,13 @@ public class ConnexionView extends JFrame {
     private JPasswordField passwordField;
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ConnexionView frame = new ConnexionView();
-                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                ConnexionView frame = new ConnexionView();
+                frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -41,14 +38,13 @@ public class ConnexionView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 815, 510);
 
-        // Custom Panel qui affiche l'image de fond redimensionnée
         contentPane = new BackgroundPanel(new ImageIcon(ConnexionView.class.getResource("/resources/recuperation-sportif.jpg")).getImage());
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
-        contentPane.setLayout(null); // On garde layout null pour placer manuellement mais adapté
+        contentPane.setLayout(null);
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(220, 230, 240, 180)); // Fond semi-transparent
+        panel.setBackground(new Color(220, 230, 240, 180));
         panel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
         panel.setBounds(50, 50, 400, 300);
         panel.setLayout(null);
@@ -89,28 +85,37 @@ public class ConnexionView extends JFrame {
         LabelMsgErreur.setBounds(20, 250, 360, 25);
         panel.add(LabelMsgErreur);
 
+        //  Listener modifié
         ButtonSeConnecter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	String email = textFieldLogin.getText();
-            	String password = new String(passwordField.getPassword());
+                String email = textFieldLogin.getText();
+                String password = new String(passwordField.getPassword());
 
-            	Utilisateur user = DAOUtilisateur.connexion(email, password);
-            	
+                Utilisateur user = DAOUtilisateur.connexion(email, password);
+                System.out.println("🔍 Résultat de DAOUtilisateur.connexion : " + (user != null ? "OK" : "null"));
 
-            	if (user != null && user.getRole() == 1) {
-            	    Session.setUtilisateur(user); // 🔐 on enregistre l’utilisateur connecté
-            	    dispose();
-            	    NavigationHelper.afficherFenetre(ConnexionView.this, new AdminDashboardView());
-            	} else {
-            	    LabelMsgErreur.setText("Identifiants incorrects");
-            	}
+                int userId = (user != null) ? user.getId() : DAOUtilisateur.getUserIdByEmail(email);
+                System.out.println("userId récupéré : " + userId);
 
+                boolean success = (user != null && user.getRole() == 1);
+                System.out.println("Connexion réussie ? " + success);
 
+                LogConnexionDAO.enregistrerConnexion(userId, success, ConnexionView.this);
+
+                if (success) {
+                    Session.setUtilisateur(user);
+                    System.out.println(" Connexion réussie, ouverture du dashboard...");
+                    dispose();
+                    NavigationHelper.afficherFenetre(ConnexionView.this, new AdminDashboardView());
+                } else {
+                    LabelMsgErreur.setText("Identifiants incorrects");
+                    System.out.println("Connexion échouée. Message affiché à l'utilisateur.");
+                }
             }
         });
     }
 
-    // Classe interne pour gérer l'image de fond qui s'adapte
+    // Classe interne pour gérer l'image de fond
     class BackgroundPanel extends JPanel {
         private Image backgroundImage;
 

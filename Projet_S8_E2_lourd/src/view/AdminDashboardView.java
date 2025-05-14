@@ -46,7 +46,13 @@ public class AdminDashboardView extends JFrame {
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         titlePanel.setOpaque(false);
         Utilisateur user = Session.getUtilisateur();
-        String nomAdmin = (user != null) ? user.getNomComplet() : "Admin";
+        if (user == null) {
+            System.out.println("Aucun utilisateur dans la session !");
+        } else {
+            System.out.println("Session récupérée pour : " + user.getNom() + " " + user.getPrenom());
+        }
+
+        String nomAdmin = (user != null && user.getNomComplet() != null) ? user.getNomComplet() : "Admin";
         JLabel lblTitre = new JLabel("Bienvenue sur ton tableau de bord administrateur " + nomAdmin, SwingConstants.CENTER);
         lblTitre.setFont(new Font("Times New Roman", Font.BOLD, 28));
         lblTitre.setForeground(Color.WHITE);
@@ -115,7 +121,8 @@ public class AdminDashboardView extends JFrame {
         btnVoirHistorique.setPreferredSize(new Dimension(220, 130));
         btnVoirHistorique.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Ouverture de l'historique des connexions");
+            	NavigationHelper.afficherFenetre(AdminDashboardView.this, new HistoriqueConnexionView());
+
             }
         });
         gbc.gridx = 1;
