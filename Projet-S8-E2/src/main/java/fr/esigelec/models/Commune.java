@@ -1,6 +1,6 @@
 package fr.esigelec.models;
 
-public class Commune {
+public class Commune implements ZoneGeo{
 	private String codeCommune,codePostal,nom,qpv;
 	private double longitude,latitude;
 	private Departement departement;

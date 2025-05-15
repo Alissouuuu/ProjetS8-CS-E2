@@ -1,6 +1,6 @@
 package fr.esigelec.models;
 
-public class Departement {
+public class Departement implements ZoneGeo{
 	private String codeDepartement,nom;
 	private Region region;
 	

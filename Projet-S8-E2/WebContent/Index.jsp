@@ -48,6 +48,15 @@ if(clubs.size() == 0)
 		</div>
 		<button type="submit">Rechercher</button>
 	</form>
+	<form method="POST" action="./Classement">
+		<label for="choix">Voir le classement par :</label>
+		<select id="choix" name="choix">
+			<option value="choisir">Choisir</option>
+			<option value="commune">Commune</option>
+			<option value="region">Région</option>
+		</select>
+		<button type="submit">Voir</button>
+	</form>
 	<% if(!listeVide){
 		for(Club club : clubs){
 			%>

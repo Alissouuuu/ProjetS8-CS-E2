@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import org.apache.commons.text.StringEscapeUtils;
 
+import fr.esigelec.dao.ClubDAO;
 import fr.esigelec.dao.DBDAO;
 import fr.esigelec.models.Club;
 
@@ -58,21 +59,19 @@ public class Recherche extends HttpServlet {
 		
 		if(!nomZone.isEmpty() && nomZone != null)
 			requeteMilieu = "WHERE code_postal.code_postal="+nomZone;
-		DBDAO dbdao = new DBDAO();
-		dbdao.Connexion();
-		ArrayList<Club> clubs = dbdao.getClubs(1, requeteMilieu);
-		dbdao.Deconnexion();
 		
-		
-		
-		
+		if(DBDAO.connexion()) {
+			ArrayList<Club> clubs = ClubDAO.getClubs(1, requeteMilieu);
+			request.setAttribute("zone",zone);
+			request.setAttribute("nom-zone",nomZone);
+			request.setAttribute("federation",federation);
+			request.setAttribute("clubs",clubs);
+			DBDAO.deconnexion();
+		}
 		
 		/*HttpSession session = request.getSession();
 		session.setAttribute("clubs", clubsTout);*/
-		request.setAttribute("zone",zone);
-		request.setAttribute("nom-zone",nomZone);
-		request.setAttribute("federation",federation);
-		request.setAttribute("clubs",clubs);
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("./Index.jsp");
 		dispatcher.forward(request, response);
 		//response.sendRedirect("./Index.jsp");
