@@ -1,20 +1,21 @@
 package fr.esigelec;
 
+import jakarta.annotation.Resource;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.text.StringEscapeUtils;
 
 import fr.esigelec.dao.ClubDAO;
-import fr.esigelec.dao.DBDAO;
 import fr.esigelec.models.Club;
 
 /**
@@ -23,6 +24,10 @@ import fr.esigelec.models.Club;
 @WebServlet("/Recherche")
 public class Recherche extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private ClubDAO clubDAO;
+	@Resource(name="jdbc/club_sport")
+	private DataSource dataSource;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -59,15 +64,12 @@ public class Recherche extends HttpServlet {
 		
 		if(!nomZone.isEmpty() && nomZone != null)
 			requeteMilieu = "WHERE code_postal.code_postal="+nomZone;
-		
-		if(DBDAO.connexion()) {
-			ArrayList<Club> clubs = ClubDAO.getClubs(1, requeteMilieu);
-			request.setAttribute("zone",zone);
-			request.setAttribute("nom-zone",nomZone);
-			request.setAttribute("federation",federation);
-			request.setAttribute("clubs",clubs);
-			DBDAO.deconnexion();
-		}
+		clubDAO = new ClubDAO(dataSource);
+		ArrayList<Club> clubs = clubDAO.getClubs(1, requeteMilieu);
+		request.setAttribute("zone",zone);
+		request.setAttribute("nom-zone",nomZone);
+		request.setAttribute("federation",federation);
+		request.setAttribute("clubs",clubs);
 		
 		/*HttpSession session = request.getSession();
 		session.setAttribute("clubs", clubsTout);*/

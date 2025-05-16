@@ -1,34 +1,55 @@
 package fr.esigelec.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.sql.DataSource;
 
 import fr.esigelec.models.Region;
 
 public class RegionDAO {
-	public static Region getRegion(String codeRegion) {
+	private DataSource dataSource;
+	
+	public RegionDAO(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
+	public Region getRegion(String codeRegion) {
 		
 		Region region = null;
 		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection conn = null;
 		try {
-			stmt = DBDAO.getConn().prepareStatement("SELECT lib_region FROM region WHERE code_region=?");
+			conn = dataSource.getConnection();
+			stmt = conn.prepareStatement("SELECT lib_region FROM region WHERE code_region=?");
 			stmt.setString(1, codeRegion);
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			if(rs.next())
 				region = new Region(codeRegion,rs.getString("lib_region"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		finally {
-			try {
-				if(stmt !=null)
-					stmt.close();
-			}
-			catch(SQLException ignore) {
-				System.err.println("Erreur lors de la fermeture de requête");
-			}
+			close(conn,stmt,rs);
 		}
 		return region;
+	}
+	
+	private void close(Connection con,Statement stmt, ResultSet rs) {
+		try {
+			if(rs != null)
+				rs.close();
+			if(stmt != null)
+				stmt.close();
+			if(con != null)
+				con.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

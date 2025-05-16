@@ -56,17 +56,6 @@ public class DBDAO {
 	
 	
 	
-	public static boolean deconnexion() {
-		try {
-			if(conn!=null)
-				conn.close();
-			return true;
-		}
-		catch(SQLException ignore) {
-			System.err.println("Impossible de fermer la connexion !");
-			return false;
-		}
-	}
 
 
 	public static Connection getConn() {

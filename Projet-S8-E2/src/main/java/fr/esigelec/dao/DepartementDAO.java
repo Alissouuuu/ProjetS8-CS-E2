@@ -1,36 +1,58 @@
 package fr.esigelec.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.sql.DataSource;
 
 import fr.esigelec.models.Departement;
 import fr.esigelec.models.Region;
 
 public class DepartementDAO {
-	public static Departement getDepartement(String codeDepartement) {
+	private DataSource dataSource;
+	
+	public DepartementDAO(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
+	public Departement getDepartement(String codeDepartement) {
 		Region region = null;
+		RegionDAO regionDAO = new RegionDAO(dataSource);
 		Departement departement = null;
 		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection conn = null;
 		try {
-			stmt = DBDAO.getConn().prepareStatement("SELECT lib_departement,code_region FROM departement WHERE code_departement=?");
+			conn = dataSource.getConnection();
+			stmt = conn.prepareStatement("SELECT lib_departement,code_region FROM departement WHERE code_departement=?");
 			stmt.setString(1, codeDepartement);
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			if(rs.next())
-				region = RegionDAO.getRegion(rs.getString("code_region"));
+				region = regionDAO.getRegion(rs.getString("code_region"));
 				departement = new Departement(codeDepartement,rs.getString("lib_departement"),region);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		finally {
-			try {
-				if(stmt !=null)
-					stmt.close();
-			}
-			catch(SQLException ignore) {
-				System.out.println("Erreur lors de la fermeture de requête");
-			}
+			close(conn,stmt,rs);
 		}
 		return departement;
+	}
+	
+	private void close(Connection con,Statement stmt, ResultSet rs) {
+		try {
+			if(rs != null)
+				rs.close();
+			if(stmt != null)
+				stmt.close();
+			if(con != null)
+				con.close();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
