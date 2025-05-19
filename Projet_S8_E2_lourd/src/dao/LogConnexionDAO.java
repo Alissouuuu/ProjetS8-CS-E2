@@ -1,6 +1,7 @@
 package dao;
 
 import model.LogConnexion;
+
 import model.Utilisateur;
 
 import java.sql.*;
@@ -12,15 +13,15 @@ import javax.swing.JOptionPane;
 
 public class LogConnexionDAO {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/sportizone";
+    private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
-    private static final String PASSWORD = "root";
+    private static final String PASSWORD = "";
 
     public List<LogConnexion> findLogsSortedBy(String tri, String nomRecherche, LocalDateTime dateDebut, LocalDateTime dateFin) {
         List<LogConnexion> logs = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
             "SELECT l.id_connexion, l.adresse_ip, l.tentative_connexion_echouee, l.date_connexion, " +
-            "u.id_user, u.nom, u.prenom, u.email, u.role, u.fontion " +
+            "u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
             "FROM log_connexion l JOIN user u ON l.id_user = u.id_user "
         );
 
@@ -72,7 +73,7 @@ public class LogConnexionDAO {
                         rs.getString("prenom"),
                         rs.getString("email"),
                         rs.getInt("role"),
-                        rs.getString("fontion")
+                        rs.getString("fonction")
                     );
 
                     LogConnexion log = new LogConnexion(

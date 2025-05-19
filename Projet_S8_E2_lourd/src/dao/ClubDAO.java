@@ -12,19 +12,24 @@ import java.util.List;
 
 public class ClubDAO {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/sportizone";
+    private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
-    private static final String PASSWORD = "root";
+    private static final String PASSWORD = "";
 
     public List<Club> findAllWithDetails() {
         List<Club> clubs = new ArrayList<>();
 
-        String sql = "SELECT c.id_club, c.lib_club,r.lib_region AS lib_region,  com.lib_commune, f.lib_federation, d.lib_departement, r.lib_region " +
-                "FROM Club c " +
-                "JOIN Commune com ON c.code_commune = com.code_commune " +
-                "JOIN Federation f ON c.code_federation = f.code_federation " +
-                "JOIN Departement d ON com.code_departement = d.code_departement " +
-                "JOIN Region r ON d.code_region = r.code_region";
+        String sql = 
+        	    "SELECT c.id_club, c.lib_club, r.lib_region AS lib_region, lv.lib_commune, " +
+        	    "f.lib_federation, d.lib_departement, r.lib_region " +
+        	    "FROM Club c " +
+        	    "JOIN Commune com ON c.code_commune = com.code_commune " +
+        	    "JOIN libelle_ville_commune cl ON com.code_commune = cl.code_commune " +
+        	    "JOIN libelle_ville lv ON cl.id_libelle = lv.id_libelle " +
+        	    "JOIN Federation f ON c.code_federation = f.code_federation " +
+        	    "JOIN Departement d ON com.code_departement = d.code_departement " +
+        	    "JOIN Region r ON d.code_region = r.code_region";
+
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -51,14 +56,18 @@ public class ClubDAO {
     
     private double[] getCenterCoordinates(Connection conn, String commune, String departement, String region) throws SQLException {
         StringBuilder sql = new StringBuilder(
-            "SELECT latitude, longitude FROM Commune com " +
-            "JOIN Departement d ON com.code_departement = d.code_departement " +
-            "JOIN Region r ON d.code_region = r.code_region WHERE 1=1"
+        		"SELECT com.latitude, com.longitude " +
+        		        "FROM Commune com " +
+        		        "JOIN libelle_ville_commune cl ON com.code_commune = cl.code_commune " +
+        		        "JOIN libelle_ville lv ON cl.id_libelle = lv.id_libelle " +
+        		        "JOIN Departement d ON com.code_departement = d.code_departement " +
+        		        "JOIN Region r ON d.code_region = r.code_region " +
+        		        "WHERE 1=1"
         );
         List<Object> params = new ArrayList<>();
 
         if (commune != null && !commune.isEmpty()) {
-            sql.append(" AND com.lib_commune LIKE ?");
+            sql.append(" AND lv.lib_commune LIKE ?");
             params.add("%" + commune + "%");
         }
 
@@ -85,7 +94,7 @@ public class ClubDAO {
             }
         }
 
-        return null; // Aucune coordonnée trouvée
+        return null; 
     }
 
     
@@ -109,15 +118,20 @@ public class ClubDAO {
             }
 
             StringBuilder sql = new StringBuilder(
-                "SELECT c.id_club, c.lib_club,r.lib_region AS lib_region, com.lib_commune, d.lib_departement, f.lib_federation, " +
-                "com.latitude, com.longitude, " +
-                "(6371 * acos(cos(radians(?)) * cos(radians(com.latitude)) * cos(radians(com.longitude) - radians(?)) + sin(radians(?)) * sin(radians(com.latitude)))) AS distance " +
-                "FROM Club c " +
-                "JOIN Commune com ON c.code_commune = com.code_commune " +
-                "JOIN Federation f ON c.code_federation = f.code_federation " +
-                "JOIN Departement d ON com.code_departement = d.code_departement " +
-                "JOIN Region r ON d.code_region = r.code_region " +
-                "WHERE 1=1"
+            		
+            	    "SELECT c.id_club, c.lib_club, r.lib_region AS lib_region, lv.lib_commune, " +
+            	    "d.lib_departement, f.lib_federation, com.latitude, com.longitude, " +
+            	    "(6371 * acos(cos(radians(?)) * cos(radians(com.latitude)) * " +
+            	    "cos(radians(com.longitude) - radians(?)) + sin(radians(?)) * sin(radians(com.latitude)))) AS distance " +
+            	    "FROM Club c " +
+            	    "JOIN Commune com ON c.code_commune = com.code_commune " +
+            	    "JOIN libelle_ville_commune cl ON com.code_commune = cl.code_commune " +
+            	    "JOIN libelle_ville lv ON cl.id_libelle = lv.id_libelle " +
+            	    "JOIN Federation f ON c.code_federation = f.code_federation " +
+            	    "JOIN Departement d ON com.code_departement = d.code_departement " +
+            	    "JOIN Region r ON d.code_region = r.code_region " +
+            	    "WHERE 1 = 1"
+
             );
 
             List<Object> params = new ArrayList<>();
@@ -130,16 +144,19 @@ public class ClubDAO {
             boolean applyCommuneFilter = (commune != null && !commune.isEmpty());
             double[] centerCoords = null;
 
+            if (applyCommuneFilter) {
+                sql.append(" AND lv.lib_commune LIKE ?");
+                params.add("%" + commune + "%");
+            }
+
             if (rayonKm > 0 && (
-                    (commune != null && !commune.isEmpty()) ||
+                    applyCommuneFilter ||
                     (departement != null && !departement.equals("Toutes")) ||
                     (region != null && !region.equals("Toutes"))
             )) {
                 centerCoords = getCenterCoordinates(conn, commune, departement, region);
-            } else if (applyCommuneFilter) {
-                sql.append(" AND com.lib_commune LIKE ?");
-                params.add("%" + commune + "%");
             }
+
 
             if (region != null && !region.equals("Toutes")) {
                 sql.append(" AND r.lib_region = ?");

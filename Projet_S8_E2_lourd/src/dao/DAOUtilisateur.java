@@ -6,12 +6,13 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.Utilisateur;
 
 public class DAOUtilisateur {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/sportizone";
+    private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
-    private static final String PASSWORD = "root";
+    private static final String PASSWORD = "";
 
     public static String convertirIntEnRole(int code) {
         switch (code) {
@@ -52,31 +53,22 @@ public class DAOUtilisateur {
                     if (rs.next()) {
                         String hashedPassword = rs.getString("mdp");
 
-                        // Debug
-                        System.out.println("Hash récupéré depuis la BDD : " + hashedPassword);
-                        System.out.println("Mot de passe saisi          : " + password);
                         boolean match = BCrypt.checkpw(password, hashedPassword);
-                        System.out.println("Résultat checkpw            : " + match);
 
                         if (match) {
                             int id = rs.getInt("id_user");
                             String nom = rs.getString("nom");
                             String prenom = rs.getString("prenom");
                             int role = rs.getInt("role");
-                            String fonction = rs.getString("fontion");
+                            String fonction = rs.getString("fonction");
 
                             user = new Utilisateur(id, nom, prenom, email, role, fonction);
-                        } else {
-                            System.out.println("Mot de passe incorrect pour : " + email);
                         }
-                    } else {
-                        System.out.println("Aucun utilisateur trouvé avec l’email : " + email);
                     }
                 }
             }
 
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("Erreur SQL lors de la connexion : " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -94,7 +86,7 @@ public class DAOUtilisateur {
             sql.append(" AND role = ?");
         }
         if (fonction != null && !fonction.trim().isEmpty()) {
-            sql.append(" AND fontion LIKE ?");
+            sql.append(" AND fonction LIKE ?");
         }
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -121,7 +113,7 @@ public class DAOUtilisateur {
                         rs.getString("prenom"),
                         rs.getString("email"),
                         rs.getInt("role"),
-                        rs.getString("fontion")
+                        rs.getString("fonction")
                     );
                     utilisateurs.add(u);
                 }
@@ -132,6 +124,51 @@ public class DAOUtilisateur {
         }
 
         return utilisateurs;
+    }
+
+    public List<Utilisateur> findInscriptionsAValider(String nom, String fonction) {
+        List<Utilisateur> resultats = new ArrayList<>();
+
+        String sql = "SELECT * FROM user WHERE statut_demande = 200 AND nom LIKE ? AND fonction LIKE ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, "%" + nom + "%");
+            stmt.setString(2, "%" + fonction + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Utilisateur u = new Utilisateur();
+                u.setId(rs.getInt("id_user"));
+                u.setNom(rs.getString("nom"));
+                u.setPrenom(rs.getString("prenom"));
+                u.setEmail(rs.getString("email"));
+                u.setRole(rs.getInt("role"));
+                u.setFonction(rs.getString("fonction"));
+                u.setPieceJustificative(rs.getBytes("piece_justificative"));
+                resultats.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resultats;
+    }
+
+    public boolean validerInscription(int idUser) {
+        String sql = "UPDATE user SET statut_demande = 100 WHERE id_user = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idUser);
+            return stmt.executeUpdate() == 1;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public List<String> findAllRoleLabels() {
@@ -158,7 +195,7 @@ public class DAOUtilisateur {
     }
 
     public void updateUser(Utilisateur utilisateur) {
-        String sql = "UPDATE user SET nom = ?, prenom = ?, email = ?, role = ?, fontion = ? WHERE id_user = ?";
+        String sql = "UPDATE user SET nom = ?, prenom = ?, email = ?, role = ?, fonction = ? WHERE id_user = ?";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -178,7 +215,12 @@ public class DAOUtilisateur {
     }
 
     public int addUser(String nom, String prenom, String email, String hashedPassword, int role, String fonction) {
-        String sql = "INSERT INTO user (nom, prenom, email, mdp, role, fontion) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO user (nom, prenom, email, mdp, role, fonction, statut_demande) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        if (emailExiste(email)) {
+            System.out.println("Email déjà utilisé.");
+            return -1;
+        }
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -189,12 +231,9 @@ public class DAOUtilisateur {
             stmt.setString(4, hashedPassword);
             stmt.setInt(5, role);
             stmt.setString(6, fonction);
+            stmt.setInt(7, 100);
 
-            int affectedRows = stmt.executeUpdate();
-
-            if (affectedRows == 0) {
-                return -1;
-            }
+            stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -225,19 +264,20 @@ public class DAOUtilisateur {
     }
 
     public boolean emailExiste(String email) {
-        String sql = "SELECT id_user FROM user WHERE email = ?";
+        String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-            return true;
         }
+        return false;
     }
 
     public static int getUserIdByEmail(String email) {
@@ -257,4 +297,24 @@ public class DAOUtilisateur {
         }
         return 0;
     }
+    
+    public byte[] getPieceJustificative(int userId) {
+        String sql = "SELECT piece_justificative FROM user WHERE id_user = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBytes("piece_justificative");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    
 }

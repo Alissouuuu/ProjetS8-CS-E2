@@ -15,7 +15,7 @@ public class UserCreationView extends JFrame {
     private JTextField nomField;
     private JTextField prenomField;
     private JTextField emailField;
-    private JTextField fonctionField;
+    private JComboBox<String> fonctionComboBox;
     private JPasswordField motDePasseField;
     private JComboBox<String> roleComboBox;
     private JButton validerButton;
@@ -87,8 +87,13 @@ public class UserCreationView extends JFrame {
         gbc.gridy++;
         panel.add(new JLabel("Fonction :"), gbc);
         gbc.gridx = 1;
-        fonctionField = new JTextField();
-        panel.add(fonctionField, gbc);
+
+        String[] fonctions = {
+        	    "Annimateur", "Assistant", "Bénévole", "Coach", "Maire", "Président de club", "Président de fédération","Superviseur de plateforme", "Trésorier"
+        	};
+    	fonctionComboBox = new JComboBox<>(fonctions);
+    	panel.add(fonctionComboBox, gbc);
+    	
 
         // Champ Rôle
         gbc.gridx = 0;
@@ -99,6 +104,21 @@ public class UserCreationView extends JFrame {
             "administrateur", "élus", "acteur du monde sportif"
         });
         panel.add(roleComboBox, gbc);
+        
+     // Forçage automatique de la fonction si rôle = administrateur
+        roleComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedRole = (String) roleComboBox.getSelectedItem();
+                if ("administrateur".equalsIgnoreCase(selectedRole)) {
+                    fonctionComboBox.setSelectedItem("Superviseur de plateforme");
+                    fonctionComboBox.setEnabled(false);
+                } else {
+                    fonctionComboBox.setEnabled(true);
+                }
+            }
+        });
+
 
         // Boutons
         gbc.gridx = 0;
@@ -144,7 +164,7 @@ public class UserCreationView extends JFrame {
         String nom = nomField.getText();
         String prenom = prenomField.getText();
         String email = emailField.getText();
-        String fonction = fonctionField.getText();
+        String fonction = (String) fonctionComboBox.getSelectedItem();
         String motDePasse = new String(motDePasseField.getPassword());
         String roleStr = (String) roleComboBox.getSelectedItem();
 

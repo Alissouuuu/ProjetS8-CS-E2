@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.EventQueue;
+
 import utils.NavigationHelper;
 
 
@@ -146,5 +147,59 @@ public class AdminDashboardView extends JFrame {
         });
         gbc.gridx = 2;
         centerPanel.add(btnRechercheClubs, gbc);
+        
+     // Nouveau bouton : Gestion des notifications
+        JButton btnNotifications = new JButton("<html><center>Gestion<br>des notifications</center></html>");
+        btnNotifications.setFont(new Font("Calibri", Font.PLAIN, 20));
+        btnNotifications.setPreferredSize(new Dimension(220, 130));
+        ImageIcon iconNotif = new ImageIcon(getClass().getResource("/resources/notification.png")); // ← Mets une icône ici si tu en as une
+        Image imgNotif = iconNotif.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+        btnNotifications.setIcon(new ImageIcon(imgNotif));
+        btnNotifications.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnNotifications.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnNotifications.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	NavigationHelper.afficherFenetre(AdminDashboardView.this, new MessageListView());
+                
+            }
+        });
+        gbc.gridx = 0;
+        gbc.gridy = -1;
+        centerPanel.add(btnNotifications, gbc);
+
+        // Nouveau bouton : Validation d'inscription
+        JButton btnValidation = new JButton("<html><center>Va lidation<br>d'inscription</center></html>");
+        btnValidation.setFont(new Font("Calibri", Font.PLAIN, 20));
+        btnValidation.setPreferredSize(new Dimension(220, 130));
+        ImageIcon iconValid = new ImageIcon(getClass().getResource("/resources/Validation.png")); // ← Mets une icône ici aussi
+        Image imgValid = iconValid.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+        btnValidation.setIcon(new ImageIcon(imgValid));
+        btnValidation.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnValidation.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnValidation.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	NavigationHelper.afficherFenetre(AdminDashboardView.this, new ValidationInscriptionView());
+            }
+        });
+        gbc.gridx = 1;
+        centerPanel.add(btnValidation, gbc);
+
+     // Nouveau bouton : Gérer les événements
+        JButton btnGererEvenements = new JButton("<html><center>Gérer<br>les événements</center></html>");
+        btnGererEvenements.setFont(new Font("Calibri", Font.PLAIN, 20));
+        btnGererEvenements.setPreferredSize(new Dimension(220, 130));
+        ImageIcon iconEvent = new ImageIcon(getClass().getResource("/resources/Evenements.png")); // ← Mets une icône ici aussi
+        Image imgEvent = iconEvent.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+        btnGererEvenements.setIcon(new ImageIcon(imgEvent));
+        btnGererEvenements.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnGererEvenements.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnGererEvenements.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	NavigationHelper.afficherFenetre(AdminDashboardView.this, new EvenementListView());
+            }
+        });
+        gbc.gridx = 2; // Mets une colonne différente si besoin
+        centerPanel.add(btnGererEvenements, gbc);
+
     }
 }

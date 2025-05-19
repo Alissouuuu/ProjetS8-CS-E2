@@ -13,7 +13,7 @@ public class UserEditView extends JFrame {
     private JTextField nomField;
     private JTextField prenomField;
     private JTextField emailField;
-    private JTextField fonctionField;
+    private JComboBox<String> fonctionComboBox;
     private JComboBox<String> roleComboBox;
     private JButton saveButton;
     private JButton cancelButton;
@@ -84,8 +84,14 @@ public class UserEditView extends JFrame {
         panel.add(new JLabel("Fonction :"), gbc);
 
         gbc.gridx = 1;
-        fonctionField = new JTextField(utilisateur.getFonction());
-        panel.add(fonctionField, gbc);
+        
+        String[] fonctions = {
+        	    "Annimateur", "Assistant", "Bénévole", "Coach", "Maire", "Président de club", "Président de fédération","Superviseur de plateforme", "Trésorier"
+        	};
+    	fonctionComboBox = new JComboBox<>(fonctions);
+    	fonctionComboBox.setSelectedItem(utilisateur.getFonction()); // préselectionne la bonne fonction
+    	panel.add(fonctionComboBox, gbc);
+
 
         // Champ Rôle
         gbc.gridx = 0;
@@ -98,6 +104,28 @@ public class UserEditView extends JFrame {
         });
         roleComboBox.setSelectedItem(DAOUtilisateur.convertirIntEnRole(utilisateur.getRole()));
         panel.add(roleComboBox, gbc);
+        
+        // Vérification initiale au chargement de la vue
+        String selectedRole = (String) roleComboBox.getSelectedItem();
+        if ("administrateur".equalsIgnoreCase(selectedRole)) {
+            fonctionComboBox.setSelectedItem("Superviseur de plateforme");
+            fonctionComboBox.setEnabled(false);
+        }
+
+        
+        roleComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedRole = (String) roleComboBox.getSelectedItem();
+                if ("administrateur".equalsIgnoreCase(selectedRole)) {
+                    fonctionComboBox.setSelectedItem("Superviseur de plateforme");
+                    fonctionComboBox.setEnabled(false);
+                } else {
+                    fonctionComboBox.setEnabled(true);
+                }
+            }
+        });
+
 
         // Boutons
         gbc.gridx = 0;
@@ -143,7 +171,7 @@ public class UserEditView extends JFrame {
         String nom = nomField.getText();
         String prenom = prenomField.getText();
         String email = emailField.getText();
-        String fonction = fonctionField.getText();
+        String fonction = (String) fonctionComboBox.getSelectedItem();
         String roleStr = (String) roleComboBox.getSelectedItem();
         int role = convertirRoleEnInt(roleStr);
 

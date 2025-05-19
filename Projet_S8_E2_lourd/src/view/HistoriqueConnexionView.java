@@ -1,6 +1,7 @@
 package view;
 
 import dao.LogConnexionDAO;
+
 import model.LogConnexion;
 import utils.NavigationHelper;
 import org.jdatepicker.impl.*;

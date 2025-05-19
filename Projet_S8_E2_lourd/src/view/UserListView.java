@@ -2,6 +2,7 @@ package view;
 
 import utils.NavigationHelper;
 
+
 import dao.DAOUtilisateur;
 import model.Utilisateur;
 
@@ -72,14 +73,27 @@ public class UserListView extends JFrame {
                 return false;
             }
         };
+        
+        
+        /*---------------- Mise à jour---------------------------------------------------- */
+        
+        userTable.setRowSelectionAllowed(true);           // Active la sélection de lignes
+        userTable.setColumnSelectionAllowed(false);          // Désactive la sélection de colonnes
+        userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      // Une seule ligne à la fois
 
+        userTable.setSelectionBackground(new Color(173, 216, 230));
+        userTable.setSelectionForeground(Color.BLACK);
+        
         userTable.getColumnModel().getColumn(0).setMinWidth(0);
         userTable.getColumnModel().getColumn(0).setMaxWidth(0);
         userTable.getColumnModel().getColumn(0).setPreferredWidth(0);
 
         userTable.setOpaque(false);
-        ((DefaultTableCellRenderer) userTable.getDefaultRenderer(Object.class)).setOpaque(false);
+        ((DefaultTableCellRenderer) userTable.getDefaultRenderer(Object.class)).setOpaque(true);
 
+        /*------------------------------------------------------------------------------*/
+        
+        
         userTable.getSelectionModel().addListSelectionListener(event -> {
             boolean selected = userTable.getSelectedRow() != -1;
             editButton.setEnabled(selected);

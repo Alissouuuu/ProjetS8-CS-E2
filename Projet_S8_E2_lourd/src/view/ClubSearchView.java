@@ -73,10 +73,36 @@ public class ClubSearchView extends JFrame {
         departement.add(0, "Toutes");
         departementComboBox = new JComboBox<>(departement.toArray(new String[0]));
         
-        
+        /*à expliquer */
         
         cityField = new JTextField();
-        radiusSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 1000, 1));
+        radiusSpinner = new JSpinner(new SpinnerNumberModel(1, 0, 2000, 1));
+        radiusSpinner.setEnabled(false); // Désactivé par défaut
+        
+        cityField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            private void updateSpinnerState() {
+                String text = cityField.getText().trim();
+                radiusSpinner.setEnabled(!text.isEmpty());
+            }
+
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                updateSpinnerState();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                updateSpinnerState();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                updateSpinnerState();
+            }
+        });
+        
+        /*--------------------*/
+        
 
         fieldPanel.add(federationComboBox);
         fieldPanel.add(cityField);
