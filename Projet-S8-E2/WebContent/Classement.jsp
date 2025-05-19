@@ -8,6 +8,8 @@ String typeZones=null;
 ArrayList<IClassement> classement = null;
 HashMap<String,String> emplacements = null;
 emplacements = (HashMap<String,String>) request.getAttribute("emplacements");
+int variableRang = (Integer) request.getAttribute("variableRang");
+String casActuel = (String) request.getAttribute("casActuel");
 
 
 if(choix!=null && !choix.isBlank()){
@@ -28,6 +30,8 @@ if(choix!=null && !choix.isBlank()){
 	</head>
 	<body>
 		<h1>Voici le classement des <%=typeZones%> en fonction de leur nombre de licencié(e)s</h1>
+		<h2>Page actuelle : <%=emplacements.get("pageActuelle") %></h2>
+		<h2>Cas actuel : <%=casActuel %></h2>
 		<table>
 			<thead>
 				<tr>
@@ -54,21 +58,31 @@ for(int i=0;i<classement.size();i++){
 	<tr>
 		<td><%=zoneGeo.getNom()%></td>
 		<td><%=licences%></td>
-		<td><%=i+1 %></td>
+		<td><%=variableRang+(i+1) %></td>
 	</tr>
 		
 <% }%>
 		</tbody>
 		</table>
-		<div class="pagination">
-			<a href="#">&laquo;</a>
-			<a href="./Classement?choix=<%=choix %>&code=a&numPage=<%=emplacements.get("pageA") %>" class="<%=emplacements.get("btnPageA") %>"><%=emplacements.get("pageA") %></a>
-			<a href="./Classement?choix=<%=choix %>&code=b&numPage=<%=emplacements.get("pageB") %>" class="<%=emplacements.get("btnPageB") %>"><%=emplacements.get("pageB") %></a> <!--pageA -->
-			<a href="./Classement?choix=<%=choix %>&code=c&numPage=<%=emplacements.get("pageC") %>" class="<%=emplacements.get("btnPageC") %>"><%=emplacements.get("pageC") %></a>
-			<a href="./Classement?choix=<%=choix %>&code=d&numPage=<%=emplacements.get("pageD") %>" class="<%=emplacements.get("btnPageD") %>"><%=emplacements.get("pageD") %></a>
-			<a href="./Classement?choix=<%=choix %>&code=e&numPage=<%=emplacements.get("pageE") %>" class="<%=emplacements.get("btnPageE") %>"><%=emplacements.get("pageE") %></a>
-			<a href="./Classement?choix=<%=choix %>&code=f&numPage=<%=emplacements.get("pageF") %>" class="<%=emplacements.get("btnPageF") %>"><%=emplacements.get("pageF") %></a>
-			<a href="#">&raquo;</a>
-		</div>
+		<%if(choix.equals("commune")){
+			%>
+			<form method="get" action="./Classement">
+			  <div class="pagination">
+			  	<button type="submit" name="precedent" value="<%=emplacements.get("pageActuelle")%>" <%=emplacements.get("etatBtnPrecedent") %>>&laquo;</button>
+			    <button type="submit" name="a" value="<%=emplacements.get("pageA") %>" <%=emplacements.get("etatBtnPageA") %>><%=emplacements.get("pageA") %></button>
+			    <button type="submit" name="b" value="<%=emplacements.get("pageB") %>" <%=emplacements.get("etatBtnPageB") %>><%=emplacements.get("pageB") %></button>
+			    <button type="submit" name="c" value="<%=emplacements.get("pageC") %>" <%=emplacements.get("etatBtnPageC") %>><%=emplacements.get("pageC") %></button>
+			    <button type="submit" name="d" value="<%=emplacements.get("pageD") %>" <%=emplacements.get("etatBtnPageD") %>><%=emplacements.get("pageD") %></button>
+			    <button type="submit" name="e" value="<%=emplacements.get("pageE") %>" <%=emplacements.get("etatBtnPageE") %>><%=emplacements.get("pageE") %></button>
+			    <button type="submit" name="f" value="<%=emplacements.get("pageF") %>" <%=emplacements.get("etatBtnPageF") %>><%=emplacements.get("pageF") %></button>
+			    <button type="submit" name="g" value="<%=emplacements.get("pageG") %>" <%=emplacements.get("etatBtnPageG") %>><%=emplacements.get("pageG") %></button>
+			    <button type="submit" name="suivant" value="<%=emplacements.get("pageActuelle")%>" <%=emplacements.get("etatBtnSuivant") %>>&raquo;</button>
+			  </div>
+			</form>
+		<% }%>
+		
+		<a href="./Index.jsp"><button>Accueil</button></a>
+		
+		
 	</body>
 </html>
