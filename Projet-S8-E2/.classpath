@@ -29,5 +29,30 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/arthu/ProjetS8-CS-E2/Projet-S8-E2/WebContent/WEB-INF/lib/pdfbox-app-2.0.34.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/arthu/ProjetS8-CS-E2/Projet-S8-E2/WebContent/WEB-INF/lib/boxable-1.7.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/arthu/ProjetS8-CS-E2/Projet-S8-E2/WebContent/WEB-INF/lib/commons-logging-1.2.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/arthu/ProjetS8-CS-E2/Projet-S8-E2/WebContent/WEB-INF/lib/slf4j-api-1.7.36.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/arthu/ProjetS8-CS-E2/Projet-S8-E2/WebContent/WEB-INF/lib/slf4j-simple-1.7.36.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
