@@ -48,6 +48,33 @@ public class ClassementCommuneDAO {
 		return classement;
 	}
 	
+	public ArrayList<ClassementCommune> getClassementAll(){
+		ArrayList<ClassementCommune> classement = new ArrayList<>();
+		Commune commune = null;
+		int licences;
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		CommuneDAO communeDAO = new CommuneDAO(dataSource);
+		String requete = "SELECT commune.code_commune,SUM(total) FROM commune STRAIGHT_JOIN club ON(commune.code_commune=club.code_commune) GROUP BY commune.code_commune ORDER BY SUM(total) DESC";
+		try {
+			conn = dataSource.getConnection();
+			stmt = conn.prepareStatement(requete);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				commune = communeDAO.getCommune(rs.getString("code_commune"));
+				licences = rs.getInt("SUM(total)");
+				classement.add(new ClassementCommune(commune,licences));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			close(conn,stmt,rs);
+		}
+		return classement;
+	}
+	
 	private void close(Connection con,Statement stmt, ResultSet rs) {
 		try {
 			if(rs != null)

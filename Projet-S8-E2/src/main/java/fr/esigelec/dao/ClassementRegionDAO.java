@@ -50,6 +50,36 @@ public class ClassementRegionDAO {
 		return classement;
 	}
 	
+	public ArrayList<ClassementRegion> getClassementAll(){
+		ArrayList<ClassementRegion> classement = new ArrayList<>();
+		Region region = null;
+		String codeRegion,nomRegion;
+		int licences;
+		Connection conn = null;
+		ResultSet rs = null;
+		PreparedStatement stmt = null;
+		String requete = "SELECT region.code_region,region.lib_region,SUM(total) FROM commune STRAIGHT_JOIN departement ON(commune.code_departement=departement.code_departement) STRAIGHT_JOIN region ON(departement.code_region=region.code_region)  STRAIGHT_JOIN club ON(commune.code_commune=club.code_commune)  GROUP BY region.code_region ORDER BY SUM(total) DESC";
+		try {
+			conn = dataSource.getConnection();
+			stmt = conn.prepareStatement(requete);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				codeRegion = rs.getString("code_region");
+				nomRegion = rs.getString("lib_region");
+				region = new Region(codeRegion,nomRegion);
+				licences = rs.getInt("SUM(total)");
+				classement.add(new ClassementRegion(region,licences));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		finally {
+			close(conn,stmt,rs);
+		}
+		return classement;
+	}
+	
 	private void close(Connection con,Statement stmt, ResultSet rs) {
 		try {
 			if(rs != null)
