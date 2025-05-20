@@ -112,6 +112,7 @@ public class MessageListView extends JFrame {
 
 
         filtrerButton.addActionListener(e -> filtrerMessagesParDate());
+        
         toutAfficherButton.addActionListener(e -> chargerTousLesMessages());
 
         chargerTousLesMessages();
