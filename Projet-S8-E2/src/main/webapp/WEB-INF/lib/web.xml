@@ -1,0 +1,9 @@
+<jsp-config>
+
+	<jsp-proprety-group>
+		<url-pattern>*.jsp</url-pattern>
+		<include-prelude></include-prelude>
+	</jsp-proprety-group>
+
+
+</jsp-config>
