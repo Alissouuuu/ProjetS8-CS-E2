@@ -178,7 +178,7 @@ public class AdminDashboardView extends JFrame {
         btnValidation.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnValidation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	//NavigationHelper.afficherFenetre(AdminDashboardView.this, new ValidationInscriptionView());
+            	NavigationHelper.afficherFenetre(AdminDashboardView.this, new ValidationInscriptionView());
             }
         });
         gbc.gridx = 1;
