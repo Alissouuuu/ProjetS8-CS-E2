@@ -1,16 +1,44 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fr.esigelec.models.Club" %>
+<%@ page import="fr.esigelec.models.Region" %>
+<%@ page import="fr.esigelec.models.Departement" %>
+<%@ page import="fr.esigelec.models.Federation" %>
 <%@ page import="java.util.ArrayList" %>
 <% ArrayList<Club> clubs = null;
+ArrayList<Departement> departements = null;
+ArrayList<Region> regions = null;
+ArrayList<Federation> federations = null;
 boolean listeVide = false;
 clubs = (ArrayList<Club>) request.getAttribute("clubs"); 
+departements = (ArrayList<Departement>) request.getAttribute("departements");
+regions = (ArrayList<Region>) request.getAttribute("regions");
+federations = (ArrayList<Federation>) request.getAttribute("federations");
+
 if(clubs == null)
 	clubs = new ArrayList<>();
 
 if(clubs.size() == 0)
 	listeVide = true;
 
+/*if(departements == null)
+	departements = new ArrayList<>();
+
+if(departements.size() == 0)
+	listeVide = true;
+
+if(regions == null)
+	regions = new ArrayList<>();
+
+if(regions.size() == 0)
+	listeVide = true;
+
+if(federations == null)
+	federations = new ArrayList<>();
+
+if(federations.size() == 0)
+	listeVide = true;*/
+//à suivre pour le booléen listeVide
 %>
 <!DOCTYPE html>
 <html>
@@ -62,6 +90,7 @@ if(clubs.size() == 0)
 			%>
 			<div>
 				<h2><%=club.getNom() %></h2>
+				<h3><%=club.getTotalLicences() %> licencié(es) dont <%=club.getTotalLicencesHomme() %> homme(s) et <%=club.getTotalLicencesFemme() %> femme(s)</h3>				
 			</div>
 		<%}
 		

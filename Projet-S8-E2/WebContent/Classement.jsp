@@ -83,6 +83,7 @@ for(int i=0;i<classement.size();i++){
 		
 		<a href="./Index.jsp"><button>Accueil</button></a>
 		<a href="./ExportTableauPDF?choix=<%=choix%>"><button>Exporter en PDF</button></a>
+		<a href="./ExportTableauExcel?choix=<%=choix%>"><button>Exporter en XLSX</button></a>
 		
 		
 	</body>
