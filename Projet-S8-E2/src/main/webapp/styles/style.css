@@ -1,0 +1,153 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.row{
+    justify-content: space-around;
+}
+.hero {
+    background-image: url('https://i.pinimg.com/736x/1a/30/8f/1a308f706a7a1600ad8aae85479abde2.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 15px 0;
+    position: relative;
+    min-height: 600px;
+    overflow: hidden;
+    animation: panoramic 30s linear infinite alternate;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+   
+}
+.hero-content{
+    width: 55vw;
+    border-radius: 25px;
+    padding: 2vw;
+    background-color: rgba(0,0,145,0.45);
+    align-items: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    
+
+}
+.cont2{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+@keyframes panoramic {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.hero-slogan {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-buttons {
+    margin-bottom: 20px;
+}
+
+.btn-access {
+    background-color: transparent !important;
+    color: #fff !important;
+    font-weight: bold !important;
+    padding: 12px 25px !important;
+    border-radius: 30px !important;
+    font-size: 1.1rem !important;
+    transition: all 0.3s !important;
+    border: 2px solid #e1000f !important;
+}
+h1{
+    color: #e1000f !important;
+    font-weight: bold !important;
+}
+.btn-access:hover {
+    background-color: white !important;
+    color: #e1000f !important;
+}
+
+.btn-member {
+    background-color: transparent !important;
+    color: white !important;
+    font-weight: bold !important;
+    padding: 12px 25px !important;
+    border-radius: 30px !important;
+    font-size: 1.1rem !important;
+    transition: all 0.3s !important;
+    border: 2px solid #e1000f !important;
+}
+
+.btn-member:hover {
+    background-color: white !important;
+    color: #e1000f !important;
+}
+
+
+
+.content-section {
+    padding: 80px 0;
+}
+
+.content-text {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    color: #333;
+}
+
+.about-section {
+    background-color: #f8f9fa;
+    padding: 80px 0;
+}
+
+.about-section h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.about-text {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    color: #333;
+}
+
+
+
+/* media queries */
+@media (max-width: 992px) {
+    .hero h1 {
+        font-size: 3rem;
+    }
+    .nav-link {
+        text-align: center;
+        margin: 5px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    .content-text, .about-text {
+        font-size: 1rem;
+    }
+}
