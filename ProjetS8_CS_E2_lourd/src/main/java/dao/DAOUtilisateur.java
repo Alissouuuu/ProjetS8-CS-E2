@@ -9,7 +9,7 @@ import java.util.List;
 
 public class DAOUtilisateur {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/sportizone";
+    private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
 
@@ -147,7 +147,7 @@ public class DAOUtilisateur {
     }
 
     public boolean updateUser(Utilisateur utilisateur) {
-        String sql = "UPDATE user SET nom = ?, prenom = ?, email = ?, role = ?, fontion = ? WHERE id_user = ?";
+        String sql = "UPDATE user SET nom = ?, prenom = ?, email = ?, role = ?, fonction = ? WHERE id_user = ?";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -170,7 +170,7 @@ public class DAOUtilisateur {
 
 
     public int addUser(String nom, String prenom, String email, String hashedPassword, int role, String fonction) {
-        String sql = "INSERT INTO user (nom, prenom, email, mdp, role, fontion) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO user (nom, prenom, email, mdp, role, fonction) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

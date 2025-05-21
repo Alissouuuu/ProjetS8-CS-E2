@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 public class LogAdminDAO {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/sportizone";
+    private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
 
@@ -49,7 +49,7 @@ public class LogAdminDAO {
     // Lire tous les logs
     public List<LogAdmin> findAllLogs() {
         List<LogAdmin> logs = new ArrayList<>();
-        String sql = "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fontion " +
+        String sql = "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
                      "FROM log_admin la JOIN user u ON la.id_admin = u.id_user " +
                      "ORDER BY la.dateHeureAction DESC";
 
@@ -71,7 +71,7 @@ public class LogAdminDAO {
     // Lire les logs d’un administrateur spécifique
     public List<LogAdmin> findByAdmin(int idAdmin) {
         List<LogAdmin> logs = new ArrayList<>();
-        String sql = "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fontion " +
+        String sql = "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
                      "FROM log_admin la JOIN user u ON la.id_admin = u.id_user " +
                      "WHERE la.id_admin = ? ORDER BY la.dateHeureAction DESC";
 
@@ -96,7 +96,7 @@ public class LogAdminDAO {
     // Lire les logs entre deux dates
     public List<LogAdmin> findBetweenDates(LocalDateTime dateDebut, LocalDateTime dateFin) {
         List<LogAdmin> logs = new ArrayList<>();
-        String sql = "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fontion " +
+        String sql = "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
                      "FROM log_admin la JOIN user u ON la.id_admin = u.id_user " +
                      "WHERE la.dateHeureAction BETWEEN ? AND ? " +
                      "ORDER BY la.dateHeureAction DESC";
@@ -125,7 +125,7 @@ public class LogAdminDAO {
         List<LogAdmin> logs = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder(
-            "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fontion " +
+            "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
             "FROM log_admin la JOIN user u ON la.id_admin = u.id_user "
         );
 
@@ -185,7 +185,7 @@ public class LogAdminDAO {
             rs.getString("prenom"),
             rs.getString("email"),
             rs.getInt("role"),
-            rs.getString("fontion")
+            rs.getString("fonction")
         );
 
         return new LogAdmin(

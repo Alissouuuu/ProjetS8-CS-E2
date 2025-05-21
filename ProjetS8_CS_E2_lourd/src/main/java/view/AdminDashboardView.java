@@ -169,8 +169,8 @@ public class AdminDashboardView extends JFrame {
         gbc.gridx = 3; // 4ᵉ colonne
         centerPanel.add(btnHistoriqueActions, gbc);
 
-     // Bouton Gérer les évènements
-        JButton btnEvenements = new JButton("<html><center>Gérer<br>les évènements</center></html>");
+     // Bouton mon profil
+        JButton btnEvenements = new JButton("<html><center>Voir<br>mon profil</center></html>");
         btnEvenements.setFont(new Font("Calibri", Font.PLAIN, 20));
         btnEvenements.setPreferredSize(new Dimension(220, 130));
 
@@ -181,7 +181,7 @@ public class AdminDashboardView extends JFrame {
         btnEvenements.setHorizontalTextPosition(SwingConstants.CENTER);
         btnEvenements.setVerticalTextPosition(SwingConstants.BOTTOM);
 
-        // Action : ouvre la vue de gestion des événements
+        // Action : ouvre la vue 
         btnEvenements.addActionListener(e -> {
             JOptionPane.showMessageDialog(
                 AdminDashboardView.this,
