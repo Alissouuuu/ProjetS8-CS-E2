@@ -139,16 +139,20 @@ public class IndexVisiteurServlet extends HttpServlet {
 
 				if (searchFederation != null && !searchFederation.trim().isEmpty() ) {
 					ClubDAO dao = new ClubDAO();
-					System.out.println(">> Appel à searchClubByFederation en cours");
+					// System.out.println(">> Appel à searchClubByFederation en cours");
 					List<ClubCarte> clubs = dao.searchClubByFederation(searchFederation);
 					
-					for(ClubCarte club : clubs) {
-						System.out.println(club.getLibelle_club() +" / "+  club.getCommune()
-						+" / "+ club.getLat() +" / "+ club.getLon());
-					}
+//					for(ClubCarte club : clubs) {
+//						System.out.println(club.getLibelle_club() +" / "+  club.getCommune()
+//						+" / "+ club.getLat() +" / "+ club.getLon());
+//					}
 					
 					request.setAttribute("clubs", clubs);
 					request.setAttribute("zoneGeo", "France");
+					
+					// On passe à la jsp la latitude et la longitude pour centrer sur la France
+					request.setAttribute("lat", 46);
+					request.setAttribute("lon", 2);
 
 				}
 

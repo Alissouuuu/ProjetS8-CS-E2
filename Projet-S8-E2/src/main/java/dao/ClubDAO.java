@@ -128,7 +128,7 @@ public class ClubDAO {
 	
 	public List<ClubCarte> searchClubByFederation(String nomFederation) throws SQLException, ClassNotFoundException {
 		List<ClubCarte> clubs = new ArrayList<>();
-		System.out.println(">> Entrée dans searchClubByFederation()");
+		// System.out.println(">> Entrée dans searchClubByFederation()");
 
 		
 		String requete = "SELECT * FROM club INNER JOIN federation ON club.code_federation = federation.code_federation "
