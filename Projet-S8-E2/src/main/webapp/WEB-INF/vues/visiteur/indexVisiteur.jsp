@@ -36,7 +36,7 @@
 			<h2>Filtres de recherche</h2>
 			
 			<div class = "container">
-			<form method="get" action="IndexVisiteurServlet">
+			<form id="form" method="get" action="#">
 				<div class="row mt-4">
 				
 					<!-- Filtre Région -->
@@ -44,9 +44,9 @@
 						<label class="form-label">Région :</label> 
 						<select id="region" name="searchRegion" class="form-select js-select2">
 							<option>-- Sélectionner une région --</option>
-							<c:forEach var="region" items="${regions}">
-					          	<option value="${region}">${region}</option>
-					        </c:forEach>
+								<c:forEach var="region" items="${regions}">
+						          	<option value="${region}">${region}</option>
+						        </c:forEach>
 						</select>
 					</div>
 
@@ -55,9 +55,9 @@
 						<label class="form-label">Département :</label> 
 						<select id="departement" name="searchDepartement" class="form-select js-select2">
 							<option>-- Sélectionner un département --</option>
-							<c:forEach var="departement" items="${departements}">
-					          	<option value="${departement}">${departement}</option>
-					        </c:forEach>
+								<c:forEach var="departement" items="${departements}">
+						          	<option value="${departement}">${departement}</option>
+						        </c:forEach>
 						</select>
 					</div>
 
@@ -66,9 +66,9 @@
 						<label class="form-label">Commune :</label> 
 						<select id="commune" name="searchVille" class="form-select js-select2">
 							<option>-- Sélectionner une commune --</option>
-					        <c:forEach var="ville" items="${villes}">
-					          	<option value="${ville}">${ville}</option>
-					        </c:forEach>
+								<c:forEach var="ville" items="${villes}">
+						          	<option value="${ville}">${ville}</option>
+						        </c:forEach>
 						</select>
 					</div>
 				</div>
@@ -79,9 +79,9 @@
 					<label class="form-label">Fédération sportive :</label> 
 						<select id="federation" name="searchFederation" class="form-select js-select2f">
 						<option >-- Sélectionner une fédération --</option>
-						<c:forEach var="federation" items="${federations}">
-				          	<option value="${federation}">${federation}</option>
-				        </c:forEach>
+					        <c:forEach var="federation" items="${federations}">
+					          	<option value="${federation}">${federation}</option>
+					        </c:forEach>						
 					</select>
 				</div>
 					
@@ -101,7 +101,7 @@
 				<label class="form-label" style="margin-right:2rem;">Rayon  :</label> <label id="rangeValue" style="">
 					<span id="rayonValue">0</span> Km</label>
 					<!-- Balise span = div sans saut de ligne, balise inline -->
-					 <input type="range" class="form-range" min="0" max="50" step="5" value="0" name="rayon" id="rayon">
+					 <input type="range" class="form-range" min="0" max="30" step="5" value="0" name="rayon" id="rayon">
 					 
 			    <!-- afficher la valeur du range-input -->
 			    <script>
@@ -172,74 +172,8 @@
         <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
         
 
-
-		<%
-		    Object latObj = request.getAttribute("lat");
-		    Object lonObj = request.getAttribute("lon");
-		    Object communeObj = request.getAttribute("commune");
-		    Object clubsObj = request.getAttribute("clubs");
-		    
-		    // On verifie que la liste des clubs n'est pas null
-		    boolean hasData = (clubsObj != null);
-		    
-		%> 
 		
-   		<script>
-   		
-   	 <% if (hasData) { %>
-	   	    const lat = <%= latObj %>;
-	   	    const lon = <%= lonObj %>;
-	   	    const zoneGeo = "<%= request.getAttribute("zoneGeo") %>";
-	   	    
-	   	    var zoomLevel = 5; // par défaut France
-	   	    if (zoneGeo === "Ville") zoomLevel = 13; // Triple = : comparaison stricte, type et valeur
-	   	    else if (zoneGeo === "Departement" || zoneGeo === "Region") zoomLevel = 8;
-	   	    
-	   	    var carte = L.map('divCarte').setView([lat, lon], zoomLevel);
-	   	    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	   	        minZoom: 3,
-	   	        maxZoom: 19,
-	   	        attribution: '&copy; OpenStreetMap'
-	   	    }).addTo(carte);
-	   	    
-	   	    var marqueurs = L.markerClusterGroup();
-	   	    var clubs = [
-	   	        <c:forEach var="club" items="${clubs}" varStatus="loop">
-	   	        {
-	   	            nom: "${club.libelle_club}",
-	   	            lat: ${club.lat},
-	   	            lon: ${club.lon},
-	   	            partH: ${club.totalH},
-	   	            partF: ${club.totalF},
-	   	            commune: "${club.commune}"
-	   	        }<c:if test="${!loop.last}">,</c:if>
-	   	        </c:forEach>
-	   	    ];
 
-	   	    clubs.forEach((club) => {
-	   	        var marqueur = L.marker([club.lat, club.lon]);
-	   	        marqueur.bindPopup(
-	   	            "<strong>" + club.nom + "<br>" + 
-	   	            "Hommes : " + club.partH + "<br>" +
-	   	            "Femmes : " + club.partF
-	   	        );
-	   	        marqueurs.addLayer(marqueur);
-	   	    });
-
-	   	    carte.addLayer(marqueurs);
-	   	    
-	   	 <% }else { %>
-	   	 
-	     	// On affiche la localisation par défaut qui est centrée sur le centre de la France
-	         var carte = L.map('divCarte').setView([46, 2], 5); // Paris par défaut
-	         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	             minZoom: 3,
-	             maxZoom: 19,
-	             attribution: '&copy; OpenStreetMap'
-	         }).addTo(carte);
-         
-	   	 <% } %>
-   		</script>
 	</main>
         
        	<footer class="text-white text-center py-3">
@@ -307,8 +241,7 @@
 				  })
 				  .catch(error => console.error("Erreur fetch :", error));
 				}
- 
-			
+ 		
 			}); */
 		</script>
 		
@@ -381,9 +314,160 @@
 				  })
 				  .catch(err => console.error(err));
 				});
-
-
 		</script>
+		
+		<script>
+		
+		function ajouterClusterPopup(clusterGroup) {
+			  clusterGroup.on('clusterclick', function (event) {
+			    const markers = event.layer.getAllChildMarkers();
+
+			    if (markers.length > 20) {
+			      let contenuPopup = '<div style="max-height: 200px; overflow-y: auto;"><strong>Clubs dans cette zone :</strong><ul>';
+			      markers.forEach(marker => {
+			        contenuPopup += `<li style="margin-bottom: 5px;">${marker.nomClub}</li>`;
+			      });
+			      contenuPopup += '</ul></div>';
+
+			      L.popup()
+			        .setLatLng(event.layer.getLatLng())
+			        .setContent(contenuPopup)
+			        .openOn(window.maCarte);
+
+			      event.originalEvent.preventDefault();
+			    }
+			  });
+			}
+
+
+
+
+	
+		function chargerCarte(filtre = null) {
+			  // Prépare l'URL du servlet, avec filtre si besoin
+			  let url = '${pageContext.request.contextPath}/IndexVisiteurAPIServlet';
+			  if (filtre) {
+			    // Exemple : filtre = {commune: "Paris"}
+			    const params = new URLSearchParams(filtre);
+			    url += '?' + params.toString();
+			  }
+
+			  fetch(url)
+			    .then(response => {
+			      if (!response.ok) throw new Error("Erreur lors du chargement des données");
+			      return response.json();
+			    })
+			    .then(data => {
+			    	console.log(data.listeClubs)
+			      let lat = data.lat || 46;
+			      let lon = data.lon || 2;
+			      let zoomLevel = 5;
+
+			      if (data.zoneGeo === "GeoLoc") zoomLevel = 10; // autour de soi
+			      else if (data.zoneGeo === "Ville") zoomLevel = 12;
+			      else if (data.zoneGeo === "Departement") zoomLevel = 8;
+			      else if (data.zoneGeo === "Region") zoomLevel = 7;
+			      else if (data.zoneGeo === "France") zoomLevel = 5;
+
+			      // Initialisation de la carte ou mise à jour si déjà créée
+			      if (window.maCarte) {
+			        window.maCarte.setView([lat, lon], zoomLevel);
+			        if (window.mesMarqueurs) {
+			          window.mesMarqueurs.clearLayers();
+			        } else {
+			        	window.mesMarqueurs = L.markerClusterGroup();
+			        	ajouterClusterPopup(window.mesMarqueurs);
+			        	window.maCarte.addLayer(window.mesMarqueurs);
+			        }
+			      } else {
+			        window.maCarte = L.map('divCarte').setView([lat, lon], zoomLevel);
+			        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			          minZoom: 1,
+			          maxZoom: 19,
+			          attribution: '&copy; OpenStreetMap'
+			        }).addTo(window.maCarte);
+
+			        window.mesMarqueurs = L.markerClusterGroup();
+			        ajouterClusterPopup(window.mesMarqueurs);
+			        window.maCarte.addLayer(window.mesMarqueurs);
+			      }
+
+			      // Ajout des marqueurs
+			      data.listeClubs.forEach(club => {
+			        const marqueur = L.marker([club.lat, club.lon]);
+			        marqueur.nomClub = club.nom;
+			        marqueur.bindPopup(
+			          `<strong>${club.nom}</strong><br>` +
+			          `Commune : ${club.commune}<br>` +
+			          `Hommes : ${club.partH}<br>` +
+			          `Femmes : ${club.partF}`
+			        );
+			        window.mesMarqueurs.addLayer(marqueur);
+			      });
+			    })
+			    .catch(err => {
+			      console.error(err);
+			      if (!window.maCarte) {
+			        window.maCarte = L.map('divCarte').setView([46, 2], 5);
+			        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			          minZoom: 3,
+			          maxZoom: 19,
+			          attribution: '&copy; OpenStreetMap'
+			        }).addTo(window.maCarte);
+			      }
+			    });
+			}
+		
+		// Au chargement de la page, on affiche la carte sans filtre
+		document.addEventListener('DOMContentLoaded', () => {
+		  chargerCarte();
+		});
+
+		// Gestionnaire du formulaire
+		document.getElementById('form').addEventListener('submit', function(event) {
+		  event.preventDefault();
+		
+		  const formData = new FormData(this);
+		  const filtre = {};
+		
+		  // Remplir l'objet filtre avec les valeurs non vides du formulaire
+		  formData.forEach((value, key) => {
+		    if (value.trim() !== '') filtre[key] = value.trim();
+		  });
+		
+		  // Vérifier si la géolocalisation est cochée
+		  const useGeoLoc = document.getElementById('useGeoLoc').checked;
+		
+		  if (useGeoLoc) {
+		    // Récupère la position actuelle du navigateur
+		    if (navigator.geolocation) {
+		      navigator.geolocation.getCurrentPosition(
+		        function(position) {
+		          // Ajoute les coordonnées à l'objet filtre
+		          filtre['useGeoLoc'] = 'true';
+		          filtre['lat'] = position.coords.latitude;
+		          filtre['lon'] = position.coords.longitude;
+		
+		          // Appelle la fonction avec géoloc
+		          chargerCarte(filtre);
+		        },
+		        function(error) {
+		          alert("La géolocalisation a échoué ou a été refusée.");
+		          // On envoie quand même le filtre sans géoloc
+		          chargerCarte(filtre);
+		        }
+		      );
+		    } else {
+		      alert("La géolocalisation n'est pas supportée par ce navigateur.");
+		      chargerCarte(filtre);
+		    }
+		  } else {
+		    filtre['useGeoLoc'] = 'false';
+		    chargerCarte(filtre);
+		  }
+		});
+
+   		</script>
 
 		
 		
