@@ -9,16 +9,20 @@ import java.util.ArrayList;
 
 public class Departement {
 	/** le code de chaque departement */
-	private int codeDepartement;
+	private String codeDepartement;
 	/** le libelle de chaque departement */
 	private String libelleDepartement;
 	/** liste des communes d'un departement */
 	private ArrayList<Commune> listeCommunes;
 
-	public Departement(int code, String libelle) {
+	public Departement(String code, String libelle) {
 		this.codeDepartement = code;
 		this.libelleDepartement = libelle;
 		this.listeCommunes = new ArrayList<>();
+	}
+
+	public Departement() {
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -26,7 +30,7 @@ public class Departement {
 	 * 
 	 * @return le code du departement
 	 */
-	public int getCodeDepartement() {
+	public String getCodeDepartement() {
 		return codeDepartement;
 	}
 
@@ -35,7 +39,7 @@ public class Departement {
 	 * 
 	 * @param codeDepartement
 	 */
-	public void setCodeDepartement(int codeDepartement) {
+	public void setCodeDepartement(String codeDepartement) {
 		this.codeDepartement = codeDepartement;
 	}
 

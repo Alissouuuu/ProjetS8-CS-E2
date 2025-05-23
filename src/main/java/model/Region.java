@@ -20,11 +20,15 @@ public class Region {
 	 * 
 	 * @param code    code de la région
 	 * @param libelle le nom de la région
-	 */
+	 avec set*/
 	public Region(int code, String libelle) {
 		this.codeRegion = code;
 		this.libelleRegion = libelle;
 		this.listeDepartements = new ArrayList<>();
+	}
+
+	public Region() {
+		// TODO Auto-generated constructor stub
 	}
 
 	/**

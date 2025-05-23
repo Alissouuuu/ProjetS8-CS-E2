@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Federation {
 	/** le code de chaque federation */
-	private int codeFederation;
+	private String codeFederation;
 	/**
 	 * le nom de la fédération sportive
 	 */
@@ -22,7 +22,7 @@ public class Federation {
 	 * 
 	 * @return le code de la federation
 	 */
-	public int getCodeFederation() {
+	public String getCodeFederation() {
 		return codeFederation;
 	}
 
@@ -31,7 +31,7 @@ public class Federation {
 	 * 
 	 * @param codeFederation
 	 */
-	public void setCodeFederation(int codeFederation) {
+	public void setCodeFederation(String codeFederation) {
 		this.codeFederation = codeFederation;
 	}
 
@@ -59,11 +59,15 @@ public class Federation {
 	 * @param code    code la federation
 	 * @param libelle nom de la federation
 	 */
-	public Federation(int code, String libelle) {
+	public Federation(String code, String libelle) {
 		this.codeFederation = code;
 		this.libelleFedeation = libelle;
 		this.listeClubs = new ArrayList<>();
 
+	}
+
+	public Federation() {
+		// TODO Auto-generated constructor stub
 	}
 
 	/**

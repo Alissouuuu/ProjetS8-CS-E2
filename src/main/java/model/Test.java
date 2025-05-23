@@ -3,6 +3,8 @@ package model;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import jakarta.servlet.http.HttpSession;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -37,5 +39,6 @@ public class Test {
 	            System.out.println("Erreur generale : " + e.getMessage());
 	        }
 	}
+	
 
 }

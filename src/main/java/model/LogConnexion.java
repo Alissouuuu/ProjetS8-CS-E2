@@ -59,13 +59,18 @@ public class LogConnexion {
 	public int getTentativesConnexionEchouee() {
 		return tentativesConnexionEchouee;
 	}
-	/**
-	 * setter du  nombre de tentatives de connexions échouées
-	 * @param tentativesConnexionEchouee le nombre de tentatives de connexions échouées
-	 */
-	public void setTentativesConnexionEchouee(int tentativesConnexionEchouee) {
-		this.tentativesConnexionEchouee = tentativesConnexionEchouee;
-	}
+	public void incrementerTentative() {
+        this.tentativesConnexionEchouee++;
+    }
+
+    public void resetTentatives() {
+        this.tentativesConnexionEchouee = 0;
+    }
+    @Override
+    public String toString() {
+        return idConnexion + "," + adresseIp + "," + tentativesConnexionEchouee;
+    }
+
 	
 
 }

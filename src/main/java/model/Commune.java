@@ -22,6 +22,8 @@ public class Commune {
 	private double longitude;
 	/** les codes postaux d'une commune */
 	private ArrayList<CodePostal> codesPostaux;
+    private ArrayList<LibelleCommune> libelles;
+
 
 	/** methodes de la classe commune */
 	public Commune(String code, String qpv, double latitude, double longitude)
@@ -31,6 +33,12 @@ public class Commune {
 		this.latitude=latitude;
 		this.longitude=longitude;
 		this.codesPostaux=new ArrayList<>();
+		this.libelles=new ArrayList<>();
+
+		
+	}
+	public Commune() {
+		// TODO Auto-generated constructor stub
 	}
 	/**
 	 * getter du code de la commune
@@ -106,6 +114,13 @@ public class Commune {
 	public ArrayList<CodePostal> getCodesPostaux()
 	{
 		return this.codesPostaux;
+	}
+	public ArrayList<LibelleCommune> getLibellesCommune()
+	{
+		return this.libelles;
+	}
+	public void setLibelles(ArrayList<LibelleCommune> libelles) {
+	    this.libelles = libelles;
 	}
 
 }

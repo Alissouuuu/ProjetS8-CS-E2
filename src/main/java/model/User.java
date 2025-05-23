@@ -9,6 +9,8 @@
  */
 package model;
 
+import java.util.ArrayList;
+
 public class User {
 	/** l'id de l'utilisateur */
 	private int idUser;
@@ -47,8 +49,10 @@ public class User {
 	 * le contenu binaire du fichier justificatif
 	 */
 	private byte[] justificatifDonnees;
+	private ArrayList<LogConnexion> historiqueConnexion;
 	/** constructeurs */
 	public User() {
+		this.historiqueConnexion= new ArrayList<>();
     }
 	
 	public User(int idUser, String nom, String prenom, String email, int role, String fonction, int statutDemande,
@@ -65,6 +69,7 @@ public class User {
 		this.typeFichier = typeFichier;
 		this.tailleFichier = tailleFichier;
 		this.justificatifDonnees = justificatifDonnees;
+		this.historiqueConnexion= new ArrayList<>();
 	}
 	 // === getters et setters ===
 	
@@ -148,7 +153,17 @@ public class User {
         this.typeFichier = typeFichier;
     }
 
-    public long getTailleFichier() {
+    public ArrayList<LogConnexion> getHistoriqueConnexion() {
+		return historiqueConnexion;
+	}
+    public void addConnexion(LogConnexion log) {
+        this.historiqueConnexion.add(log);
+    }
+	public void setHistoriqueConnexion(ArrayList<LogConnexion> historiqueConnexion) {
+		this.historiqueConnexion = historiqueConnexion;
+	}
+
+	public long getTailleFichier() {
         return tailleFichier;
     }
 

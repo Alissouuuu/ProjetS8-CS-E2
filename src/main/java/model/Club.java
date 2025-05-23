@@ -41,6 +41,10 @@ public class Club {
 	private ArrayList<ActualiteClub> actualitesClub;
 	/** Liste des evenemnts organisé par un club */
 	private ArrayList<Evenement> evenements;
+	private int totalLicencies;
+	private int totalLicenciesFemme;
+
+	private int totalLicenciesHomme;
 
 	/**
 	 * Constructeur de la classe Club
@@ -53,6 +57,10 @@ public class Club {
 		this.libelleClub = libelleClub;
 		this.actualitesClub = new ArrayList<>();
 		this.evenements = new ArrayList<>();
+	}
+
+	public Club() {
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -102,6 +110,30 @@ public class Club {
 	 */
 	public void setMontantCotisation(float montantCotisation) {
 		this.montantCotisation = montantCotisation;
+	}
+
+	public void setTotalLicencies(int total) {
+		this.totalLicencies = total;
+	}
+
+	public int getTotalLicencies() {
+		return this.totalLicencies;
+	}
+
+	public void setTotalLicenciesFemme(int total) {
+		this.totalLicenciesFemme = total;
+	}
+
+	public int getTotalLicenciesFemme() {
+		return this.totalLicenciesFemme;
+	}
+
+	public void setTotalLicenciesHomme(int total) {
+		this.totalLicenciesHomme = total;
+	}
+
+	public int getTotalLicenciesHomme() {
+		return this.totalLicenciesHomme;
 	}
 
 }
