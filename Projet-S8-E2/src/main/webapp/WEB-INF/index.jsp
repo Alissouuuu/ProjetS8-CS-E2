@@ -33,7 +33,7 @@
 				<p class="hero-slogan">Découvrez votre sport, trouvez votre
 					club, où que vous soyez</p>
 				<div class="hero-buttons">
-					<a href="${pageContext.request.contextPath}/indexVisiteur" class="btn btn-access me-3">Accéder
+					<a href="${pageContext.request.contextPath}/IndexVisiteurServlet" class="btn btn-access me-3">Accéder
 						sans compte</a> 
 						<a href="${pageContext.request.contextPath}/login"
 						class="btn btn-member">Espace réservé aux membres</a>

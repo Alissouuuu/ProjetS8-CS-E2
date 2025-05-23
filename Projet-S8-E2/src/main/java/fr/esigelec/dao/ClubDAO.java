@@ -13,6 +13,7 @@ import fr.esigelec.models.Club;
 import fr.esigelec.models.Commune;
 import fr.esigelec.models.Federation;
 
+
 public class ClubDAO {
 	private DataSource dataSource;
 	
@@ -63,6 +64,7 @@ public class ClubDAO {
 		}
 		return clubs;
 	}
+	
 	
 	private void close(Connection con,Statement stmt, ResultSet rs) {
 		try {
