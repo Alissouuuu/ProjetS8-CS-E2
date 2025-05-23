@@ -24,8 +24,8 @@ import fr.esigelec.models.ClassementRegion;
 /**
  * Servlet implementation class Classement
  */
-@WebServlet("/Classement")
-public class Classement extends HttpServlet {
+@WebServlet("/ClassementZone")
+public class ClassementZone extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ClassementRegionDAO classementRegionDAO;
 	private ClassementCommuneDAO classementCommuneDAO;
@@ -35,7 +35,7 @@ public class Classement extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Classement() {
+    public ClassementZone() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -652,7 +652,7 @@ public class Classement extends HttpServlet {
 		int variableRang = (Integer.parseInt(emplacements.get("pageActuelle"))-1)*25;
 		request.setAttribute("variableRang", variableRang);
 		request.setAttribute("casActuel", casActuel);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("./Classement.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("./WEB-INF/vues/elu/ClassementZone.jsp");
 		dispatcher.forward(request, response);
 	}
 
@@ -693,7 +693,7 @@ public class Classement extends HttpServlet {
 		request.setAttribute("choix", choix);
 		request.setAttribute("emplacements", emplacements);
 		request.setAttribute("variableRang", 0);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("./Classement.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("./WEB-INF/vues/elu/ClassementZone.jsp");
 		dispatcher.forward(request, response);
 	}
 

@@ -66,7 +66,7 @@ for(int i=0;i<classement.size();i++){
 		</table>
 		<%if(choix.equals("commune")){
 			%>
-			<form method="get" action="./Classement">
+			<form method="get" action="./ClassementZone">
 			  <div class="pagination">
 			  	<button type="submit" name="precedent" value="<%=emplacements.get("pageActuelle")%>" <%=emplacements.get("etatBtnPrecedent") %>>&laquo;</button>
 			    <button type="submit" name="a" value="<%=emplacements.get("pageA") %>" <%=emplacements.get("etatBtnPageA") %>><%=emplacements.get("pageA") %></button>
@@ -81,7 +81,7 @@ for(int i=0;i<classement.size();i++){
 			</form>
 		<% }%>
 		
-		<a href="./Index.jsp"><button>Accueil</button></a>
+		<a href="./indexElu"><button>Accueil</button></a>
 		<a href="./ExportTableauPDF?choix=<%=choix%>"><button>Exporter en PDF</button></a>
 		<a href="./ExportTableauExcel?choix=<%=choix%>"><button>Exporter en XLSX</button></a>
 		

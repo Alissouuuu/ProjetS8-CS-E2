@@ -31,8 +31,13 @@
 						<p class="hero-subtitle2">Explorez ces chiffres en quelques clics !</p>
 						<div class="d-flex justify-content-center gap-3 mb-4">
 							<a href="${pageContext.request.contextPath}/statistiques" class="btn btn-primary ">Statistiques licenciés</a> 
-								<a href="${pageContext.request.contextPath}/classement" class="btn btn-primary ">Classements par zones</a>
+							<a href="${pageContext.request.contextPath}/classement" class="btn btn-primary ">Classements par zones</a>
 						</div>
+						<p class="hero-subtitle2">Classement général :</p>
+						<form method="POST" action="${pageContext.request.contextPath}/ClassementZone" class="d-flex justify-content-center gap-3 mb-4">
+							<button class="btn btn-primary" name="choix" value="commune">Par commune</button>
+							<button class="btn btn-primary" name="choix" value="region">Par région</button>	
+						</form>
 						
 						
 						
