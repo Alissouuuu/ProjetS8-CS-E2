@@ -48,7 +48,7 @@ public class FederationDAO {
 			conn = dataSource.getConnection();
 			stmt = conn.prepareStatement("SELECT code_federation,lib_federation FROM federation");
 			rs = stmt.executeQuery();
-			if(rs.next())
+			while(rs.next())
 				federations.add(new Federation(rs.getInt("code_federation"),rs.getString("lib_federation")));
 		} catch (SQLException e) {
 			e.printStackTrace();

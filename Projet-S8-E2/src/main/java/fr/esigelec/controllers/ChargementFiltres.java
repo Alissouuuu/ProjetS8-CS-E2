@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
@@ -22,8 +23,8 @@ import fr.esigelec.models.Region;
 /**
  * Servlet implementation class Accueil
  */
-@WebServlet("/Accueil")
-public class Accueil extends HttpServlet {
+@WebServlet("/ChargementFiltres")
+public class ChargementFiltres extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	@Resource(name="jdbc/club_sport")
 	private DataSource dataSource;
@@ -34,7 +35,7 @@ public class Accueil extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Accueil() {
+    public ChargementFiltres() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -56,7 +57,13 @@ public class Accueil extends HttpServlet {
 		request.setAttribute("departements", departements);
 		request.setAttribute("federations", federations);
 		
-		RequestDispatcher dispatcher= request.getRequestDispatcher("./Index.jsp");
+		RequestDispatcher dispatcher= request.getRequestDispatcher("./WEB-INF/vues/elu/classement.jsp");
+		/*PrintWriter out = response.getWriter();
+		out.println("");
+		out.println("Taille liste régions : "+regions.size());
+		for(Region region : regions) {
+			out.println(region.getNom());
+		}*/
 		dispatcher.forward(request, response);
 		
 	}

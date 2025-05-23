@@ -1,5 +1,38 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="fr.esigelec.models.Region" %>
+<%@ page import="fr.esigelec.models.Departement" %>
+<%@ page import="fr.esigelec.models.Federation" %>
+<%@ page import="fr.esigelec.models.Commune" %>
+
+<%
+ArrayList<Region> regionsFiltres = null;
+ArrayList<Departement> departementsFiltres = null;
+ArrayList<Federation> federationsFiltres = null;
+
+boolean regionsFiltresVide=false,departementsFiltresVide=false,federationsFiltresVide=false;
+
+regionsFiltres = (ArrayList<Region>) request.getAttribute("regions");
+departementsFiltres = (ArrayList<Departement>) request.getAttribute("departements");
+federationsFiltres = (ArrayList<Federation>) request.getAttribute("federations");
+
+if(regionsFiltres == null)
+	regionsFiltres = new ArrayList<>();
+if(regionsFiltres.size()==0)
+	regionsFiltresVide = true;
+
+if(departementsFiltres == null)
+	departementsFiltres = new ArrayList<>();
+if(departementsFiltres.size()==0)
+	departementsFiltresVide = true;
+
+if(federationsFiltres == null)
+	federationsFiltres = new ArrayList<>();
+if(federationsFiltres.size()==0)
+	federationsFiltresVide = true;
+%>	
+	
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,11 +68,35 @@
 						<select name="region"
 							class="form-select">
 							<option value="">Sélectionner une région</option>
-							<option value=""></option>
+							<%if(!regionsFiltresVide){
+								for(Region region : regionsFiltres){
+									%>
+									<option value="<%=region.getCodeRegion()%>"><%=region.getNom() %></option>
+								<% }
+							}
+							%>
+							
 
 						</select>
 					</div>
+					<!-- Filtre Département -->
+					<div class="col-md-5">
+						<label class="form-label">Département :</label> 
+						<select name="departement"
+							class="form-select">
+							<option value="">Sélectionner un département</option>
+							<%if(!departementsFiltresVide){
+								for(Departement departement : departementsFiltres){
+									%>
+									<option value="<%=departement.getCodeDepartement()%>"><%=departement.getNom() %></option>
+								<% }
+							}
+							%>
+							
 
+						</select>
+					</div>
+					
 
 					<!-- Filtre Ville -->
 					<div class="col-md-5">
@@ -49,8 +106,28 @@
 							<option value=""></option>
 
 						</select>
+						<label class="form-label" for="code-postal">Ou son code postal :</label>
+						<input type="text" name="code-postal" id="code-postal" class="form-control">
 					</div>
 				</div>
+				
+				<!-- Filtre Fédération -->
+					<div class="col-md-5">
+						<label class="form-label">Fédération :</label> 
+						<select name="federation"
+							class="form-select">
+							<option value="">Sélectionner une fédération</option>
+							<%if(!federationsFiltresVide){
+								for(Federation federation : federationsFiltres){
+									%>
+									<option value="<%=federation.getCodeFederation()%>"><%=federation.getNom() %></option>
+								<% }
+							}
+							%>
+							
+
+						</select>
+					</div>
 
 				<!-- filtre age et genre -->
 				<div class="row filtre-section">

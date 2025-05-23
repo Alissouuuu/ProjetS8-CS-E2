@@ -49,7 +49,7 @@ public class RegionDAO {
 			conn = dataSource.getConnection();
 			stmt = conn.prepareStatement("SELECT code_region,lib_region FROM region");
 			rs = stmt.executeQuery();
-			if(rs.next())
+			while(rs.next())
 				regions.add(new Region(rs.getString("code_region"),rs.getString("lib_region")));
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -54,9 +54,11 @@ public class DepartementDAO {
 			conn = dataSource.getConnection();
 			stmt = conn.prepareStatement("SELECT code_departement,lib_departement,code_region FROM departement");
 			rs = stmt.executeQuery();
-			if(rs.next())
+			while(rs.next()) {
 				region = regionDAO.getRegion(rs.getString("code_region"));
 				departements.add(new Departement(rs.getString("code_departement"),rs.getString("lib_departement"),region));
+			}
+				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -66,7 +66,7 @@ public class CommuneDAO {
 					+ "INNER JOIN libelle_ville_commune ON commune.code_commune = libelle_ville_commune.code_commune INNER JOIN libelle_ville ON "
 					+ "libelle_ville_commune.id_libelle = libelle_ville.id_libelle");
 			rs = stmt.executeQuery();
-			if(rs.next())
+			while(rs.next()) {
 				departement = departementDAO.getDepartement(rs.getString("code_departement"));
 				String nom = rs.getString("lib_commune");
 				String codePostal = rs.getString("code_postal");
@@ -75,6 +75,8 @@ public class CommuneDAO {
 				double latitude = rs.getDouble("latitude");
 				
 				communes.add(new Commune(rs.getString("code_commune"),codePostal,nom,qpv,longitude,latitude,departement));
+			}
+				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
