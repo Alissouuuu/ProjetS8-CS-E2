@@ -80,7 +80,8 @@ public class UserDAO {
      * @param password le mot de passe de l'utilisateur
      * @return l'utilisateur si les identifiants sont corrects, null sinon
      */
-    public User authenticate(String email, String password) {
+    
+   /* public User authenticate(String email, String password) {
         String sql = "SELECT * FROM users WHERE email = ? AND mdp = ?";
         
         try (Connection conn = DBConnexion.getConnection();
@@ -99,6 +100,27 @@ public class UserDAO {
         }
         
         return null;
+    }*/
+    public User findByEmail(String email) {
+        User user = null;
+        try (Connection conn = DBConnexion.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM user WHERE email = ?")) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setIdUser(rs.getInt("id_user"));
+                user.setEmail(rs.getString("email"));
+                user.setMdp(rs.getString("mdp"));
+                user.setRole(rs.getInt("role"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // À remplacer par du logging en prod
+        }
+        return user;
     }
     /**
      * Convertit un ResultSet en objet User
