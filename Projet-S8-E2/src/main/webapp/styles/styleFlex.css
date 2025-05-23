@@ -1,0 +1,30 @@
+@charset "UTF-8";
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100% !important;
+    }
+
+    body {
+      display: flex !important;
+      flex-direction: column !important;
+      min-height: 100vh !important;
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    }
+      main {
+      flex: 1 !important;
+      padding: 20px !important;
+    }
+    label{
+    color:#000091;
+     font-weight:bold;
+    }
+    h2{
+    color:#e1000f;
+   
+    }

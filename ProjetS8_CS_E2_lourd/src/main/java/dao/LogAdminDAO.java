@@ -1,7 +1,6 @@
 package dao;
 
 import model.LogAdmin;
-
 import model.Utilisateur;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -14,7 +13,8 @@ public class LogAdminDAO {
 
     private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
+
 
     // Enregistrer une action admin
     public static void enregistrerLog(LogAdmin log, Component component) {
