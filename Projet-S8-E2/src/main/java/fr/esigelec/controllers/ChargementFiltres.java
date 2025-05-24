@@ -13,9 +13,11 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
+import fr.esigelec.dao.CommuneDAO;
 import fr.esigelec.dao.DepartementDAO;
 import fr.esigelec.dao.FederationDAO;
 import fr.esigelec.dao.RegionDAO;
+import fr.esigelec.models.Commune;
 import fr.esigelec.models.Departement;
 import fr.esigelec.models.Federation;
 import fr.esigelec.models.Region;
@@ -31,6 +33,7 @@ public class ChargementFiltres extends HttpServlet {
 	private RegionDAO regionDAO;
 	private DepartementDAO departementDAO;
 	private FederationDAO federationDAO;
+	private CommuneDAO communeDAO;
        
     /**
      * @see HttpServlet#HttpServlet()

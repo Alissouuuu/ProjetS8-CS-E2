@@ -43,6 +43,16 @@ if(federationsFiltres.size()==0)
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+
+<!-- Inclure jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Inclure Select2 CSS et JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
+
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/styles/styleHeader.css">
 <link rel="stylesheet"
@@ -65,9 +75,9 @@ if(federationsFiltres.size()==0)
 					<!-- Filtre Région -->
 					<div class="col-md-5">
 						<label class="form-label">Région :</label> 
-						<select name="region"
+						<select name="region" id="region-select"
 							class="form-select">
-							<option value="">Sélectionner une région</option>
+							<option value="all">Sélectionner une région</option>
 							<%if(!regionsFiltresVide){
 								for(Region region : regionsFiltres){
 									%>
@@ -75,20 +85,19 @@ if(federationsFiltres.size()==0)
 								<% }
 							}
 							%>
-							
-
 						</select>
 					</div>
+					
 					<!-- Filtre Département -->
 					<div class="col-md-5">
 						<label class="form-label">Département :</label> 
 						<select name="departement"
-							class="form-select">
+							class="form-select select-chercheable" id="departement-select" onchange="chargerCommunes(this.value)">
 							<option value="">Sélectionner un département</option>
 							<%if(!departementsFiltresVide){
 								for(Departement departement : departementsFiltres){
 									%>
-									<option value="<%=departement.getCodeDepartement()%>"><%=departement.getNom() %></option>
+									<option value="<%=departement.getCodeDepartement()%>" data-region="<%=departement.getRegion().getCodeRegion()%>"><%=departement.getNom() %></option>
 								<% }
 							}
 							%>
@@ -100,11 +109,10 @@ if(federationsFiltres.size()==0)
 
 					<!-- Filtre Ville -->
 					<div class="col-md-5">
-						<label class="form-label">Commune :</label> <select name="commune"
-							class="form-select">
+						<label class="form-label">Commune :</label>
+						<select name="commune"
+							class="form-select select-chercheable" id="commune-select">
 							<option value="">Sélectionner une commune</option>
-							<option value=""></option>
-
 						</select>
 						<label class="form-label" for="code-postal">Ou son code postal :</label>
 						<input type="text" name="code-postal" id="code-postal" class="form-control">
@@ -115,7 +123,7 @@ if(federationsFiltres.size()==0)
 					<div class="col-md-5">
 						<label class="form-label">Fédération :</label> 
 						<select name="federation"
-							class="form-select">
+							class="form-select select-chercheable">
 							<option value="">Sélectionner une fédération</option>
 							<%if(!federationsFiltresVide){
 								for(Federation federation : federationsFiltres){
@@ -175,5 +183,66 @@ if(federationsFiltres.size()==0)
 			<p class="mb-0">© 2025 SportiZone. Tous droits réservés.</p>
 		</div>
 	</footer>
+	<script>
+		document.getElementById("region-select").addEventListener("change",function(){
+			const selectedRegion = this.value;
+			const departementSelect = document.getElementById("departement-select");
+			const options = departementSelect.querySelectorAll("option");
+			
+			//Réinitialiser la sélection
+			departementSelect.value = "";
+			if(selectedRegion ==="all"){
+				options.forEach(option =>{
+					option.style.display = "block";
+				});
+			}
+			else{
+				options.forEach(option =>{
+					const regionAttr = option.getAttribute("data-region");
+					if(!regionAttr){
+						option.style.display = "block"; //permet d'afficher "Sélectionner un département" car c'est la seule option sans valeur
+					}
+					else{
+						option.style.display = regionAttr === selectedRegion ? "block" : "none";
+					}
+				});
+			}
+			
+		});
+		
+		function chargerCommunes(departementCode){
+			//const departementCode = document.getElementById("departement-select").value;
+			const communeSelect = document.getElementById("commune-select");
+			console.log("département sélectionné :",departementCode);
+			//Réinitialiser les communes
+			communeSelect.innerHTML = '<option value="">Sélectionner une commune</option>';
+			
+			if(!departementCode)
+				return;
+			
+			const url = "ChargementCommunes?codeDepartement="+departementCode;
+			fetch(url)
+				.then(response => {
+					console.log("Réponse brute :",response);
+					return response.json();
+				})
+				.then(data => {
+					data.forEach(com => {
+						const option = document.createElement("option");
+						option.value = com.code;
+						option.text = com.nom;
+						communeSelect.appendChild(option);
+					});
+				})
+				.catch(error => console.error("Erreur de chargement des communes :",error));
+		}
+		
+		$(document).ready(function(){
+			$('.select-chercheable').select2({
+				placeholder: "Sélectionnez ou recherchez",
+				allowClear: true
+			});
+		});
+	</script>	
 </body>
 </html>
