@@ -70,7 +70,7 @@ if(federationsFiltres.size()==0)
 		<!-- Formulaire de recherche -->
 		<div class="container">
 			<h2>Filtres de recherche</h2>
-			<form method="post" action="">
+			<form method="post" action="ClassementServlet">
 				<div class="row filtre-section">
 					<!-- Filtre Région -->
 					<div class="col-md-5">
@@ -145,11 +145,12 @@ if(federationsFiltres.size()==0)
 						<label for="filtre-age" class="form-label">Tranche d'âge :</label>
 						<select id="age" name="age" class="form-select">
 							<option value="" selected>-- Toutes les tranches --</option>
-							<option value="moins18">Moins de 18 ans</option>
-							<option value="18_25">18–25 ans</option>
-							<option value="26_35">26–35 ans</option>
-							<option value="36_50">36–50 ans</option>
-							<option value="plus50">Plus de 50 ans</option>
+							<option value="moins15">Moins de 15 ans</option>
+							<option value="15_24">15–24 ans</option>
+							<option value="25_34">25–34 ans</option>
+							<option value="35_49">35–49 ans</option>
+							<option value="50_79">50–79 ans</option>
+							<option value="80plus">80 ans et plus</option>
 						</select>
 
 
@@ -183,6 +184,8 @@ if(federationsFiltres.size()==0)
 			<p class="mb-0">© 2025 SportiZone. Tous droits réservés.</p>
 		</div>
 	</footer>
+	
+	
 	<script>
 		document.getElementById("region-select").addEventListener("change",function(){
 			const selectedRegion = this.value;
