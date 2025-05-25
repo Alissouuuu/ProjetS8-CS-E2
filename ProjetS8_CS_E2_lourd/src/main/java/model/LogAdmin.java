@@ -14,7 +14,7 @@ public class LogAdmin {
     private String adresse_IP;
     private LocalDateTime dateHeureAction;
     private boolean reussite;
-
+   
     public LogAdmin(int id_log, Utilisateur id_admin, String type_action, String type_entite, int id_entite,
                     String ancienne_valeur, String nouvelle_valeur, String adresse_IP,
                     LocalDateTime dateHeureAction, boolean reussite) {
@@ -29,7 +29,7 @@ public class LogAdmin {
         this.dateHeureAction = dateHeureAction;
         this.reussite = reussite;
     }
-
+    
     public int getId_log() {
         return id_log;
     }
@@ -61,6 +61,7 @@ public class LogAdmin {
     public String getAdresse_IP() {
         return adresse_IP;
     }
+    
 
     public LocalDateTime getDateHeureAction() {
         return dateHeureAction;
@@ -69,8 +70,21 @@ public class LogAdmin {
     public boolean isReussite() {
         return reussite;
     }
+    
 
     public String getStatut() {
         return reussite ? "Succès" : "Échec";
     }
+    
+ // Nom et prénom de la personne sur laquelle l'action a été faite
+    private String nomCible;
+
+    public String getNomCible() {
+        return nomCible;
+    }
+
+    public void setNomCible(String nomCible) {
+        this.nomCible = nomCible;
+    }
+
 }

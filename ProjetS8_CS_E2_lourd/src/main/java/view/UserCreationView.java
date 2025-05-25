@@ -91,7 +91,7 @@ public class UserCreationView extends JFrame {
         gbc.gridx = 1;
 
         String[] fonctions = {
-        	    "Annimateur", "Assistant", "Bénévole", "Coach", "Maire", "Président de club", "Président de fédération","Superviseur de plateforme", "Trésorier"
+        	    "Animateur", "Assistant", "Bénévole", "Coach", "Maire", "Président de club", "Président de fédération","Superviseur de plateforme", "Trésorier"
         	};
     	fonctionComboBox = new JComboBox<>(fonctions);
     	panel.add(fonctionComboBox, gbc);
@@ -208,6 +208,10 @@ public class UserCreationView extends JFrame {
             java.time.LocalDateTime.now(),
             newId != -1
         );
+        Utilisateur nouvelleCible = new Utilisateur();
+        nouvelleCible.setNom(nom);
+        nouvelleCible.setPrenom(prenom);
+        log.setNomCible(nouvelleCible.getNom() + " " + nouvelleCible.getPrenom());
 
         LogAdminDAO.enregistrerLog(log, this); //Enregistrement du log
 

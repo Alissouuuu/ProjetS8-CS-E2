@@ -77,7 +77,7 @@ public class HistoriqueAdminView extends JFrame {
 
         logTable = new JTable(new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Nom", "Prénom", "Action", "Entité", "Date", "Heure", "Adresse IP", "Statut"}
+                new String[]{"Nom", "Prénom", "Action", "Entité","Cible", "Date", "Heure", "Adresse IP", "Statut"}
         )) {
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -97,7 +97,7 @@ public class HistoriqueAdminView extends JFrame {
 
         appliquerFiltresButton.addActionListener(e -> chargerLogsAvecFiltre());
 
-        chargerTousLesLogs(); // 🟢 Ne filtre rien au démarrage
+        chargerTousLesLogs(); // Ne filtre rien au démarrage
     }
 
     private JDatePickerImpl createDatePicker() {
@@ -166,6 +166,7 @@ public class HistoriqueAdminView extends JFrame {
                     log.getId_admin().getPrenom(),
                     log.getType_action(),
                     log.getType_entite(),
+                    log.getNomCible(),
                     log.getDateHeureAction().format(dateFormatter),
                     log.getDateHeureAction().format(heureFormatter),
                     log.getAdresse_IP(),

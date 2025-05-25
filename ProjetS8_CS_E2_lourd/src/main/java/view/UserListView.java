@@ -206,8 +206,12 @@ public class UserListView extends JFrame {
                         null,
                         LogAdminDAO.getIpLocale(),
                         java.time.LocalDateTime.now(),
-                        success // 🔁 true ou false selon résultat
+                        success // true ou false selon résultat
                     );
+                    Utilisateur nouvelleCible = new Utilisateur();
+                    nouvelleCible.setNom(nom);
+                    nouvelleCible.setPrenom(prenom);
+                    log.setNomCible(nouvelleCible.getNom() + " " + nouvelleCible.getPrenom());
 
                     LogAdminDAO.enregistrerLog(log, this);
 

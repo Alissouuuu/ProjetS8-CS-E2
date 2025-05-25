@@ -2,6 +2,7 @@ package view;
 
 import java.awt.EventQueue;
 
+
 import utils.NavigationHelper;
 
 
@@ -13,6 +14,7 @@ import java.awt.event.ActionListener;
 
 import utils.Session;
 import model.Utilisateur;
+
 
 public class AdminDashboardView extends JFrame {
 
@@ -226,29 +228,25 @@ public class AdminDashboardView extends JFrame {
         centerPanel.add(btnHistoriqueActions, gbc);
 
      // Bouton mon profil
-        JButton btnEvenements = new JButton("<html><center>Voir<br>mon profil</center></html>");
-        btnEvenements.setFont(new Font("Calibri", Font.PLAIN, 20));
-        btnEvenements.setPreferredSize(new Dimension(220, 130));
+        JButton btnProfil = new JButton("<html><center>Voir<br>mon profil</center></html>");
+        btnProfil.setFont(new Font("Calibri", Font.PLAIN, 20));
+        btnProfil.setPreferredSize(new Dimension(220, 130));
 
         // Icône (assure-toi que le fichier existe dans /resources/)
-        ImageIcon iconEvenement = new ImageIcon(getClass().getResource("/resources/Evenements.png")); // <-- adapte le nom
+        ImageIcon iconEvenement = new ImageIcon(getClass().getResource("/resources/Profil.png")); // <-- adapte le nom
         Image imgEvenement = iconEvenement.getImage().getScaledInstance(64, 64, Image.SCALE_SMOOTH);
-        btnEvenements.setIcon(new ImageIcon(imgEvenement));
-        btnEvenements.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnEvenements.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnProfil.setIcon(new ImageIcon(imgEvenement));
+        btnProfil.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnProfil.setVerticalTextPosition(SwingConstants.BOTTOM);
 
         // Action : ouvre la vue 
-        btnEvenements.addActionListener(e -> {
-            JOptionPane.showMessageDialog(
-                AdminDashboardView.this,
-                "Pas disponible.",
-                "Fonctionnalité à venir",
-                JOptionPane.INFORMATION_MESSAGE
-            );
+        btnProfil.addActionListener(e -> {
+            NavigationHelper.afficherFenetre(AdminDashboardView.this, new MonProfilView());
         });
+
         gbc.gridx = 3;
         gbc.gridy = -1; // nouvelle ligne !
-        centerPanel.add(btnEvenements, gbc);
+        centerPanel.add(btnProfil, gbc);
 
 
     }

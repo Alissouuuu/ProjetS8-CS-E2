@@ -1,11 +1,13 @@
 package view;
 
 import dao.DAOMessage;
+import dao.DAOUtilisateur;
+import dao.LogAdminDAO;
+import model.LogAdmin;
 import model.Message;
 import model.Utilisateur;
 import utils.NavigationHelper;
 import view.BackgroundPanel;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -112,10 +114,34 @@ public class MessageSendView extends JFrame {
 
                 for (String email : destinataires) {
                     Message msg = new Message(sujet, contenu, email.trim(), expediteur.getNomComplet(), now);
-           
                     dao.envoyerMessage(msg);
 
+                    // Récupérer l'utilisateur cible
+                    Utilisateur cible = new DAOUtilisateur().findByEmail(email.trim());
+
+                    // Créer un log
+                    LogAdmin log = new LogAdmin(
+                        0,
+                        expediteur,
+                        "ENVOI_MESSAGE",
+                        "Message",
+                        0,
+                        null,
+                        contenu,
+                        LogAdminDAO.getIpLocale(),
+                        LocalDateTime.now(),
+                        true
+                    );
+
+                    if (cible != null) {
+                        log.setNomCible(cible.getNom() + " " + cible.getPrenom());
+                    } else {
+                        log.setNomCible(email.trim()); // juste l’email
+                    }
+
+                    LogAdminDAO.enregistrerLog(log, MessageSendView.this);
                 }
+
 
                 JOptionPane.showMessageDialog(MessageSendView.this, "Message(s) envoyé(s) avec succès.");
                 dispose();

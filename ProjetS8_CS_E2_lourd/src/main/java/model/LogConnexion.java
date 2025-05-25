@@ -9,14 +9,18 @@ public class LogConnexion {
     private boolean tentativeEchouee;
     private LocalDateTime dateConnexion;
     private Utilisateur utilisateur;
+    private String sourceConnexion;
 
-    public LogConnexion(int id, String adresseIp, boolean tentativeEchouee, LocalDateTime dateConnexion, Utilisateur utilisateur) {
+
+    public LogConnexion(int id, String adresseIp, boolean tentativeEchouee, LocalDateTime dateConnexion, Utilisateur utilisateur, String sourceConnexion) {
         this.id = id;
         this.adresseIp = adresseIp;
         this.tentativeEchouee = tentativeEchouee;
         this.dateConnexion = dateConnexion;
         this.utilisateur = utilisateur;
+        this.sourceConnexion = sourceConnexion;
     }
+
 
     public int getId() {
         return id;
@@ -41,4 +45,9 @@ public class LogConnexion {
     public String getStatut() {
         return tentativeEchouee ? "Échec" : "Succès";
     }
+    
+    public String getSourceConnexion() {
+        return sourceConnexion;
+    }
+
 }

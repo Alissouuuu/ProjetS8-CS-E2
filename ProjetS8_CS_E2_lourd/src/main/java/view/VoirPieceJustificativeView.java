@@ -10,7 +10,9 @@ import java.io.FileOutputStream;
 
 import java.io.InputStream;
 import java.net.URLConnection;
-
+import model.LogAdmin;
+import model.Utilisateur;
+import dao.LogAdminDAO;
 public class VoirPieceJustificativeView extends JFrame {
 
     private JLabel imageLabel;
@@ -55,6 +57,30 @@ public class VoirPieceJustificativeView extends JFrame {
     private void chargerEtAfficher(int userId) {
         DAOUtilisateur dao = new DAOUtilisateur();
         byte[] data = dao.getPieceJustificative(userId);
+     //  Admin en session
+        Utilisateur admin = utils.Session.getUtilisateur();
+
+        // Création du log
+        Utilisateur cible = dao.findById(userId); 
+        model.LogAdmin log = new model.LogAdmin(
+            0,
+            admin,
+            "consultation",
+            "pièce justificative",
+            userId,
+            null,
+            null,
+            LogAdminDAO.getIpLocale(),
+            java.time.LocalDateTime.now(),
+            (data != null && data.length > 0)
+        );
+
+        // Enregistrement
+        if (cible != null) {
+            log.setNomCible(cible.getNom() + " " + cible.getPrenom());
+        }
+        LogAdminDAO.enregistrerLog(log, this);
+
 
         if (data != null && data.length > 0) {
             String mimeType = detectMimeType(data);

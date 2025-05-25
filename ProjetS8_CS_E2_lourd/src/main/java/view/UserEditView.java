@@ -184,7 +184,7 @@ public class UserEditView extends JFrame {
         DAOUtilisateur dao = new DAOUtilisateur();
         boolean success = dao.updateUser(updated);
 
-        // 🔍 Enregistrement du log
+        //  Enregistrement du log
         Utilisateur admin = utils.Session.getUtilisateur();
 
         String ancienneValeur = utilisateur.getNomComplet() + " - " + utilisateur.getEmail() + " - " + utilisateur.getFonction();
@@ -202,10 +202,14 @@ public class UserEditView extends JFrame {
             java.time.LocalDateTime.now(),
             success
         );
+        Utilisateur nouvelleCible = new Utilisateur();
+        nouvelleCible.setNom(nom);
+        nouvelleCible.setPrenom(prenom);
+        log.setNomCible(nouvelleCible.getNom() + " " + nouvelleCible.getPrenom());
 
         LogAdminDAO.enregistrerLog(log, this);
 
-        // 🧾 Message pour l’admin
+        //  Message pour l’admin
         if (success) {
             JOptionPane.showMessageDialog(this, "Utilisateur mis à jour.");
             NavigationHelper.afficherFenetre(UserEditView.this, new UserListView());

@@ -79,7 +79,7 @@ public class HistoriqueConnexionView extends JFrame {
 
         logTable = new JTable(new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Nom", "Prénom", "Email", "Fonction", "Date", "Heure", "Adresse IP", "Statut"}
+                new String[]{"Nom", "Prénom", "Email", "Fonction", "Date", "Heure", "Adresse IP", "Statut", "Source Connexion"}
         )) {
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -156,7 +156,8 @@ public class HistoriqueConnexionView extends JFrame {
                     log.getDateConnexion().format(dateFormatter),
                     log.getDateConnexion().format(heureFormatter),
                     log.getAdresseIp(),
-                    log.getStatut()
+                    log.getStatut(),
+                    log.getSourceConnexion() 
             });
         }
     }

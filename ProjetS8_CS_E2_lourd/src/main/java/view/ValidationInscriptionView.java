@@ -10,7 +10,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
-
+import model.LogAdmin;
+import dao.LogAdminDAO;
 public class ValidationInscriptionView extends JFrame {
 
     private JTable table;
@@ -152,9 +153,34 @@ public class ValidationInscriptionView extends JFrame {
             if (row == -1) return;
             int id = (int) tableModel.getValueAt(row, 0);
             DAOUtilisateur dao = new DAOUtilisateur();
-            dao.validerInscription(id);
+            
+            boolean success = dao.validerInscription(id);
+
+            Utilisateur admin = utils.Session.getUtilisateur();
+            Utilisateur utilisateurCible = dao.findById(id); 
+
+            LogAdmin log = new LogAdmin(
+                0,
+                admin,
+                "VALIDATION",
+                "Utilisateur",
+                id,
+                "non validé",
+                "validé",
+                LogAdminDAO.getIpLocale(),
+                java.time.LocalDateTime.now(),
+                success
+            );
+
+            if (utilisateurCible != null) {
+                log.setNomCible(utilisateurCible.getNom() + " " + utilisateurCible.getPrenom());
+            }
+
+            LogAdminDAO.enregistrerLog(log, this);
+
             chargerUtilisateurs();
         });
+
 
         backButton.addActionListener(e -> NavigationHelper.retourDashboard(this));
 

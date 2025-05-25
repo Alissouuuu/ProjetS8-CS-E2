@@ -2,18 +2,25 @@ package dao;
 
 import model.LogAdmin;
 import model.Utilisateur;
+
+import javax.swing.*;
+import java.awt.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.Component;
-import javax.swing.JOptionPane;
 
 public class LogAdminDAO {
 
     private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
+
+    private static final String BASE_SELECT =
+        "SELECT la.id_log, la.id_admin, la.type_action, la.type_entite, la.id_entite, " +
+        "la.ancienne_valeur, la.nouvelle_valeur, la.adresse_IP, la.dateHeureAction, la.reussite, la.nom_cible, " +
+        "u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
+        "FROM log_admin la JOIN user u ON la.id_admin = u.id_user ";
 
     // Enregistrer une action admin
     public static void enregistrerLog(LogAdmin log, Component component) {
@@ -23,8 +30,8 @@ public class LogAdminDAO {
         }
 
         String sql = "INSERT INTO log_admin (id_admin, type_action, type_entite, id_entite, " +
-                     "ancienne_valeur, nouvelle_valeur, adresse_IP, dateHeureAction, reussite) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?)";
+                     "ancienne_valeur, nouvelle_valeur, adresse_IP, dateHeureAction, reussite, nom_cible) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -37,7 +44,7 @@ public class LogAdminDAO {
             stmt.setString(6, log.getNouvelle_valeur());
             stmt.setString(7, log.getAdresse_IP());
             stmt.setBoolean(8, log.isReussite());
-
+            stmt.setString(9, log.getNomCible());
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -46,12 +53,9 @@ public class LogAdminDAO {
         }
     }
 
-    // Lire tous les logs
     public List<LogAdmin> findAllLogs() {
         List<LogAdmin> logs = new ArrayList<>();
-        String sql = "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
-                     "FROM log_admin la JOIN user u ON la.id_admin = u.id_user " +
-                     "ORDER BY la.dateHeureAction DESC";
+        String sql = BASE_SELECT + "ORDER BY la.dateHeureAction DESC";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -68,12 +72,9 @@ public class LogAdminDAO {
         return logs;
     }
 
-    // Lire les logs d’un administrateur spécifique
     public List<LogAdmin> findByAdmin(int idAdmin) {
         List<LogAdmin> logs = new ArrayList<>();
-        String sql = "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
-                     "FROM log_admin la JOIN user u ON la.id_admin = u.id_user " +
-                     "WHERE la.id_admin = ? ORDER BY la.dateHeureAction DESC";
+        String sql = BASE_SELECT + "WHERE la.id_admin = ? ORDER BY la.dateHeureAction DESC";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -93,13 +94,9 @@ public class LogAdminDAO {
         return logs;
     }
 
-    // Lire les logs entre deux dates
     public List<LogAdmin> findBetweenDates(LocalDateTime dateDebut, LocalDateTime dateFin) {
         List<LogAdmin> logs = new ArrayList<>();
-        String sql = "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
-                     "FROM log_admin la JOIN user u ON la.id_admin = u.id_user " +
-                     "WHERE la.dateHeureAction BETWEEN ? AND ? " +
-                     "ORDER BY la.dateHeureAction DESC";
+        String sql = BASE_SELECT + "WHERE la.dateHeureAction BETWEEN ? AND ? ORDER BY la.dateHeureAction DESC";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -120,14 +117,9 @@ public class LogAdminDAO {
         return logs;
     }
 
-    // Filtres dynamiques comme dans LogConnexionDAO
     public List<LogAdmin> findLogsSortedBy(String statut, String nomRecherche, LocalDateTime dateDebut, LocalDateTime dateFin, boolean ordreCroissant) {
         List<LogAdmin> logs = new ArrayList<>();
-
-        StringBuilder sql = new StringBuilder(
-            "SELECT la.*, u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
-            "FROM log_admin la JOIN user u ON la.id_admin = u.id_user "
-        );
+        StringBuilder sql = new StringBuilder(BASE_SELECT);
 
         boolean hasWhere = false;
 
@@ -177,7 +169,6 @@ public class LogAdminDAO {
         return logs;
     }
 
-    // Construction d’un objet LogAdmin à partir du ResultSet
     private LogAdmin construireLog(ResultSet rs) throws SQLException {
         Utilisateur admin = new Utilisateur(
             rs.getInt("id_user"),
@@ -188,7 +179,7 @@ public class LogAdminDAO {
             rs.getString("fonction")
         );
 
-        return new LogAdmin(
+        LogAdmin log = new LogAdmin(
             rs.getInt("id_log"),
             admin,
             rs.getString("type_action"),
@@ -200,9 +191,11 @@ public class LogAdminDAO {
             rs.getTimestamp("dateHeureAction").toLocalDateTime(),
             rs.getBoolean("reussite")
         );
+
+        log.setNomCible(rs.getString("nom_cible"));
+        return log;
     }
 
-    // IP locale
     public static String getIpLocale() {
         try {
             for (java.net.NetworkInterface ni : java.util.Collections.list(java.net.NetworkInterface.getNetworkInterfaces())) {

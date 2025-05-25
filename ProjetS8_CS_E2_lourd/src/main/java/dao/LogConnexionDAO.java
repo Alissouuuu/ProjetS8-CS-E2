@@ -15,12 +15,12 @@ public class LogConnexionDAO {
 
     private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
 
     public List<LogConnexion> findLogsSortedBy(String tri, String nomRecherche, LocalDateTime dateDebut, LocalDateTime dateFin) {
         List<LogConnexion> logs = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-            "SELECT l.id_connexion, l.adresse_ip, l.tentative_connexion_echouee, l.date_connexion, " +
+            "SELECT l.id_connexion, l.adresse_ip, l.tentative_connexion_echouee, l.date_connexion,l.source_connexion, " +
             "u.id_user, u.nom, u.prenom, u.email, u.role, u.fonction " +
             "FROM log_connexion l JOIN user u ON l.id_user = u.id_user "
         );
@@ -81,7 +81,8 @@ public class LogConnexionDAO {
                         rs.getString("adresse_ip"),
                         rs.getInt("tentative_connexion_echouee") == 1,
                         rs.getTimestamp("date_connexion").toLocalDateTime(),
-                        user
+                        user,
+                        rs.getString("source_connexion") 
                     );
 
                     logs.add(log);
@@ -104,7 +105,8 @@ public class LogConnexionDAO {
         String ip = getIpLocale();
         System.out.println("IP utilisée pour log : " + ip);
 
-        String sql = "INSERT INTO log_connexion (adresse_ip, tentative_connexion_echouee, date_connexion, id_user) VALUES (?, ?, NOW(), ?)";
+        String sql = "INSERT INTO log_connexion (adresse_ip, tentative_connexion_echouee, date_connexion, id_user, source_connexion) VALUES (?, ?, NOW(), ?, ?)";
+        System.out.println("Connexion MySQL avec user=" + USER + ", password=" + (PASSWORD.isEmpty() ? "<vide>" : PASSWORD));
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -112,6 +114,7 @@ public class LogConnexionDAO {
             stmt.setString(1, ip);
             stmt.setInt(2, success ? 0 : 1);
             stmt.setInt(3, userId);
+            stmt.setString(4, "Application");  // on précise que ça vient du client lourd
             stmt.executeUpdate();
 
         } catch (SQLException e) {
