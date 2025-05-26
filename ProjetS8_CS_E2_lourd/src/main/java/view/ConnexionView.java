@@ -58,7 +58,7 @@ public class ConnexionView extends JFrame {
         contentPane.add(panel);
 
         JLabel LabelConAdmin = new JLabel("Connexion Administrateur");
-        LabelConAdmin.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        LabelConAdmin.setFont(new Font("Calibri", Font.BOLD, 24));
         LabelConAdmin.setBounds(50, 10, 300, 30);
         panel.add(LabelConAdmin);
 
@@ -68,7 +68,7 @@ public class ConnexionView extends JFrame {
         panel.add(LabelLogin);
 
         textFieldLogin = new JTextField();
-        textFieldLogin.setBounds(140, 70, 200, 30);
+        textFieldLogin.setBounds(170, 65, 200, 30);
         panel.add(textFieldLogin);
         textFieldLogin.setColumns(10);
 
@@ -78,7 +78,7 @@ public class ConnexionView extends JFrame {
         panel.add(LabelPassword);
 
         passwordField = new JPasswordField();
-        passwordField.setBounds(140, 120, 200, 30);
+        passwordField.setBounds(170, 115, 200, 30);
         panel.add(passwordField);
 
         JButton ButtonSeConnecter = new JButton("Se connecter");
@@ -87,8 +87,10 @@ public class ConnexionView extends JFrame {
         panel.add(ButtonSeConnecter);
 
         JLabel LabelMsgErreur = new JLabel("");
-        LabelMsgErreur.setFont(new Font("Arial", Font.BOLD, 14));
+        LabelMsgErreur.setFont(new Font("Arial", Font.BOLD, 18));
         LabelMsgErreur.setForeground(Color.RED);
+        LabelMsgErreur.setOpaque(false);
+        LabelMsgErreur.setBackground(new Color(0, 0, 0, 0));
         LabelMsgErreur.setBounds(20, 250, 360, 25);
         panel.add(LabelMsgErreur);
 
@@ -115,6 +117,12 @@ public class ConnexionView extends JFrame {
                     dispose();
                     NavigationHelper.afficherFenetre(ConnexionView.this, new AdminDashboardView());
                 } else {
+                	
+                	LabelMsgErreur.setForeground(Color.RED);
+                    LabelMsgErreur.setOpaque(true);
+                    LabelMsgErreur.setBackground(Color.WHITE);
+                    LabelMsgErreur.setBounds(20, 250, 360, 25);
+                    panel.add(LabelMsgErreur);
                     LabelMsgErreur.setText("Identifiants incorrects");
                     System.out.println("Connexion échouée. Message affiché à l'utilisateur.");
                 }

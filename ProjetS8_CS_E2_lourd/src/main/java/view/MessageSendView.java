@@ -1,9 +1,12 @@
 package view;
 
 import dao.DAOMessage;
+
 import dao.DAOUtilisateur;
+
 import dao.LogAdminDAO;
 import model.LogAdmin;
+
 import model.Message;
 import model.Utilisateur;
 import utils.NavigationHelper;
@@ -110,10 +113,40 @@ public class MessageSendView extends JFrame {
                 }
 
                 DAOMessage dao = new DAOMessage();
+                DAOUtilisateur daoUtilisateur = new DAOUtilisateur();
                 LocalDateTime now = LocalDateTime.now();
 
-                for (String email : destinataires) {
-                    Message msg = new Message(sujet, contenu, email.trim(), expediteur.getNomComplet(), now);
+
+
+                for (String rawEmail : destinataires) {
+                    String email = rawEmail.trim();
+
+                    if (!estEmailValide(email)) {
+                        JOptionPane.showMessageDialog(MessageSendView.this, "Email invalide : " + email, "Erreur", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (!daoUtilisateur.emailExiste(email)) {
+                        JOptionPane.showMessageDialog(MessageSendView.this, "Aucun utilisateur avec l'email : " + email, "Erreur", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    
+                    System.out.println("Sujet : " + sujet);
+                    System.out.println("Contenu : " + contenu);
+                    System.out.println("Destinataire : " + email);
+
+
+                 // Envoi de l'e-mail
+                    boolean ok = utils.MailSender.envoyerEmail(sujet, contenu, email);
+
+                    if (!ok) {
+                        JOptionPane.showMessageDialog(MessageSendView.this, "Échec de l'envoi à : " + email, "Erreur", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // Sauvegarde dans la base uniquement si envoi OK
+                    Message msg = new Message(sujet, contenu, email, expediteur.getNomComplet(), now);
+
                     dao.envoyerMessage(msg);
 
                     // Récupérer l'utilisateur cible
@@ -143,7 +176,7 @@ public class MessageSendView extends JFrame {
                 }
 
 
-                JOptionPane.showMessageDialog(MessageSendView.this, "Message(s) envoyé(s) avec succès.");
+                JOptionPane.showMessageDialog(MessageSendView.this, "Message envoyé avec succès.");
                 dispose();
                 NavigationHelper.afficherFenetre(MessageSendView.this, new MessageListView());
             }
@@ -155,7 +188,23 @@ public class MessageSendView extends JFrame {
                 NavigationHelper.afficherFenetre(MessageSendView.this, new MessageListView());
             }
         });
+        
+        
     }
+    
+ // Constructeur avec destinataire pré-rempli
+    public MessageSendView(Utilisateur expediteur, String emailDestinataire) {
+        this(expediteur); // Appel du constructeur principal
+        destinataireField.setText(emailDestinataire); // Préremplir le champ
+        destinataireField.setEditable(false); // Désactive l'édition du champ
+        destinataireField.setBackground(new Color(230, 230, 230));
+    }
+
+    
+    private boolean estEmailValide(String email) {
+        return email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$");
+    }
+
 
    
 }

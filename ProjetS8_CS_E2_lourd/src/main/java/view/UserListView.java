@@ -20,7 +20,7 @@ import java.util.List;
 public class UserListView extends JFrame {
 
     private JTextField nomField;
-    private JTextField fonctionField;
+    private JComboBox<String> fonctionComboBox;
     private JComboBox<String> roleComboBox;
     private JTable userTable;
     private JButton searchButton;
@@ -48,7 +48,12 @@ public class UserListView extends JFrame {
         filterPanel.setBackground(new Color(173, 216, 230, 190));
 
         nomField = new JTextField();
-        fonctionField = new JTextField();
+        String[] fonctions = {
+        	    "Toutes", "Annimateur", "Assistant", "Bénévole", "Coach", "Maire",
+        	    "Président de club", "Président de fédération", "Superviseur de plateforme", "Trésorier"
+        };
+        fonctionComboBox = new JComboBox<>(fonctions);
+
 
         DAOUtilisateur dao = new DAOUtilisateur();
         List<String> roles = dao.findAllRoleLabels();
@@ -60,7 +65,8 @@ public class UserListView extends JFrame {
         filterPanel.add(new JLabel("Rôle :"));
         filterPanel.add(roleComboBox);
         filterPanel.add(new JLabel("Fonction :"));
-        filterPanel.add(fonctionField);
+        filterPanel.add(fonctionComboBox);
+
 
         searchButton = new JButton("Rechercher");
         filterPanel.add(new JLabel());
@@ -232,7 +238,12 @@ public class UserListView extends JFrame {
 
     private void chargerUtilisateursFiltres() {
         String nom = nomField.getText();
-        String fonction = fonctionField.getText();
+        
+        String fonction = (String) fonctionComboBox.getSelectedItem();
+        if (fonction.equals("Toutes")) {
+            fonction = "";
+        }
+
         String role = (String) roleComboBox.getSelectedItem();
         if (role.equals("Tous")) {
             role = "";

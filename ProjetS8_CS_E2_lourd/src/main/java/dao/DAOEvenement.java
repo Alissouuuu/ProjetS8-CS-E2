@@ -27,13 +27,14 @@ public class DAOEvenement {
     public List<Evenement> getAllEvenementsAvecNoms() {
         List<Evenement> evenements = new ArrayList<>();
         String sql = """
-        	    SELECT e.type, e.nbr_max, e.date, e.heure, e.lieu,
-        	           u.nom AS nom_user, u.prenom AS prenom_user, u.email,
-        	           c.lib_club AS nom_club
-        	    FROM evenement e
-        	    JOIN user u ON e.id_user = u.id_user
-        	    LEFT JOIN club c ON e.id_club = c.id_club
-        	    ORDER BY e.date, e.heure
+        	    SELECT e.id_evenement, e.type, e.nbr_max, e.date, e.heure, e.lieu, e.description,
+				u.nom AS nom_user, u.prenom AS prenom_user, u.email,
+				c.lib_club AS nom_club
+				FROM evenement e
+				JOIN user u ON e.id_user = u.id_user
+				LEFT JOIN club c ON e.id_club = c.id_club
+				ORDER BY e.date, e.heure
+
         	""";
 
 
@@ -41,20 +42,22 @@ public class DAOEvenement {
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            while (rs.next()) {
-            	String type = rs.getString("type");
-            	int nbrMax = rs.getInt("nbr_max");
-            	LocalDate date = rs.getDate("date").toLocalDate();
-            	LocalTime heure = rs.getTime("heure").toLocalTime();
-            	String lieu = rs.getString("lieu");
-            	String nomResponsable = rs.getString("prenom_user") + " " + rs.getString("nom_user");
-            	String nomClub = rs.getString("nom_club");
-            	String email = rs.getString("email");
+        	while (rs.next()) {
+        	    Evenement evt = new Evenement(
+        	        rs.getInt("id_evenement"),
+        	        rs.getString("type"),
+        	        rs.getDate("date").toLocalDate(),
+        	        rs.getTime("heure").toLocalTime(),
+        	        rs.getString("lieu"),
+        	        rs.getInt("nbr_max"),
+        	        rs.getString("description"),
+        	        rs.getString("prenom_user") + " " + rs.getString("nom_user"),
+        	        rs.getString("nom_club"),
+        	        rs.getString("email")
+        	    );
+        	    evenements.add(evt);
+        	}
 
-            	Evenement evt = new Evenement(type, date, heure, lieu, nbrMax, nomResponsable, nomClub, email);
-
-                evenements.add(evt);
-            }
 
         } catch (SQLException e) {
             e.printStackTrace();

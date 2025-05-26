@@ -16,6 +16,7 @@ public class LogAdminDAO {
     private static final String USER = "root";
     private static final String PASSWORD = "root";
 
+
     private static final String BASE_SELECT =
         "SELECT la.id_log, la.id_admin, la.type_action, la.type_entite, la.id_entite, " +
         "la.ancienne_valeur, la.nouvelle_valeur, la.adresse_IP, la.dateHeureAction, la.reussite, la.nom_cible, " +

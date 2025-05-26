@@ -44,7 +44,7 @@ public class ValidationInscriptionView extends JFrame {
             }
         };
         mainPanel.setOpaque(false);
-        mainPanel.setPreferredSize(new Dimension(950, 600));
+        mainPanel.setPreferredSize(new Dimension(850, 600));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Panel des filtres
@@ -145,7 +145,8 @@ public class ValidationInscriptionView extends JFrame {
         	int row = table.getSelectedRow();
             if (row == -1) return;
             int userId = (int) tableModel.getValueAt(row, 0);
-            NavigationHelper.afficherFenetre(ValidationInscriptionView.this, new VoirPieceJustificativeView(userId));
+            String email = (String) tableModel.getValueAt(row, 3);
+            NavigationHelper.afficherFenetre(ValidationInscriptionView.this, new VoirPieceJustificativeView(userId, email));
         });
 
         validerButton.addActionListener(e -> {
