@@ -1,3 +1,8 @@
+/**
+ * @author imane
+ * @version 1.2
+ * servlet qui gère les inscritptions
+ */
 package contolleur;
 
 import jakarta.servlet.RequestDispatcher;
@@ -10,10 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
+import org.mindrot.jbcrypt.BCrypt;
 
 import dao.UserDAO;
 import model.User;
@@ -27,13 +31,15 @@ import util.FichierValidateur;
  * @version 1.0
  */
 @WebServlet("/inscription")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024, // 1 MB
-		maxFileSize = 1024 * 1024 * 10, // 10 MB
-		maxRequestSize = 1024 * 1024 * 15 // 15 MB
+@MultipartConfig(maxRequestSize = 1024 * 1024 * 5 // 5 MB
 )
 public class InscriptionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserDAO userDAO;
+	String created;
+	boolean inserted;
+	User user = new User();
+	boolean hasError = false;
 
 	@Override
 	public void init() {
@@ -64,78 +70,94 @@ public class InscriptionServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		User user = new User();
 
 		// recuperation des infos reçues
 		String nom = request.getParameter("nom");
 		String prenom = request.getParameter("prenom");
 		String email = request.getParameter("email");
-		String fonction = request.getParameter("metier");
+		String fonction = request.getParameter("fonction");
+
 		String password = request.getParameter("password");
 		// verification des conformité des données
 		// les champs nom et prenom accèptent les caractères miniscules, majiscules et
 		// les tirets -
-		if (!nom.matches("^[A-Za-z- ]+$") || !prenom.matches("^[A-Za-z- ]+$") || !fonction.matches("^[A-Za-z- ]+$")) {
-			request.setAttribute("erreur", "Le nom et le prénom ne doivent contenir que des lettres et/ou des tirets.");
-			request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription.jsp").forward(request, response);
-			return;
+		if (!nom.matches("^[A-Za-z- ]+$") || !prenom.matches("^[A-Za-z- ]+$")) {
+			request.setAttribute("erreurNom", "Le nom  ne doit contenir que des lettres et/ou des tirets.");
 		} else {
 			user.setNom(nom);
 			user.setPrenom(prenom);
-			user.setFonction(fonction);
 		}
+		if (!prenom.matches("^[A-Za-z- ]+$")) {
+			request.setAttribute("erreurPrenom", "Le prénom ne doit contenir que des lettres et/ou des tirets.");
+			hasError = true;
+
+		} else {
+			user.setPrenom(prenom);
+		}
+
 //verification de l'email : 1.verififer s'il est valide après verifier  s'il faut verifier si l'email existe deja dans la bdd
 		boolean used = userDAO.emailEstUtilise(email);
 		if (email == null || !email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") || used) {
-			request.setAttribute("erreur", "Adresse email invalide.");
-			request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription.jsp").forward(request, response);
-			return;
+			request.setAttribute("erreurEmail", "Adresse email invalide.");
+			hasError = true;
+
 		} else
 			user.setEmail(email);
 
 		// verifier si le mdp recupere est une chaine de caractères et des chiifres : si
 		// oui on le hache et le stocker dans la bdd
-		if (password != null || estValideMotDePasse(password)) {
-			String mdpHashe=hashPassword(password);
+		if (password != null && estValideMotDePasse(password)) {
+			String mdpHashe = hashPassword(password);
 			user.setMdp(mdpHashe);
 
 		} else {
-			request.setAttribute("erreur", "Mot de passe invalide.");
-			request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription.jsp").forward(request, response);
-
+			request.setAttribute("erreurMdp", "Mot de passe invalide.");
+			hasError = true;
 		}
+// fonction choisie ou pas
+		if (fonction == null || fonction.trim().isEmpty()) {
+			request.setAttribute("erreurFonction", "Vous devez choisir une fonction.");
+			hasError = true;
 
+		} else
+			user.setFonction(fonction);
 		// Traitons le fichier justificatif
 		Part filePart = request.getPart("file");
 
 		// lecture du fichier
 		if (filePart == null || filePart.getSize() == 0) {
-			request.setAttribute("erreur", "Aucun fichier n'a été téléchargé.");
-			return;
+			request.setAttribute("erreurFile", "Aucun fichier n'a été téléchargé.");
+			hasError = true;
+		} else {
+			if (!FichierValidateur.isFileValid(filePart)) {
+				request.setAttribute("erreurFile2",
+						"Le fichier téléchargé est invalide. Veuillez respecter les critères.");
+				hasError = true;
+			}
 		}
-		if (!FichierValidateur.isFileValid(filePart)) {
-			request.setAttribute("erreur", "Le fichier téléchargé est invalide. Veuillez respecter les critères.");
-
-			return;
-		}
-		
 		try {
-            byte[] justificatif = FichierValidateur.processFile(filePart);
-            // Ici, tu peux enregistrer le fichier ou effectuer d'autres actions nécessaires
-    		user.setJustificatifDonnees(justificatif);
+			byte[] justificatif = FichierValidateur.processFile(filePart);
+			user.setJustificatifDonnees(justificatif);
 
 		} catch (IOException e) {
-            response.getWriter().println("Erreur lors du traitement du fichier : " + e.getMessage());
-        }
-		user.setRole(0); // elu par defaut
-		user.setStatutDemande(2); // par défaut en attente
+			response.getWriter().println("Erreur lors du traitement du fichier : " + e.getMessage());
+		}
+		if (hasError) {
+			request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription.jsp").forward(request, response);
+			return;
+		}
+		user.setRole(0); // visiteur par defaut
+		user.setStatutDemande(100); // par défaut en attente
 
 		// creation d' un nouvel utilisateur
 
 		try {
-			boolean inserted = userDAO.create(user);
+			inserted = userDAO.create(user);
+
 			if (inserted) {
-				response.sendRedirect(request.getContextPath() + "/login");
+				request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription-success.jsp").forward(request,
+						response);
+				return;
 			} else {
 				request.setAttribute("erreur", "Erreur lors de l'enregistrement. Réessayez.");
 				request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription.jsp").forward(request, response);
@@ -146,16 +168,7 @@ public class InscriptionServlet extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription.jsp").forward(request, response);
 		}
 
-		/*
-		 * } else { // Erreur lors de l'inscription request.setAttribute("erreur",
-		 * "Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
-		 * RequestDispatcher dispatcher =
-		 * request.getRequestDispatcher("/vues/inscription.jsp");
-		 * dispatcher.forward(request, response); }
-		 */
 	}
-
-
 
 	public static boolean estValideMotDePasse(String motDePasse) {
 		// verifier d'abord si le mdp contient des caractères miniscule et majiscules,
@@ -172,16 +185,6 @@ public class InscriptionServlet extends HttpServlet {
 	}
 
 	public static String hashPassword(String password) {
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			byte[] hashedBytes = md.digest(password.getBytes());
-			StringBuilder sb = new StringBuilder();
-			for (byte b : hashedBytes) {
-				sb.append(String.format("%02x", b));
-			}
-			return sb.toString();
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("Erreur de hachage", e);
-		}
+		return BCrypt.hashpw(password, BCrypt.gensalt());
 	}
 }
