@@ -3,13 +3,14 @@ package contolleur;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
-
+import java.util.regex.Pattern;
+import org.mindrot.jbcrypt.BCrypt;
 import dao.UserDAO;
 import model.User;
 
@@ -23,9 +24,12 @@ import model.User;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final int MAX_TENTATIVES = 3;
 
 	private UserDAO userDAO;
+	private User user;
+	private boolean used;
+	private String loginEmail;
+	private String loginPassword;
 
 	/**
 	 * initialisation du dao
@@ -48,67 +52,82 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		// verifions si le user est déja connecté
-		//HttpSession session = request.getSession(false);
-	
-		// Afficher la page de connexion
+
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/vues/connexion/login.jsp");
 		dispatcher.forward(request, response);
+		
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String loginEmail = request.getParameter("loginEmail");
-		String loginPassword = request.getParameter("loginPassword");
-		if (loginEmail.equals("admin") && loginPassword.equals("123")) {
-            request.getSession().setAttribute("user", loginEmail);
-            response.sendRedirect(request.getContextPath()+"/index"); 
-        } else {
-            request.setAttribute("error", "Identifiants invalides");
-            System.out.println("erreur");
-            request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription.jsp").forward(request, response);
-        }
-	}
-	
-	
-	
-		// TODO Auto-generated method stub
-		/*doGet(request, response);
-		// Récupérer les paramètres du formulaire
-		String email = request.getParameter("loginEmail");
-		String password = request.getParameter("loginPassword");
-		User user = userDAO.authenticate(email, password);
-		if (user != null) {
-			// faut verifier le role
-			// aussi il faut reinitialiser le nbr de tentatievs de connexion
-			// creation une session pour l'utilisateur
-			HttpSession session = request.getSession();
-			session.setAttribute("user", user);
-			// Rediriger vers la page d'accueil
-			response.sendRedirect(request.getContextPath() + "/accueil");
+//recuperons l email et le mdp du login et les verifions  leur conformité avec nos exigences
+		loginEmail = request.getParameter("loginEmail");
+		loginPassword = request.getParameter("loginPassword");
+		used = userDAO.emailEstUtilise(loginEmail);
+		if (loginEmail == null || !loginEmail.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") || used) {
+			request.setAttribute("erreur", "Adresse email invalide.");
+			request.getRequestDispatcher("/WEB-INF/vues/connexion/login.jsp").forward(request, response);
+			return;
+		}
+		if (loginPassword == null || !estValideMotDePasse(loginPassword)) {
+			request.setAttribute("error", "Mot de passe invalide.");
+			request.getRequestDispatcher("/WEB-INF/vues/connexion/login.jsp").forward(request, response);
+			return;
+		}
+		// 2 eme filtre verfication BDD
 
-		} else {
-			//incrementer le nbr de tentatives
-			// int tentatives = logConnexionDAO.incrementTentatives(adresseIp);
-            //  le message d'erreur
-            String message = "Email ou mot de passe incorrect.";
-            /*if (MAX_TENTATIVES - tentatives > 0) {
-                message += " Il vous reste " + (MAX_TENTATIVES - tentatives) + " tentative(s).";
-            } else {
-                message = "Trop de tentatives échouées. Veuillez réessayer plus tard.";
-            }*/
-            
-            // Afficher le message d'erreur
-          //  request.setAttribute("erreur", message);
-         //   RequestDispatcher dispatcher = request.getRequestDispatcher("/vues/login.jsp");
-          //  dispatcher.forward(request, response);
-		//}
-	//}*/
+		user = userDAO.findByEmail(loginEmail);
+		if (user != null && this.verifyPassword(loginPassword, user.getMdp())) {
+
+			HttpSession session = request.getSession(true);
+	        session.setAttribute("userId", user.getIdUser());
+
+	        // creation cookie rôle
+	        int role = user.getRole();
+	        Cookie roleCookie = new Cookie("userRole", String.valueOf(role));
+	        roleCookie.setMaxAge(60 * 60); // 1h
+	        roleCookie.setPath("/");
+	        response.addCookie(roleCookie);
+		
+	        // redirection vers servlet selon le rôle
+	        if (role == 2) {
+	            response.sendRedirect(request.getContextPath() + "/indexElu");
+	        } else if (role == 1) {
+	            response.sendRedirect(request.getContextPath() + "/indexMembre");
+	        } else {
+	            response.sendRedirect(request.getContextPath() + "/login");
+	        }
+		
+		}else {
+	        request.setAttribute("error", "Email ou mot de passe incorrect.");
+	        request.getRequestDispatcher("/WEB-INF/vues/connexion/login.jsp").forward(request, response);
+	    }
+			
+		
+	}
+
+	public static boolean estValideMotDePasse(String motDePasse) {
+		// verifier d'abord si le mdp contient des caractères miniscule et majiscules,
+		// des chiffres et des caracères speciaux
+		if (!Pattern.compile("[a-zA-Z]").matcher(motDePasse).find()
+				|| !Pattern.compile("[0-9]").matcher(motDePasse).find()
+				|| !Pattern.compile("[@/?!']").matcher(motDePasse).find()) {
+			System.out.println(
+					"Le mot de passe doit contenir au moins une lettre, un chiffre et un caractère spécial (@/?!').");
+			return false;
+		}
+		return true;
+
+	}
+
+	public boolean verifyPassword(String password, String hashed) {
+		return BCrypt.checkpw(password, hashed);
+	}
+
 
 }
