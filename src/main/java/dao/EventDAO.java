@@ -1,3 +1,8 @@
+/**
+ * @author imane
+ * @version 1.1
+ * DAO des events
+ */
 package dao;
 
 import model.Evenement;

@@ -1,3 +1,8 @@
+/**
+ * @author imane
+ * @version 1.1
+ * DAO des régions
+ */
 package dao;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,7 +14,7 @@ import util.DBConnexion;
 import java.sql.*;
 public class RegionDAO {
 	
-	public List<Region> getListRegion() throws SQLException, ClassNotFoundException {
+	public List<Region> getListeRegion() throws SQLException, ClassNotFoundException {
 	    List<Region> regions = new ArrayList<>();
 	    
 	    //System.out.println(">> Entrée dans getListRegion()");

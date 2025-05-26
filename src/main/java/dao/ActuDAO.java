@@ -1,3 +1,8 @@
+/**
+ * @author imane
+ * @version 1.1
+ * DAO des actualités
+ */
 package dao;
 
 import java.sql.Connection;

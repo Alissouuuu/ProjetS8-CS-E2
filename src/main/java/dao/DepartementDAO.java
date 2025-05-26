@@ -1,3 +1,8 @@
+/**
+ * @author imane
+ * @version 1.1
+ * DAO des departements
+ */
 package dao;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +12,8 @@ import util.DBConnexion;
 
 import java.sql.*;
 public class DepartementDAO {
-	public List< Departement> getListDepartement() throws SQLException, ClassNotFoundException {
+	//rename french
+	public List< Departement> getListeDepartement() throws SQLException, ClassNotFoundException {
 	    List<Departement>  departements = new ArrayList<>();
 	    
 	    
