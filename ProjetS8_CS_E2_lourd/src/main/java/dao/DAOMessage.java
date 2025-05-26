@@ -10,7 +10,7 @@ import java.util.List;
 public class DAOMessage {
     private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
-    private static final String PASSWORD = "root";
+    private static final String PASSWORD = "";
 
     public boolean enregistrerMessage(Message message) {
         String sql = "INSERT INTO messages (sujet, contenu, destinataire, date_envoi) VALUES (?, ?, ?, ?)";

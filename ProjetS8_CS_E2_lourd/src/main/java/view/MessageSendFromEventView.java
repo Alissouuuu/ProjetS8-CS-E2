@@ -1,6 +1,10 @@
 package view;
 
 import dao.DAOMessage;
+import utils.MailSender;
+
+import dao.DAOUtilisateur;
+import model.Utilisateur;
 import model.Evenement;
 import model.Message;
 import utils.NavigationHelper;
@@ -16,8 +20,10 @@ public class MessageSendFromEventView extends JFrame {
     private JTextField destinataireField;
     private JButton envoyerButton;
     private JButton annulerButton;
+    private Utilisateur expediteur;
 
-    public MessageSendFromEventView(Evenement evenement) {
+    public MessageSendFromEventView(Evenement evenement, Utilisateur expediteur) {
+    	this.expediteur = expediteur;
         setTitle("Envoyer un message");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(800, 600);
@@ -101,13 +107,23 @@ public class MessageSendFromEventView extends JFrame {
                 return;
             }
 
+         // Envoi réel de l’e-mail
+            boolean ok = utils.MailSender.envoyerEmail(sujet, contenu, destinataire);
+
+            if (!ok) {
+                JOptionPane.showMessageDialog(this, "Échec de l'envoi de l'e-mail à : " + destinataire, "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Si envoi OK, on enregistre le message dans la base
             DAOMessage dao = new DAOMessage();
-            Message msg = new Message(sujet, contenu, destinataire, evenement.getNomResponsable(), LocalDateTime.now());
+            Message msg = new Message(sujet, contenu, destinataire, expediteur.getNomComplet(), LocalDateTime.now());
             dao.envoyerMessage(msg);
 
             JOptionPane.showMessageDialog(this, "Message envoyé avec succès.");
             dispose();
             NavigationHelper.afficherFenetre(this, new MessageListView());
+
         });
 
         annulerButton.addActionListener((ActionEvent e) -> {

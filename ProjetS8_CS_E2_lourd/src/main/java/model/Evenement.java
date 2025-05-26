@@ -62,6 +62,22 @@ public class Evenement {
         this.nomClub = nomClub;
         this.email=email;
     }
+    
+    public Evenement(int id, String type, LocalDate date, LocalTime heure, String lieu,
+            int nbrMax, String description, String nomResponsable,
+            String nomClub, String email) {
+			this.id = id;
+			this.type = type;
+			this.date = date;
+			this.heure = heure;
+			this.lieu = lieu;
+			this.nbrMax = nbrMax;
+			this.description = description;
+			this.nomResponsable = nomResponsable;
+			this.nomClub = nomClub;
+			this.email = email;
+	}
+
 
     // --- Getters & Setters ---
 

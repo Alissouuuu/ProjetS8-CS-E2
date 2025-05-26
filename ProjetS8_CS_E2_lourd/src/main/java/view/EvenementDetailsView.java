@@ -125,7 +125,15 @@ public class EvenementDetailsView extends JFrame {
         });
         messageButton.addActionListener(e -> {
             
-                NavigationHelper.afficherFenetre(this, new MessageSendFromEventView(evenement));
+        	Utilisateur utilisateurActif = Session.getUtilisateur();
+            if (utilisateurActif != null) {
+                NavigationHelper.afficherFenetre(EvenementDetailsView.this,
+                    new MessageSendFromEventView(evenement, utilisateurActif));
+            } else {
+                JOptionPane.showMessageDialog(this, "Aucun utilisateur connecté.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        	
+                //NavigationHelper.afficherFenetre(this, new MessageSendFromEventView(, ));
            
         });
 

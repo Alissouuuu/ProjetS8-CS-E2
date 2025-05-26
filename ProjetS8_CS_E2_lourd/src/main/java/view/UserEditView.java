@@ -177,12 +177,31 @@ public class UserEditView extends JFrame {
         String roleStr = (String) roleComboBox.getSelectedItem();
         int role = convertirRoleEnInt(roleStr);
 
+        // Validation email
+        if (!estEmailValide(email)) {
+            JOptionPane.showMessageDialog(this, "Format d'email invalide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+
+        //  Vérification email en base AVANT modification
+        DAOUtilisateur dao = new DAOUtilisateur();
+        
+        if (!utilisateur.getEmail().equals(email) && dao.emailExiste(email)) {
+            JOptionPane.showMessageDialog(this, "Cet email est déjà utilisé par un autre utilisateur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        //  Création de l'objet modifié
         Utilisateur updated = new Utilisateur(
             utilisateur.getId(), nom, prenom, email, role, fonction
         );
 
-        DAOUtilisateur dao = new DAOUtilisateur();
+        // Mise à jour
         boolean success = dao.updateUser(updated);
+        
+       
+
 
         // 🔍 Enregistrement du log
         Utilisateur admin = utils.Session.getUtilisateur();
@@ -214,7 +233,9 @@ public class UserEditView extends JFrame {
         }
     }
 
-
+    private boolean estEmailValide(String email) {
+        return email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$");
+    }
 
     private int convertirRoleEnInt(String role) {
         if (role == null) return 0;

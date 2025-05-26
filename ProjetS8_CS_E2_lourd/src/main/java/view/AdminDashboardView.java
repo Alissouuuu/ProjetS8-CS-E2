@@ -55,7 +55,7 @@ public class AdminDashboardView extends JFrame {
 
         String nomAdmin = (user != null && user.getNomComplet() != null) ? user.getNomComplet() : "Admin";
         JLabel lblTitre = new JLabel("Bienvenue sur ton tableau de bord administrateur " + nomAdmin, SwingConstants.CENTER);
-        lblTitre.setFont(new Font("Times New Roman", Font.BOLD, 28));
+        lblTitre.setFont(new Font("Calibri", Font.BOLD, 28));
         lblTitre.setForeground(Color.WHITE);
         titlePanel.add(lblTitre);
 
@@ -171,7 +171,7 @@ public class AdminDashboardView extends JFrame {
         centerPanel.add(btnNotifications, gbc);
 
         // Nouveau bouton : Validation d'inscription
-        JButton btnValidation = new JButton("<html><center>Va lidation<br>d'inscription</center></html>");
+        JButton btnValidation = new JButton("<html><center>Validation<br>d'inscription</center></html>");
         btnValidation.setFont(new Font("Calibri", Font.PLAIN, 20));
         btnValidation.setPreferredSize(new Dimension(220, 130));
         ImageIcon iconValid = new ImageIcon(getClass().getResource("/resources/Validation.png")); // ← Mets une icône ici aussi

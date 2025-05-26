@@ -1,3 +1,4 @@
+
 package dao;
 
 import model.Club;
@@ -14,7 +15,7 @@ public class ClubDAO {
 
     private static final String URL = "jdbc:mysql://localhost:3306/club_sport";
     private static final String USER = "root";
-    private static final String PASSWORD = "root";
+    private static final String PASSWORD = "";
 
     public List<Club> findAllWithDetails() {
         List<Club> clubs = new ArrayList<>();
@@ -104,97 +105,96 @@ public class ClubDAO {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
 
-            boolean hasFilter = false;
-
-            if ((federation != null && !federation.equals("Toutes")) ||
-                (commune != null && !commune.isEmpty()) ||
-                (departement != null && !departement.equals("Toutes")) ||
-                (region != null && !region.equals("Toutes"))) {
-                hasFilter = true;
-            }
-
-            if (!hasFilter) {
-                return findAllWithDetails();
-            }
-
-            StringBuilder sql = new StringBuilder(
-            		
-            	    "SELECT c.id_club, c.lib_club, r.lib_region AS lib_region, lv.lib_commune, " +
-            	    "d.lib_departement, f.lib_federation, com.latitude, com.longitude, " +
-            	    "(6371 * acos(cos(radians(?)) * cos(radians(com.latitude)) * " +
-            	    "cos(radians(com.longitude) - radians(?)) + sin(radians(?)) * sin(radians(com.latitude)))) AS distance " +
-            	    "FROM Club c " +
-            	    "JOIN Commune com ON c.code_commune = com.code_commune " +
-            	    "JOIN libelle_ville_commune cl ON com.code_commune = cl.code_commune " +
-            	    "JOIN libelle_ville lv ON cl.id_libelle = lv.id_libelle " +
-            	    "JOIN Federation f ON c.code_federation = f.code_federation " +
-            	    "JOIN Departement d ON com.code_departement = d.code_departement " +
-            	    "JOIN Region r ON d.code_region = r.code_region " +
-            	    "WHERE 1 = 1"
-
+            boolean useDistance = rayonKm > 0 && (
+                    (commune != null && !commune.isEmpty()) ||
+                    (departement != null && !departement.equals("Toutes")) ||
+                    (region != null && !region.equals("Toutes"))
             );
 
+            StringBuilder sql = new StringBuilder();
             List<Object> params = new ArrayList<>();
+            double[] centerCoords = null;
 
+            // SQL base selon useDistance
+            if (useDistance) {
+                sql.append("SELECT c.id_club, c.lib_club, r.lib_region AS lib_region, lv.lib_commune, ")
+                   .append("d.lib_departement, f.lib_federation, com.latitude, com.longitude, ")
+                   .append("(6371 * acos(cos(radians(?)) * cos(radians(com.latitude)) * ")
+                   .append("cos(radians(com.longitude) - radians(?)) + sin(radians(?)) * sin(radians(com.latitude)))) AS distance ")
+                   .append("FROM Club c ")
+                   .append("JOIN Commune com ON c.code_commune = com.code_commune ")
+                   .append("JOIN libelle_ville_commune cl ON com.code_commune = cl.code_commune ")
+                   .append("JOIN libelle_ville lv ON cl.id_libelle = lv.id_libelle ")
+                   .append("JOIN Federation f ON c.code_federation = f.code_federation ")
+                   .append("JOIN Departement d ON com.code_departement = d.code_departement ")
+                   .append("JOIN Region r ON d.code_region = r.code_region ")
+                   .append("WHERE 1=1 ");
+
+                // Obtenir les coordonnées
+                centerCoords = getCenterCoordinates(conn, commune, departement, region);
+                if (centerCoords == null) return clubs;
+
+                // Coords en premiers paramètres
+                params.add(centerCoords[0]);
+                params.add(centerCoords[1]);
+                params.add(centerCoords[0]);
+
+            } else {
+                sql.append("SELECT c.id_club, c.lib_club, r.lib_region AS lib_region, lv.lib_commune, ")
+                   .append("d.lib_departement, f.lib_federation ")
+                   .append("FROM Club c ")
+                   .append("JOIN Commune com ON c.code_commune = com.code_commune ")
+                   .append("JOIN libelle_ville_commune cl ON com.code_commune = cl.code_commune ")
+                   .append("JOIN libelle_ville lv ON cl.id_libelle = lv.id_libelle ")
+                   .append("JOIN Federation f ON c.code_federation = f.code_federation ")
+                   .append("JOIN Departement d ON com.code_departement = d.code_departement ")
+                   .append("JOIN Region r ON d.code_region = r.code_region ")
+                   .append("WHERE 1=1 ");
+            }
+
+            // Filtres
             if (federation != null && !federation.equals("Toutes")) {
-                sql.append(" AND f.lib_federation = ?");
+                sql.append("AND f.lib_federation = ? ");
                 params.add(federation);
             }
 
-            boolean applyCommuneFilter = (commune != null && !commune.isEmpty());
-            double[] centerCoords = null;
-
-            if (applyCommuneFilter) {
-                sql.append(" AND lv.lib_commune LIKE ?");
+            if (!useDistance && commune != null && !commune.isEmpty()) {
+                sql.append("AND lv.lib_commune LIKE ? ");
                 params.add("%" + commune + "%");
             }
 
-            if (rayonKm > 0 && (
-                    applyCommuneFilter ||
-                    (departement != null && !departement.equals("Toutes")) ||
-                    (region != null && !region.equals("Toutes"))
-            )) {
-                centerCoords = getCenterCoordinates(conn, commune, departement, region);
-            }
-
-
             if (region != null && !region.equals("Toutes")) {
-                sql.append(" AND r.lib_region = ?");
+                sql.append("AND r.lib_region = ? ");
                 params.add(region);
             }
 
             if (departement != null && !departement.equals("Toutes")) {
-                sql.append(" AND d.lib_departement = ?");
+                sql.append("AND d.lib_departement = ? ");
                 params.add(departement);
             }
 
-            if (centerCoords != null) {
-                sql.append(" HAVING distance <= ?");
+            if (useDistance) {
+                sql.append("HAVING distance <= ? ");
                 params.add(rayonKm);
             }
 
+            // Préparation
             PreparedStatement stmt = conn.prepareStatement(sql.toString());
             int index = 1;
-
-            if (centerCoords != null) {
-                stmt.setDouble(index++, centerCoords[0]);
-                stmt.setDouble(index++, centerCoords[1]);
-                stmt.setDouble(index++, centerCoords[0]);
-            }
-
             for (Object param : params) {
                 stmt.setObject(index++, param);
             }
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id_club");
-                String nom = rs.getString("lib_club");
-                String com = rs.getString("lib_commune");
-                String dept = rs.getString("lib_departement");
-                String reg = rs.getString("lib_region");
-                String fed = rs.getString("lib_federation");
-                clubs.add(new Club(id, nom,  com, dept, reg, fed));
+                clubs.add(new Club(
+                    rs.getInt("id_club"),
+                    rs.getString("lib_club"),
+                    rs.getString("lib_commune"),
+                    rs.getString("lib_departement"),
+                    rs.getString("lib_region"),
+                    rs.getString("lib_federation")
+                ));
             }
 
         } catch (SQLException e) {
@@ -203,6 +203,7 @@ public class ClubDAO {
 
         return clubs;
     }
+
 
 
 

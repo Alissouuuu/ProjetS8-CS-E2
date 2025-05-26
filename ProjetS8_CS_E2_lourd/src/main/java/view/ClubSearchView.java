@@ -178,26 +178,58 @@ public class ClubSearchView extends JFrame {
                 String region = (String) regionComboBox.getSelectedItem();
                 int rayon = (int) radiusSpinner.getValue();
 
-                List<Club> clubs = clubDAO.findByFilters(federation, commune, region, departement, rayon);
-
+                // On vide la table avant d'afficher les nouveaux résultats
                 DefaultTableModel model = (DefaultTableModel) resultsTable.getModel();
                 model.setRowCount(0);
 
-                for (Club club : clubs) {
-                    model.addRow(new Object[]{
-                        club.getNom(),
-                        club.getCommune(),
-                        club.getDepartement(),
-                        club.getRegion(),
-                        club.getFederation()
-                    });
-                }
-
-                resultsTable.revalidate();
-                resultsTable.repaint();
+                // Lancement du chargement progressif
+                new ChargementClubsWorker(federation, commune, region, departement, rayon).execute();
             }
         });
+
+
     }
+    
+    private class ChargementClubsWorker extends SwingWorker<Void, Club> {
+        private final String federation, commune, region, departement;
+        private final int rayon;
+
+        public ChargementClubsWorker(String federation, String commune, String region, String departement, int rayon) {
+            this.federation = federation;
+            this.commune = commune;
+            this.region = region;
+            this.departement = departement;
+            this.rayon = rayon;
+        }
+
+        @Override
+        protected Void doInBackground() {
+            ClubDAO dao = new ClubDAO();
+            List<Club> clubs = dao.findByFilters(federation, commune, region, departement, rayon);
+
+            for (Club club : clubs) {
+                publish(club); // Envoie un club à la méthode process()
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void process(List<Club> clubs) {
+            DefaultTableModel model = (DefaultTableModel) resultsTable.getModel();
+            for (Club club : clubs) {
+                model.addRow(new Object[]{
+                    club.getNom(),
+                    club.getCommune(),
+                    club.getDepartement(),
+                    club.getRegion(),
+                    club.getFederation()
+                });
+            }
+        }
+    }
+
+
 
     
     public static void main(String[] args) {
