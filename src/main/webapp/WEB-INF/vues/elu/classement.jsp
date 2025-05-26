@@ -49,12 +49,20 @@
 					<div class="col-md-5">
 						<label class="form-label">Région :</label> <select name="region"
 							class="form-select">
-							<c:out value="${regions}" />
 
 							<option value="">Sélectionner une région</option>
-							<c:forEach var="region" items="${regions}">
-								<option value="${region.codeRegion}">${region.libelleRegion}</option>
-							</c:forEach>
+							<%
+							List<Region> regions = (List<Region>) request.getAttribute("regions");
+							if (regions != null) {
+								for (Region region : regions) {
+							%>
+							<option value="<%=region.getCodeRegion()%>">
+								<%=region.getLibelleRegion()%>
+							</option>
+							<%
+							}
+							}
+							%>
 
 						</select>
 					</div>

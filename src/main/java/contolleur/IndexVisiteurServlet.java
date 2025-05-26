@@ -1,17 +1,21 @@
 package contolleur;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
+import java.util.*;
+import java.io.*;
+import dao.*;
+import modelCarte.*;
 /**
- * Servlet implementation class IndexVisiteurServlet
+ * Servlet implementation class Carte
  */
-@WebServlet("/indexVisiteur")
+@WebServlet("/IndexVisiteurServlet")
 public class IndexVisiteurServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -27,17 +31,17 @@ public class IndexVisiteurServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/vues/visiteur/indexVisiteur.jsp");
-		dispatcher.forward(request, response);
-		
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+
+
+		
+        // Forward vers la JSP
+        request.getRequestDispatcher("/WEB-INF/vues/visiteur/indexVisiteur.jsp").forward(request, response);
+        
 	}
 
+	
+    
+	
 }

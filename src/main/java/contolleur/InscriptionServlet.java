@@ -83,6 +83,7 @@ public class InscriptionServlet extends HttpServlet {
 		// les tirets -
 		if (!nom.matches("^[A-Za-z- ]+$") || !prenom.matches("^[A-Za-z- ]+$")) {
 			request.setAttribute("erreurNom", "Le nom  ne doit contenir que des lettres et/ou des tirets.");
+			hasError=true;
 		} else {
 			user.setNom(nom);
 			user.setPrenom(prenom);
@@ -147,7 +148,7 @@ public class InscriptionServlet extends HttpServlet {
 			return;
 		}
 		user.setRole(0); // visiteur par defaut
-		user.setStatutDemande(100); // par défaut en attente
+		user.setStatutDemande(200); // par défaut en attente
 
 		// creation d' un nouvel utilisateur
 

@@ -68,7 +68,7 @@ public class StatistiquesServlet extends HttpServlet {
 		}
 		try {
 			FederationDAO federationDAO = new FederationDAO();
-			List<Federation> federations = federationDAO.getListFederation();
+			List<Federation> federations = federationDAO.getListeFederation();
 			System.out.println("fede" + federations.size());
 
 			request.setAttribute("federations", federations);
@@ -154,7 +154,7 @@ public class StatistiquesServlet extends HttpServlet {
 			}
 			try {
 				FederationDAO federationDAO = new FederationDAO();
-				List<Federation> federations = federationDAO.getListFederation();
+				List<Federation> federations = federationDAO.getListeFederation();
 				System.out.println("fede" + federations.size());
 
 				request.setAttribute("federations", federations);

@@ -26,11 +26,11 @@
                                     <a class="nav-link" href="${pageContext.request.contextPath}/index">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="${pageContext.request.contextPath}/index">A propos de Nous</a>
+                                    <a class="nav-link" href="${pageContext.request.contextPath}/eventsActus">Evènements et actualités des clubs</a>
                                 </li>
                                
                                 <li class="nav-item">
-                                    <a class="nav-link" href="${pageContext.request.contextPath}/indexVisiteur">Trouvez un club sportif</a>
+                                    <a class="nav-link" href="${pageContext.request.contextPath}/IndexVisiteurServlet">Trouvez un club sportif</a>
                                 </li>
                                
                                 <li class="nav-item">

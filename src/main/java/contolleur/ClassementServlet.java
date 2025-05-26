@@ -54,7 +54,6 @@ public class ClassementServlet extends HttpServlet {
 	        response.sendRedirect(request.getContextPath() + "/login");
 	        return;
 	    }
-	    request.getRequestDispatcher("/WEB-INF/vues/elu/classement.jsp").forward(request, response);
 		String regionParam = request.getParameter("region");
 		String cpParam = request.getParameter("cp");
 		String ageParam = request.getParameter("age");
@@ -140,7 +139,8 @@ public class ClassementServlet extends HttpServlet {
         List<Region> regions;
 		try {
 			regions = regionDAO.getListeRegion();
-			 request.setAttribute("regions", regions);
+
+			request.setAttribute("regions", regions);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

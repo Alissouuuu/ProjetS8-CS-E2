@@ -6,7 +6,8 @@
 		<div class="row align-items-center w-100">
 			<div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
 				<a class="navbar-brand d-flex align-items-center"
-					href="indexMembre.jsp">
+					href="${pageContext.request.contextPath}/indexMembre">
+
 
 					<div class="logo-container">
 						<div class="logo-diamond">
@@ -37,7 +38,7 @@
 							<li class="nav-item"><a class="nav-link"
 								href="<%=response.encodeURL(request.getContextPath() + "/index")%>">Déconnexion
 							</a></li>
-							
+
 						</ul>
 					</div>
 				</nav>

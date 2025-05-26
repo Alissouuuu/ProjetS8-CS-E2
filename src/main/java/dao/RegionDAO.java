@@ -17,9 +17,8 @@ public class RegionDAO {
 	public List<Region> getListeRegion() throws SQLException, ClassNotFoundException {
 	    List<Region> regions = new ArrayList<>();
 	    
-	    //System.out.println(">> Entrée dans getListRegion()");
 	    
-	    String sql = "SELECT DISTINCT * FROM region ORDER BY lib_region";
+	    String sql = "SELECT * FROM region ORDER BY lib_region";
 
 	    try (Connection conn = DBConnexion.getConnection();
 	         Statement stmt = conn.createStatement();
@@ -39,27 +38,29 @@ public class RegionDAO {
 
 	    return regions;
 	}
-    //  Recuperer une région par son ID
-	 public Region getRegionById(int codeRegion) throws SQLException {
-	        String sql = "SELECT code_region, lib_region FROM region WHERE code_region = ?";
-	        Region region = null;
+	public List<String> getListRegion() throws SQLException, ClassNotFoundException {
+	    List<String> regions = new ArrayList<>();
+	    //System.out.println(">> Entrée dans getListRegion()");
+	    
+	    String sql = "SELECT DISTINCT lib_region FROM region ORDER BY lib_region";
 
-	        try (Connection connection = DBConnexion.getConnection();
-	             PreparedStatement stmt = connection.prepareStatement(sql)) {
+	    try (Connection conn = DBConnexion.getConnection();
+	         Statement stmt = conn.createStatement();
+	         ResultSet rs = stmt.executeQuery(sql)) {
 
-	            stmt.setInt(1, codeRegion);
-
-	            try (ResultSet rs = stmt.executeQuery()) {
-	                if (rs.next()) {
-	                    region = new Region();
-	                    region.setCodeRegion(rs.getInt("code_region"));
-	                    region.setLibelleRegion(rs.getString("lib_region"));
-	                }
-	            }
+	        while (rs.next()) {
+	        	regions.add(rs.getString("lib_region"));
 	        }
-
-	        return region;
+	        
+	    }catch (SQLException e) {
+	        System.err.println("Erreur SQL : " + e.getMessage());
+	        e.printStackTrace();
 	    }
+//	    for (String region : regions) {
+//	    	System.out.println(region);
+//	    }
+	    return regions;
+	}
 	
 
 }

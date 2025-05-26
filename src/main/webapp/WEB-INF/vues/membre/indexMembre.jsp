@@ -54,8 +54,6 @@
 		</div>
 
 	</section>
-	<!-- Features Section -->
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 	<!-- Section -->
 	<section class="features-section">

@@ -70,15 +70,17 @@ public class LoginServlet extends HttpServlet {
 		loginPassword = request.getParameter("loginPassword");
 		used = userDAO.emailEstUtilise(loginEmail);
 		if (loginEmail == null || !loginEmail.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") || used) {
-			request.setAttribute("erreur", "Adresse email invalide.");
+			request.setAttribute("error", "Email ou mot de passe incorrect.");
 			request.getRequestDispatcher("/WEB-INF/vues/connexion/login.jsp").forward(request, response);
 			return;
 		}
 		if (loginPassword == null || !estValideMotDePasse(loginPassword)) {
-			request.setAttribute("error", "Mot de passe invalide.");
+			request.setAttribute("error", "Email ou mot de passe incorrect.");
+
 			request.getRequestDispatcher("/WEB-INF/vues/connexion/login.jsp").forward(request, response);
 			return;
 		}
+		
 		// 2 eme filtre verfication BDD
 
 		user = userDAO.findByEmail(loginEmail);
@@ -97,16 +99,16 @@ public class LoginServlet extends HttpServlet {
 	        // redirection vers servlet selon le rôle
 	        if (role == 2) {
 	            response.sendRedirect(request.getContextPath() + "/indexElu");
-	        } else if (role == 1) {
+	        } else if (role == 3) {
 	            response.sendRedirect(request.getContextPath() + "/indexMembre");
 	        } else {
 	            response.sendRedirect(request.getContextPath() + "/login");
 	        }
 		
 		}else {
-	        request.setAttribute("error", "Email ou mot de passe incorrect.");
+			request.setAttribute("error", "Email ou mot de passe incorrect.");
 	        request.getRequestDispatcher("/WEB-INF/vues/connexion/login.jsp").forward(request, response);
-	    }
+		}
 			
 		
 	}
@@ -119,6 +121,7 @@ public class LoginServlet extends HttpServlet {
 				|| !Pattern.compile("[@/?!']").matcher(motDePasse).find()) {
 			System.out.println(
 					"Le mot de passe doit contenir au moins une lettre, un chiffre et un caractère spécial (@/?!').");
+			
 			return false;
 		}
 		return true;

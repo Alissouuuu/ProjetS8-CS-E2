@@ -44,18 +44,22 @@
 						
 					
   
-   <c:if test = "${created eq 'user inscrit'}">
-         <p>My salary is:  <c:out value = "${salary}"/><p>
-      </c:if>
-
-						
-
-
-
+  
 						<form method="post" action="login" class="was-validated"
 							novalidate>
 							<div class="mb-3">
 								<label for="loginEmail" class="form-label">Email</label>
+								
+									<%
+								if (request.getAttribute("error") != null) {
+								%>
+								<div
+									style="color: red; text-align: center; font-weight: bold; margin-bottom: 20px;">
+									<%=request.getAttribute("error")%>
+								</div>
+								<%
+								}
+								%>
 								<div class="input-group">
 									<span class="input-group-text bg-white"> <i
 										class="fas fa-envelope text-muted"></i>

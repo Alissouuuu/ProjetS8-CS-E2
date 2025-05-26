@@ -1,3 +1,8 @@
+/**
+ * @author imane
+ * @version 1.0
+ * servlet qui modifie les events 
+ */
 package contolleur;
 
 import jakarta.servlet.ServletException;

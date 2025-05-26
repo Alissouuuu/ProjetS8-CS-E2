@@ -51,6 +51,7 @@ public class ActuDAO {
 				liste.add(a);
 			}
 		}
+		System.out.println("Nombre d'actus : " + liste.size());
 		return liste;
 	}
 	public void supprimerActu(int id) throws SQLException {

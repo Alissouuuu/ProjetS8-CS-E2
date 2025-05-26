@@ -52,7 +52,7 @@ public class CreateEventServlet extends HttpServlet {
 		}
 
 		int userRole = getRoleFromCookies(request);
-		if (userRole != 1) {
+		if (userRole != 3) {
 			response.sendRedirect(request.getContextPath() + "/login");
 			return;
 		}

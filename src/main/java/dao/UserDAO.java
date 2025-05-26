@@ -38,7 +38,7 @@ public class UserDAO {
             pstmt.setString(3, user.getEmail());
             pstmt.setInt(4, user.getRole());
             pstmt.setString(5, user.getFonction());
-            pstmt.setInt(6, user.getStatutDemande());
+            pstmt.setInt(6, 200);
             pstmt.setString(7, user.getMdp());
             pstmt.setBytes(8, user.getJustificatifDonnees());
         

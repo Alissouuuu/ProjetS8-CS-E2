@@ -17,7 +17,7 @@ public class EventDAO {
 
 	// créer un nouvel événement
 	public boolean createEvent(Evenement event) throws SQLException {
-		String sql = "INSERT INTO evenement (nbr_max, date, heure, lieu, description, nom, id_user, id_club) "
+		String sql = "INSERT INTO evenement (nbr_max, date, heure, lieu, description, type, id_user, id_club) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try (Connection conn = DBConnexion.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -29,14 +29,14 @@ public class EventDAO {
 			pstmt.setString(5, event.getDescriptionEvenement());
 			pstmt.setString(6, event.getNomEvenement());
 			pstmt.setInt(7, 1);
-			pstmt.setInt(8, 1); // Remplacez 1 par l'ID du club associé
+			pstmt.setInt(8, 1); 
 
 			return pstmt.executeUpdate() > 0;
 		}
 	}
 
 	public void updateEvenement(Evenement e) throws SQLException {
-	    String sql = "UPDATE evenement SET nom = ?, date = ?, heure = ?, lieu= ?, nbr_max = ?, description = ? WHERE id_evenement = ?";
+	    String sql = "UPDATE evenement SET type = ?, date = ?, heure = ?, lieu= ?, nbr_max = ?, description = ? WHERE id_evenement = ?";
 	    try (Connection conn = DBConnexion.getConnection();
 	         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -74,7 +74,7 @@ public class EventDAO {
 				ResultSet rs = stmt.executeQuery(sql)) {
 			while (rs.next()) {
 				Evenement e = new Evenement();
-				e.setNomEvenement(rs.getString("nom"));
+				e.setNomEvenement(rs.getString("type"));
 				e.setDescriptionEvenement(rs.getString("description"));
 				e.setDateEvenement(rs.getDate("date").toLocalDate());
 				e.setHeureEvenement(rs.getTime("heure").toLocalTime());
@@ -95,14 +95,14 @@ public class EventDAO {
 	            if (rs.next()) {
 	                Evenement e = new Evenement();
 	                e.setIdEvenement(id);
-	                e.setNomEvenement(rs.getString("nom"));
+	                e.setNomEvenement(rs.getString("type"));
 	                e.setDescriptionEvenement(rs.getString("description"));
 	                e.setDateEvenement(rs.getDate("date").toLocalDate());
 	                e.setHeureEvenement(rs.getTime("heure").toLocalTime());
 	                e.setLieuEvenement(rs.getString("lieu"));
 	                e.setNbrMaxParticipants(rs.getInt("nbr_max"));
 	                
-	                
+	  
 	                return e;
 	            }
 	        }
@@ -148,7 +148,7 @@ public class EventDAO {
 
 	private Evenement mapResultSetToEvenement(ResultSet rs) throws SQLException {
 		Evenement e = new Evenement();
-		e.setNomEvenement(rs.getString("nom"));
+		e.setNomEvenement(rs.getString("type"));
 		e.setIdEvenement(rs.getInt("id_evenement"));
 		e.setDateEvenement(rs.getDate("date").toLocalDate());
 		e.setHeureEvenement(rs.getTime("heure").toLocalTime());
