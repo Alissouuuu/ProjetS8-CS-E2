@@ -2,9 +2,11 @@ package contolleur;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 //import jakarta.servlet.http.HttpSession;
 import model.Club;
 import model.Departement;
@@ -22,35 +24,33 @@ import dao.RegionDAO;
 import dao.FederationDAO;
 
 /**
- * Servlet implementation class StatistiquesServlet
+ * @author imane
+ * @version 1.2
+ * 
+ * Servlet implementation class StatistiquesServlet qui gère les statistiques
  */
 @WebServlet("/statistiques")
 public class StatistiquesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// HttpSession session = request.getSession(false);
-		/*
-		 * if (session == null || session.getAttribute("userId") == null ||
-		 * session.getAttribute("userRole") == null) {
-		 * response.sendRedirect(request.getContextPath() +"/index"); return; } int role
-		 * = (int) session.getAttribute("userRole"); /* if (role != 0) {
-		 * response.sendRedirect(request.getContextPath() +"/index"); return; } else {
-		 * RequestDispatcher dispatcher =
-		 * request.getRequestDispatcher("/WEB-INF/vues/membre/statistiques.jsp");
-		 * dispatcher.forward(request, response); }
-		 */
+			throws ServletException, IOException {	
+		
+		HttpSession session = request.getSession(false);
+	    if (session == null || session.getAttribute("userId") == null) {
+	        response.sendRedirect(request.getContextPath() + "/login");
+	        return;
+	    }
 
-		/*
-		 * for (String trancheAge : Club.getTrancheAge()) { totalHommes +=
-		 * club.getLicencies().get(Genre.HOMME).get(trancheAge); totalFemmes +=
-		 * club.getLicencies().get(Genre.FEMME).get(trancheAge); }
-		 */
+	    int userRole = getRoleFromCookies(request);
+	    if (userRole != 2) {
+	        response.sendRedirect(request.getContextPath() + "/login");
+	        return;
+	    }
 
 		try {
 			DepartementDAO departementDAO = new DepartementDAO();
-			List<Departement> departements = departementDAO.getListDepartement();
+			List<Departement> departements = departementDAO.getListeDepartement();
 			// System.out.println(departements.size());
 			request.setAttribute("departements", departements);
 
@@ -59,7 +59,7 @@ public class StatistiquesServlet extends HttpServlet {
 		}
 		try {
 			RegionDAO regionDAO = new RegionDAO();
-			List<Region> regions = regionDAO.getListRegion();
+			List<Region> regions = regionDAO.getListeRegion();
 
 			request.setAttribute("regions", regions);
 
@@ -76,7 +76,7 @@ public class StatistiquesServlet extends HttpServlet {
 		} catch (SQLException | ClassNotFoundException e) {
 			throw new ServletException("Erreur BDD : " + e.getMessage(), e);
 		}
-		// Rediriger vers la JSP
+	
 
 		request.getRequestDispatcher("/WEB-INF/vues/elu/statistiques.jsp").forward(request, response);
 	}
@@ -87,18 +87,6 @@ public class StatistiquesServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//HttpSession session = request.getSession(false);
-		/*
-		 * if (session == null || session.getAttribute("userId") == null ||
-		 * session.getAttribute("userRole") == null) {
-		 * response.sendRedirect(request.getContextPath() +"/index"); return; } int role
-		 * = (int) session.getAttribute("userRole"); if (role != 0) {
-		 * response.sendRedirect(request.getContextPath() +"/index"); return; }else {
-		 * RequestDispatcher dispatcher =
-		 * request.getRequestDispatcher("/WEB-INF/vues/elu/classement.jsp");
-		 * dispatcher.forward(request, response); }
-		 * 
-		 */
 		String regionParam = request.getParameter("region");
 		String cpParam = request.getParameter("cp");
 		System.out.println("cp"+cpParam);
@@ -107,14 +95,9 @@ public class StatistiquesServlet extends HttpServlet {
 
 		String federationParam = request.getParameter("federation");
 		System.out.println("federation"+federationParam);
-
 		List<Club> clubs = new ArrayList<>();
-		
-		
 		ClubDAO dao = new ClubDAO();
 		try {
-			
-			
 			if (cpParam != null && !cpParam.isEmpty()) {
 				// Cas 2 : Code postal choisi
 				if (federationParam != null && !federationParam.isEmpty()) {
@@ -153,7 +136,7 @@ public class StatistiquesServlet extends HttpServlet {
 			
 			try {
 				DepartementDAO departementDAO = new DepartementDAO();
-				List<Departement> departements = departementDAO.getListDepartement();
+				List<Departement> departements = departementDAO.getListeDepartement();
 				// System.out.println(departements.size());
 				request.setAttribute("departements", departements);
 
@@ -162,7 +145,7 @@ public class StatistiquesServlet extends HttpServlet {
 			}
 			try {
 				RegionDAO regionDAO = new RegionDAO();
-				List<Region> regions = regionDAO.getListRegion();
+				List<Region> regions = regionDAO.getListeRegion();
 
 				request.setAttribute("regions", regions);
 
@@ -179,9 +162,6 @@ public class StatistiquesServlet extends HttpServlet {
 			} catch (SQLException | ClassNotFoundException e) {
 				throw new ServletException("Erreur BDD : " + e.getMessage(), e);
 			}
-			// Rediriger vers la JSP
-
-
 			request.setAttribute("listeClubs", clubs);
 			request.getRequestDispatcher("/WEB-INF/vues/elu/statistiques.jsp").forward(request, response);
 
@@ -190,6 +170,21 @@ public class StatistiquesServlet extends HttpServlet {
 		} catch (NumberFormatException e) {
 			throw new ServletException("Code région invalide : " + regionParam, e);
 		}
+	}
+	private int getRoleFromCookies(HttpServletRequest request) {
+	    Cookie[] cookies = request.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if ("userRole".equals(cookie.getName())) {
+	                try {
+	                    return Integer.parseInt(cookie.getValue());
+	                } catch (NumberFormatException e) {
+	                    return -1;
+	                }
+	            }
+	        }
+	    }
+	    return -1;
 	}
 
 }
