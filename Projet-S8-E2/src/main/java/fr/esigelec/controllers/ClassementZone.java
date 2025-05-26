@@ -8,9 +8,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -47,604 +50,60 @@ public class ClassementZone extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		String valeurString = null,casActuel=null;
-		int valeurInt=1,ancienneValeurInt,ecartDroite,ecartGauche,valeurIntMoinsUn,valeurIntMoinsDeux,valeurIntMoinsTrois,valeurIntPlusUn,valeurIntPlusDeux;
-		HashMap<String,String> emplacements = new HashMap<>();
-		if(request.getParameter("a") !=null) {
-			valeurInt = 1;
-			emplacements.put("etatBtnPrecedent", "disabled");
-			emplacements.put("etatBtnPageA", "active");
-			emplacements.put("etatBtnPageB", "");
-			emplacements.put("etatBtnPageC", "");
-			emplacements.put("etatBtnPageD", "");
-			emplacements.put("etatBtnPageE", "");
-			emplacements.put("etatBtnPageF", "disabled");
-			emplacements.put("etatBtnPageG", "");
-			emplacements.put("etatBtnSuivant", "");
-			emplacements.put("pageA", "1");
-			emplacements.put("pageB", "2");
-			emplacements.put("pageC", "3");
-			emplacements.put("pageD", "4");
-			emplacements.put("pageE", "5");
-			emplacements.put("pageF", "...");
-			emplacements.put("pageG", "1395");
-			emplacements.put("pageActuelle", "1");
-			
-		}
-		else if(request.getParameter("b") !=null) {
-			valeurString = "2";
-			valeurInt = 2;
-			emplacements.put("etatBtnPrecedent", "");
-			emplacements.put("etatBtnPageA", "");
-			emplacements.put("etatBtnPageB", "active");
-			emplacements.put("etatBtnPageC", "");
-			emplacements.put("etatBtnPageD", "");
-			emplacements.put("etatBtnPageE", "");
-			emplacements.put("etatBtnPageF", "disabled");
-			emplacements.put("etatBtnPageG", "");
-			emplacements.put("etatBtnSuivant", "");
-			emplacements.put("pageA", "1");
-			emplacements.put("pageB", "2");
-			emplacements.put("pageC", "3");
-			emplacements.put("pageD", "4");
-			emplacements.put("pageE", "5");
-			emplacements.put("pageF", "...");
-			emplacements.put("pageG", "1395");
-			emplacements.put("pageActuelle", "2");
-		}
-		else if(request.getParameter("c") !=null) {
-			valeurString = request.getParameter("c");
-			valeurInt = Integer.parseInt(valeurString);
-			valeurIntPlusUn = valeurInt +1;
-			valeurIntPlusDeux = valeurInt +2;
-			if(!valeurString.equals("3")) {
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "disabled");
-				emplacements.put("etatBtnPageC", "active");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "...");
-				emplacements.put("pageC", valeurString);
-				emplacements.put("pageD", String.valueOf(valeurIntPlusUn));
-				emplacements.put("pageE", String.valueOf(valeurIntPlusDeux));
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", valeurString);
-			}
-			else {
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "");
-				emplacements.put("etatBtnPageC", "active");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "3");
-			}
-		}
-		else if(request.getParameter("d") !=null) {
-			valeurString = request.getParameter("d");
-			valeurInt = Integer.parseInt(valeurString);
-			valeurIntMoinsUn = valeurInt -1;
-			valeurIntPlusUn = valeurInt+1;
-			valeurIntPlusDeux = valeurInt + 2;
-			ecartDroite = 1395-valeurInt;
-			if(!valeurString.equals("4")) {
-				if(ecartDroite == 2) {
-					emplacements.put("etatBtnPrecedent", "");
-					emplacements.put("etatBtnPageA", "");
-					emplacements.put("etatBtnPageB", "disabled");
-					emplacements.put("etatBtnPageC", "");
-					emplacements.put("etatBtnPageD", "active");
-					emplacements.put("etatBtnPageE", "");
-					emplacements.put("etatBtnPageF", "disabled");
-					emplacements.put("etatBtnPageG", "");
-					emplacements.put("etatBtnSuivant", "");
-					emplacements.put("pageA", "1");
-					emplacements.put("pageB", "...");
-					emplacements.put("pageC", String.valueOf(valeurIntMoinsUn));
-					emplacements.put("pageD", valeurString);
-					emplacements.put("pageE", String.valueOf(valeurIntPlusUn));
-					emplacements.put("pageF", "...");
-					emplacements.put("pageG", "1395");
-					emplacements.put("pageActuelle", valeurString);
-				}
-				else {
-					emplacements.put("etatBtnPrecedent", "");
-					emplacements.put("etatBtnPageA", "");
-					emplacements.put("etatBtnPageB", "disabled");
-					emplacements.put("etatBtnPageC", "active");
-					emplacements.put("etatBtnPageD", "");
-					emplacements.put("etatBtnPageE", "");
-					emplacements.put("etatBtnPageF", "disabled");
-					emplacements.put("etatBtnPageG", "");
-					emplacements.put("etatBtnSuivant", "");
-					emplacements.put("pageA", "1");
-					emplacements.put("pageB", "...");
-					emplacements.put("pageC", valeurString);
-					emplacements.put("pageD", String.valueOf(valeurIntPlusUn));
-					emplacements.put("pageE", String.valueOf(valeurIntPlusDeux));
-					emplacements.put("pageF", "...");
-					emplacements.put("pageG", "1395");
-					emplacements.put("pageActuelle", valeurString);
-				}
-			}
-			else {
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "active");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "4");
-			}
-		}
-		else if(request.getParameter("e") !=null) {
-			valeurString = request.getParameter("e");
-			valeurInt = Integer.parseInt(valeurString);
-			valeurIntMoinsUn = valeurInt -1;
-			valeurIntMoinsDeux = valeurInt-2;
-			valeurIntPlusUn = valeurInt+1;
-			valeurIntPlusDeux = valeurInt+2;
-			ecartDroite = 1395-valeurInt;
-			if(ecartDroite == 1) {
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "disabled");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "active");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "...");
-				emplacements.put("pageC", String.valueOf(valeurIntMoinsDeux));
-				emplacements.put("pageD", String.valueOf(valeurIntMoinsUn));
-				emplacements.put("pageE", valeurString);
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", valeurString);
-			}
-			else if(ecartDroite == 2){
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "disabled");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "active");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "...");
-				emplacements.put("pageC", String.valueOf(valeurIntMoinsUn));
-				emplacements.put("pageD", valeurString);
-				emplacements.put("pageE", String.valueOf(valeurIntPlusUn));
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", valeurString);
-			}
-			else {
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "disabled");
-				emplacements.put("etatBtnPageC", "active");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "...");
-				emplacements.put("pageC", valeurString);
-				emplacements.put("pageD", String.valueOf(valeurIntPlusUn));
-				emplacements.put("pageE", String.valueOf(valeurIntPlusDeux));
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", valeurString);
-			}
-		}
-		else if(request.getParameter("f") !=null) {
-			valeurString = request.getParameter("f");
-		}
-		else if(request.getParameter("g") !=null) {
-			valeurString = request.getParameter("g");
-			valeurInt = Integer.parseInt(valeurString);
-			valeurIntMoinsUn = valeurInt -1;
-			valeurIntMoinsDeux = valeurInt-2;
-			valeurIntMoinsTrois = valeurInt-3;
-			emplacements.put("etatBtnPrecedent", "");
-			emplacements.put("etatBtnPageA", "");
-			emplacements.put("etatBtnPageB", "disabled");
-			emplacements.put("etatBtnPageC", "");
-			emplacements.put("etatBtnPageD", "");
-			emplacements.put("etatBtnPageE", "");
-			emplacements.put("etatBtnPageF", "disabled");
-			emplacements.put("etatBtnPageG", "active");
-			emplacements.put("etatBtnSuivant", "disabled");
-			emplacements.put("pageA", "1");
-			emplacements.put("pageB", "...");
-			emplacements.put("pageC", String.valueOf(valeurIntMoinsTrois));
-			emplacements.put("pageD", String.valueOf(valeurIntMoinsDeux));
-			emplacements.put("pageE", String.valueOf(valeurIntMoinsUn));
-			emplacements.put("pageF", "...");
-			emplacements.put("pageG", "1395");
-			emplacements.put("pageActuelle", "1395");
-		}
-		else if(request.getParameter("precedent") != null) {
-			valeurString = request.getParameter("precedent");
-			ancienneValeurInt = Integer.parseInt(valeurString);
-			valeurInt = ancienneValeurInt - 1;
-			valeurString = String.valueOf(valeurInt);
-			valeurIntMoinsUn = valeurInt -1;
-			valeurIntMoinsDeux = valeurInt -2;
-			valeurIntMoinsTrois = valeurInt-3;
-			valeurIntPlusUn = valeurInt +1;
-			valeurIntPlusDeux = valeurInt + 2;
-			ecartDroite = 1395-valeurInt;
-			switch(valeurInt) {
-			case 1:
-				casActuel = "normal1";
-				emplacements.put("etatBtnPrecedent", "disabled");
-				emplacements.put("etatBtnPageA", "active");
-				emplacements.put("etatBtnPageB", "");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "1");
-				break;
-			case 2:
-				casActuel = "normal2";
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "active");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "2");
-				break;
-			case 3:
-				casActuel = "normal3";
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "");
-				emplacements.put("etatBtnPageC", "active");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "3");
-				break;
-			case 4:
-				casActuel = "normal4";
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "active");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "4");
-				break;
-			case 1395:
-				casActuel = "normal1395";
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "disabled");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "active");
-				emplacements.put("etatBtnSuivant", "disabled");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "...");
-				emplacements.put("pageC", String.valueOf(valeurIntMoinsTrois));
-				emplacements.put("pageD", String.valueOf(valeurIntMoinsDeux));
-				emplacements.put("pageE", String.valueOf(valeurIntMoinsUn));
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "1395");
-				break;
-			default:
-				switch(ecartDroite) {
-				case 1:
-					casActuel = "default1";
-					emplacements.put("etatBtnPrecedent", "");
-					emplacements.put("etatBtnPageA", "");
-					emplacements.put("etatBtnPageB", "disabled");
-					emplacements.put("etatBtnPageC", "");
-					emplacements.put("etatBtnPageD", "");
-					emplacements.put("etatBtnPageE", "active");
-					emplacements.put("etatBtnPageF", "disabled");
-					emplacements.put("etatBtnPageG", "");
-					emplacements.put("etatBtnSuivant", "");
-					emplacements.put("pageA", "1");
-					emplacements.put("pageB", "...");
-					emplacements.put("pageC", String.valueOf(valeurIntMoinsDeux));
-					emplacements.put("pageD", String.valueOf(valeurIntMoinsUn));
-					emplacements.put("pageE", valeurString);
-					emplacements.put("pageF", "...");
-					emplacements.put("pageG", "1395");
-					emplacements.put("pageActuelle", valeurString);
-					break;
-				case 2:
-					casActuel = "default2";
-					emplacements.put("etatBtnPrecedent", "");
-					emplacements.put("etatBtnPageA", "");
-					emplacements.put("etatBtnPageB", "disabled");
-					emplacements.put("etatBtnPageC", "");
-					emplacements.put("etatBtnPageD", "active");
-					emplacements.put("etatBtnPageE", "");
-					emplacements.put("etatBtnPageF", "disabled");
-					emplacements.put("etatBtnPageG", "");
-					emplacements.put("etatBtnSuivant", "");
-					emplacements.put("pageA", "1");
-					emplacements.put("pageB", "...");
-					emplacements.put("pageC", String.valueOf(valeurIntMoinsUn));
-					emplacements.put("pageD", valeurString);
-					emplacements.put("pageE", String.valueOf(valeurIntPlusUn));
-					emplacements.put("pageF", "...");
-					emplacements.put("pageG", "1395");
-					emplacements.put("pageActuelle", valeurString);
-					break;
-				default:
-					casActuel = "defaultDefault";
-					emplacements.put("etatBtnPrecedent", "");
-					emplacements.put("etatBtnPageA", "");
-					emplacements.put("etatBtnPageB", "disabled");
-					emplacements.put("etatBtnPageC", "active");
-					emplacements.put("etatBtnPageD", "");
-					emplacements.put("etatBtnPageE", "");
-					emplacements.put("etatBtnPageF", "disabled");
-					emplacements.put("etatBtnPageG", "");
-					emplacements.put("etatBtnSuivant", "");
-					emplacements.put("pageA", "1");
-					emplacements.put("pageB", "...");
-					emplacements.put("pageC", valeurString);
-					emplacements.put("pageD", String.valueOf(valeurIntPlusUn));
-					emplacements.put("pageE", String.valueOf(valeurIntPlusDeux));
-					emplacements.put("pageF", "...");
-					emplacements.put("pageG", "1395");
-					emplacements.put("pageActuelle", valeurString);
-				}
-			}
-			
-		}
+		int nbPages=1395,valeurInt=1,ancienneValeurInt,ecartDroite,ecartGauche,valeurIntMoinsUn,valeurIntMoinsDeux,valeurIntMoinsTrois,valeurIntPlusUn,valeurIntPlusDeux;
+		//HashMap<String,String> emplacements = new HashMap<>();
 		
-		else if(request.getParameter("suivant") != null) {
-			valeurString = request.getParameter("suivant");
-			ancienneValeurInt = Integer.parseInt(valeurString);
-			valeurInt = ancienneValeurInt + 1;
-			valeurString = String.valueOf(valeurInt);
-			valeurIntMoinsUn = valeurInt -1;
-			valeurIntMoinsDeux = valeurInt -2;
-			valeurIntMoinsTrois = valeurInt-3;
-			valeurIntPlusUn = valeurInt +1;
-			valeurIntPlusDeux = valeurInt + 2;
-			ecartDroite = 1395-valeurInt;
-			switch(valeurInt) {
-			case 1:
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "active");
-				emplacements.put("etatBtnPageB", "");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "1");
-				break;
-			case 2:
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "active");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "2");
-				break;
-			case 3:
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "");
-				emplacements.put("etatBtnPageC", "active");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "3");
-				break;
-			case 4:
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "active");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "");
-				emplacements.put("etatBtnSuivant", "");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "2");
-				emplacements.put("pageC", "3");
-				emplacements.put("pageD", "4");
-				emplacements.put("pageE", "5");
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "4");
-				break;
-			case 1395:
-				emplacements.put("etatBtnPrecedent", "");
-				emplacements.put("etatBtnPageA", "");
-				emplacements.put("etatBtnPageB", "disabled");
-				emplacements.put("etatBtnPageC", "");
-				emplacements.put("etatBtnPageD", "");
-				emplacements.put("etatBtnPageE", "");
-				emplacements.put("etatBtnPageF", "disabled");
-				emplacements.put("etatBtnPageG", "active");
-				emplacements.put("etatBtnSuivant", "disabled");
-				emplacements.put("pageA", "1");
-				emplacements.put("pageB", "...");
-				emplacements.put("pageC", String.valueOf(valeurIntMoinsTrois));
-				emplacements.put("pageD", String.valueOf(valeurIntMoinsDeux));
-				emplacements.put("pageE", String.valueOf(valeurIntMoinsUn));
-				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
-				emplacements.put("pageActuelle", "1395");
-				break;
-			default:
-				switch(ecartDroite) {
-				case 1:
-					emplacements.put("etatBtnPrecedent", "");
-					emplacements.put("etatBtnPageA", "");
-					emplacements.put("etatBtnPageB", "disabled");
-					emplacements.put("etatBtnPageC", "");
-					emplacements.put("etatBtnPageD", "");
-					emplacements.put("etatBtnPageE", "active");
-					emplacements.put("etatBtnPageF", "disabled");
-					emplacements.put("etatBtnPageG", "");
-					emplacements.put("etatBtnSuivant", "");
-					emplacements.put("pageA", "1");
-					emplacements.put("pageB", "...");
-					emplacements.put("pageC", String.valueOf(valeurIntMoinsDeux));
-					emplacements.put("pageD", String.valueOf(valeurIntMoinsUn));
-					emplacements.put("pageE", valeurString);
-					emplacements.put("pageF", "...");
-					emplacements.put("pageG", "1395");
-					emplacements.put("pageActuelle", valeurString);
-					break;
-				case 2:
-					emplacements.put("etatBtnPrecedent", "");
-					emplacements.put("etatBtnPageA", "");
-					emplacements.put("etatBtnPageB", "disabled");
-					emplacements.put("etatBtnPageC", "");
-					emplacements.put("etatBtnPageD", "active");
-					emplacements.put("etatBtnPageE", "");
-					emplacements.put("etatBtnPageF", "disabled");
-					emplacements.put("etatBtnPageG", "");
-					emplacements.put("etatBtnSuivant", "");
-					emplacements.put("pageA", "1");
-					emplacements.put("pageB", "...");
-					emplacements.put("pageC", String.valueOf(valeurIntMoinsUn));
-					emplacements.put("pageD", valeurString);
-					emplacements.put("pageE", String.valueOf(valeurIntPlusUn));
-					emplacements.put("pageF", "...");
-					emplacements.put("pageG", "1395");
-					emplacements.put("pageActuelle", valeurString);
-					break;
-				default:
-					emplacements.put("etatBtnPrecedent", "");
-					emplacements.put("etatBtnPageA", "");
-					emplacements.put("etatBtnPageB", "disabled");
-					emplacements.put("etatBtnPageC", "active");
-					emplacements.put("etatBtnPageD", "");
-					emplacements.put("etatBtnPageE", "");
-					emplacements.put("etatBtnPageF", "disabled");
-					emplacements.put("etatBtnPageG", "");
-					emplacements.put("etatBtnSuivant", "");
-					emplacements.put("pageA", "1");
-					emplacements.put("pageB", "...");
-					emplacements.put("pageC", valeurString);
-					emplacements.put("pageD", String.valueOf(valeurIntPlusUn));
-					emplacements.put("pageE", String.valueOf(valeurIntPlusDeux));
-					emplacements.put("pageF", "...");
-					emplacements.put("pageG", "1395");
-					emplacements.put("pageActuelle", valeurString);
-				}
-			}
-			
-		}
-		
+		String provenance = (String) request.getParameter("provenance");
+		HttpSession session = request.getSession();
 		classementCommuneDAO = new ClassementCommuneDAO(dataSource);
-		ArrayList<ClassementCommune> classementCommune = classementCommuneDAO.getClassement(valeurInt);
+		ArrayList<ClassementCommune> classementCommune = null;
+		
+		if(provenance.equals("classementToutCritere")) {
+			String clauseWHERE = (String) session.getAttribute("clauseWHERE");
+			String critereAgeGenre = (String) session.getAttribute("critereAgeGenre");
+			
+			nbPages = classementCommuneDAO.getNombrePagesToutCritere(clauseWHERE, critereAgeGenre) / 25;
+		}
+		else {
+			nbPages = classementCommuneDAO.getNombrePages() / 25;
+		}
+		
+		
+		String action = null;
+		String param = null;
+
+		// Récupération des paramètres envoyés par les boutons
+		if (request.getParameter("suivant") != null) {
+		    action = "suivant";
+		    param = request.getParameter("suivant"); // contient la page actuelle
+		} else if (request.getParameter("precedent") != null) {
+		    action = "precedent";
+		    param = request.getParameter("precedent"); // contient la page actuelle
+		} else {
+		    // Recherche du bouton cliqué parmi les boutons de page
+		    String[] boutons = {"a", "b", "c", "d", "e", "f", "g"};
+		    for (String bouton : boutons) {
+		        if (request.getParameter(bouton) != null && !request.getParameter(bouton).equals("...")) {
+		            action = "page";
+		            param = request.getParameter(bouton);
+		            break;
+		        }
+		    }
+		}
+
+		// Appel à ta fonction
+		HashMap<String, String> emplacements = calculerPagination(nbPages,action, param);
+		valeurInt = Integer.parseInt(emplacements.get("pageActuelle")); 
+		if(provenance.equals("classementToutCritere")) {
+			String clauseWHERE = (String) session.getAttribute("clauseWHERE");
+			String critereAgeGenre = (String) session.getAttribute("critereAgeGenre");
+			
+			classementCommune = classementCommuneDAO.getClassementToutCritere(valeurInt,clauseWHERE,critereAgeGenre);
+		}
+		else {
+			classementCommune = classementCommuneDAO.getClassement(valeurInt);
+		}
+			
 		String choix = "commune";
 		request.setAttribute("classement", classementCommune);
 		request.setAttribute("choix", choix);
@@ -652,6 +111,7 @@ public class ClassementZone extends HttpServlet {
 		int variableRang = (Integer.parseInt(emplacements.get("pageActuelle"))-1)*25;
 		request.setAttribute("variableRang", variableRang);
 		request.setAttribute("casActuel", casActuel);
+		request.setAttribute("provenance", provenance);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("./WEB-INF/vues/elu/ClassementZone.jsp");
 		dispatcher.forward(request, response);
 	}
@@ -661,6 +121,7 @@ public class ClassementZone extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String choix = (String) StringEscapeUtils.escapeHtml4(request.getParameter("choix"));
+		String nbPages = "1395";
 		if(choix.equals("commune")) {
 			classementCommuneDAO = new ClassementCommuneDAO(dataSource);
 			ArrayList<ClassementCommune> classementCommune = classementCommuneDAO.getClassement(1);
@@ -691,10 +152,134 @@ public class ClassementZone extends HttpServlet {
 		emplacements.put("pageActuelle", "1");
 		
 		request.setAttribute("choix", choix);
+		request.setAttribute("provenance", "indexElu");
 		request.setAttribute("emplacements", emplacements);
 		request.setAttribute("variableRang", 0);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("./WEB-INF/vues/elu/ClassementZone.jsp");
 		dispatcher.forward(request, response);
 	}
+	
+	public static HashMap<String, String> calculerPagination(int totalPages,String action, String param) {
+	    HashMap<String, String> emplacements = new HashMap<>();
+	    int valeurInt = 1;
+	    totalPages = 1395;
+
+	    if (param != null && !param.isEmpty()) {
+	        int page = Integer.parseInt(param);
+	        switch (action) {
+	            case "page":
+	                valeurInt = page;
+	                break;
+	            case "suivant":
+	                valeurInt = Math.min(page + 1, totalPages);
+	                break;
+	            case "precedent":
+	                valeurInt = Math.max(page - 1, 1);
+	                break;
+	        }
+	    }
+
+	    String valeurString = String.valueOf(valeurInt);
+	    int valeurIntMoinsUn = valeurInt - 1;
+	    int valeurIntMoinsDeux = valeurInt - 2;
+	    int valeurIntMoinsTrois = valeurInt - 3;
+	    int valeurIntPlusUn = valeurInt + 1;
+	    int valeurIntPlusDeux = valeurInt + 2;
+	    int ecartDroite = totalPages - valeurInt;
+
+	    // Boutons "Suivant" et "Précédent"
+	    emplacements.put("etatBtnPrecedent", valeurInt == 1 ? "disabled" : "");
+	    emplacements.put("etatBtnSuivant", valeurInt == totalPages ? "disabled" : "");
+
+	    // Cas : Début (1 à 5)
+	    if (valeurInt >= 1 && valeurInt <= 5) {
+	        emplacements.put("etatBtnPageA", valeurInt == 1 ? "active" : "");
+	        emplacements.put("etatBtnPageB", valeurInt == 2 ? "active" : "");
+	        emplacements.put("etatBtnPageC", valeurInt == 3 ? "active" : "");
+	        emplacements.put("etatBtnPageD", valeurInt == 4 ? "active" : "");
+	        emplacements.put("etatBtnPageE", valeurInt == 5 ? "active" : "");
+	        emplacements.put("etatBtnPageF", "disabled");
+	        emplacements.put("etatBtnPageG", "");
+	        emplacements.put("pageA", "1");
+	        emplacements.put("pageB", "2");
+	        emplacements.put("pageC", "3");
+	        emplacements.put("pageD", "4");
+	        emplacements.put("pageE", "5");
+	        emplacements.put("pageF", "...");
+	        emplacements.put("pageG", String.valueOf(totalPages));
+	    }
+	    // Cas : Dernière page
+	    else if (valeurInt == totalPages) {
+	        emplacements.put("etatBtnPageA", "");
+	        emplacements.put("etatBtnPageB", "disabled");
+	        emplacements.put("etatBtnPageC", "");
+	        emplacements.put("etatBtnPageD", "");
+	        emplacements.put("etatBtnPageE", "");
+	        emplacements.put("etatBtnPageF", "disabled");
+	        emplacements.put("etatBtnPageG", "active");
+	        emplacements.put("pageA", "1");
+	        emplacements.put("pageB", "...");
+	        emplacements.put("pageC", String.valueOf(valeurIntMoinsTrois));
+	        emplacements.put("pageD", String.valueOf(valeurIntMoinsDeux));
+	        emplacements.put("pageE", String.valueOf(valeurIntMoinsUn));
+	        emplacements.put("pageF", "...");
+	        emplacements.put("pageG", String.valueOf(totalPages));
+	    }
+	    // Cas : Avant-dernière (écart droite = 1)
+	    else if (ecartDroite == 1) {
+	        emplacements.put("etatBtnPageA", "");
+	        emplacements.put("etatBtnPageB", "disabled");
+	        emplacements.put("etatBtnPageC", "");
+	        emplacements.put("etatBtnPageD", "");
+	        emplacements.put("etatBtnPageE", "active");
+	        emplacements.put("etatBtnPageF", "disabled");
+	        emplacements.put("etatBtnPageG", "");
+	        emplacements.put("pageA", "1");
+	        emplacements.put("pageB", "...");
+	        emplacements.put("pageC", String.valueOf(valeurIntMoinsDeux));
+	        emplacements.put("pageD", String.valueOf(valeurIntMoinsUn));
+	        emplacements.put("pageE", valeurString);
+	        emplacements.put("pageF", "...");
+	        emplacements.put("pageG", String.valueOf(totalPages));
+	    }
+	    // Cas : avant-avant-dernière (écart droite = 2)
+	    else if (ecartDroite == 2) {
+	        emplacements.put("etatBtnPageA", "");
+	        emplacements.put("etatBtnPageB", "disabled");
+	        emplacements.put("etatBtnPageC", "");
+	        emplacements.put("etatBtnPageD", "active");
+	        emplacements.put("etatBtnPageE", "");
+	        emplacements.put("etatBtnPageF", "disabled");
+	        emplacements.put("etatBtnPageG", "");
+	        emplacements.put("pageA", "1");
+	        emplacements.put("pageB", "...");
+	        emplacements.put("pageC", String.valueOf(valeurIntMoinsUn));
+	        emplacements.put("pageD", valeurString);
+	        emplacements.put("pageE", String.valueOf(valeurIntPlusUn));
+	        emplacements.put("pageF", "...");
+	        emplacements.put("pageG", String.valueOf(totalPages));
+	    }
+	    // Cas par défaut (milieu pagination)
+	    else {
+	        emplacements.put("etatBtnPageA", "");
+	        emplacements.put("etatBtnPageB", "disabled");
+	        emplacements.put("etatBtnPageC", "active");
+	        emplacements.put("etatBtnPageD", "");
+	        emplacements.put("etatBtnPageE", "");
+	        emplacements.put("etatBtnPageF", "disabled");
+	        emplacements.put("etatBtnPageG", "");
+	        emplacements.put("pageA", "1");
+	        emplacements.put("pageB", "...");
+	        emplacements.put("pageC", valeurString);
+	        emplacements.put("pageD", String.valueOf(valeurIntPlusUn));
+	        emplacements.put("pageE", String.valueOf(valeurIntPlusDeux));
+	        emplacements.put("pageF", "...");
+	        emplacements.put("pageG", String.valueOf(totalPages));
+	    }
+
+	    emplacements.put("pageActuelle", valeurString);
+	    return emplacements;
+	}
+
 
 }

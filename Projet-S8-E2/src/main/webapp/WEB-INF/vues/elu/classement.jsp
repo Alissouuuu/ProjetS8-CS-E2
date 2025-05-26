@@ -70,7 +70,7 @@ if(federationsFiltres.size()==0)
 		<!-- Formulaire de recherche -->
 		<div class="container">
 			<h2>Filtres de recherche</h2>
-			<form method="post" action="ClassementServlet">
+			<form method="post" action="./ClassementServlet">
 				<div class="row filtre-section">
 					<!-- Filtre Région -->
 					<div class="col-md-5">
@@ -158,7 +158,7 @@ if(federationsFiltres.size()==0)
 					<div class="col-md-5">
 						<label class="form-label">Genre :</label> <select
 							id="genre" name="genre" class="form-select">
-
+							<option value="all">Tout</option>
 							<option value="femme">Femme</option>
 							<option value="homme">Homme</option>
 
@@ -168,7 +168,27 @@ if(federationsFiltres.size()==0)
 				
 <p style="margin-top:1.25rem;"><em>Astuce : vous pouvez combiner les filtres pour un affichage plus précis.</em></p>
 				</div>
-
+				
+				<div class="form-check">
+				  <input class="form-check-input" type="radio" name="choix" id="choix1" value="commune">
+				  <label class="form-check-label" for="choix1">
+				    Afficher un classement des communes de toute la France ou bien du département ou de la région sélectionnée
+				  </label>
+				</div>
+				<!-- <div class="form-check">
+				  <input class="form-check-input" type="radio" name="choix" id="choix2" value="departement" checked>
+				  <label class="form-check-label" for="choix2">
+				    Afficher un classement des départements de toute la France ou de la région sélectionnée
+				  </label>
+				</div> -->
+				<div class="form-check">
+				  <input class="form-check-input" type="radio" name="choix" id="choix3" value="region" checked>
+				  <label class="form-check-label" for="choix3">
+				    Afficher un classement des régions de France
+				  </label>
+				</div>
+				
+				
 				<!-- Bouton de soumission -->
 				<div class="text-center mt-4">
 					<button type="submit" class="btn btn-primary">Rechercher</button>

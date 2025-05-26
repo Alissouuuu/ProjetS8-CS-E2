@@ -1,7 +1,7 @@
 package fr.esigelec.models;
 
 public class ClassementCommune implements IClassement{
-	private int licences,licencesFemmes,licencesHommes;
+	private int licences,licencesFemmes,licencesHommes,nombrePages;
 	private int licencesHommes114,licencesHommes1524,licencesHommes2534,licencesHommes3549,licencesHommes5079,licencesHommes8099;
 	private int licencesFemmes114,licencesFemmes1524,licencesFemmes2534,licencesFemmes3549,licencesFemmes5079,licencesFemmes8099;
 	private int licencesTotales114,licencesTotales1524,licencesTotales2534,licencesTotales3549,licencesTotales5079,licencesTotales8099;
@@ -24,24 +24,28 @@ public class ClassementCommune implements IClassement{
 		this.licences = licences;
 		this.licencesFemmes = licencesFemmes;
 		this.licencesHommes = licencesHommes;
+		
 		this.licencesHommes114 = licencesHommes114;
 		this.licencesHommes1524 = licencesHommes1524;
 		this.licencesHommes2534 = licencesHommes2534;
 		this.licencesHommes3549 = licencesHommes3549;
 		this.licencesHommes5079 = licencesHommes5079;
 		this.licencesHommes8099 = licencesHommes8099;
+		
 		this.licencesFemmes114 = licencesFemmes114;
 		this.licencesFemmes1524 = licencesFemmes1524;
 		this.licencesFemmes2534 = licencesFemmes2534;
 		this.licencesFemmes3549 = licencesFemmes3549;
 		this.licencesFemmes5079 = licencesFemmes5079;
 		this.licencesFemmes8099 = licencesFemmes8099;
+		
 		this.licencesTotales114 = licencesTotales114;
 		this.licencesTotales1524 = licencesTotales1524;
 		this.licencesTotales2534 = licencesTotales2534;
 		this.licencesTotales3549 = licencesTotales3549;
 		this.licencesTotales5079 = licencesTotales5079;
 		this.licencesTotales8099 = licencesTotales8099;
+		
 		this.commune = commune;
 	}
 
@@ -150,6 +154,14 @@ public class ClassementCommune implements IClassement{
 
 	public Commune getCommune() {
 		return commune;
+	}
+	
+	public void setNombrePages(int i) {
+		nombrePages = i;
+	}
+	
+	public int getNombrePages() {
+		return nombrePages;
 	}
 	
 	

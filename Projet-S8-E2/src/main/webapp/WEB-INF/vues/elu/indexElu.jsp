@@ -34,7 +34,7 @@
 							<a href="./ChargementFiltres" class="btn btn-primary ">Classements par zones</a>
 						</div>
 						<p class="hero-subtitle2">Classement général :</p>
-						<form method="POST" action="${pageContext.request.contextPath}/ClassementZone" class="d-flex justify-content-center gap-3 mb-4">
+						<form method="POST" action="${pageContext.request.contextPath}/ClassementZone?provenance=indexElu" class="d-flex justify-content-center gap-3 mb-4">
 							<button class="btn btn-primary" name="choix" value="commune">Par commune</button>
 							<button class="btn btn-primary" name="choix" value="region">Par région</button>	
 						</form>
