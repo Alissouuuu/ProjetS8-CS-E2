@@ -10,6 +10,9 @@ import java.time.LocalTime;
 
 public class Evenement {
 	private int idUser;
+	private int idClub;
+	private int idEvenement;
+
 /** le nombre maximal des participants dans un evenement*/
 private int nbrMaxParticipants;
 /** le lieu de  l'evenement*/
@@ -111,5 +114,17 @@ public int getIdUser() {
 }
 public void setIdUser(int idUser) {
 	this.idUser = idUser;
+}
+public int getIdClub() {
+	return idClub;
+}
+public void setIdClub(int idClub) {
+	this.idClub = idClub;
+}
+public int getIdEvenement() {
+	return idEvenement;
+}
+public void setIdEvenement(int idEvenement) {
+	this.idEvenement = idEvenement;
 }
 }

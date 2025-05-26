@@ -1,9 +1,7 @@
 package model;
 
 import java.util.HashMap;
-import java.util.TreeMap;
 
-import jakarta.servlet.http.HttpSession;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,10 +10,7 @@ import util.DBConnexion;
 
 public class Test {
 
-	@SuppressWarnings("null")
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		TreeMap<TreeMap<String, String>, Integer> licencies;
 		HashMap<String,String> tranche_age = new HashMap<>();
 		tranche_age.put("Homme", "0-4");
 		tranche_age.put("Femme", "0-4");
