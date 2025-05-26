@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-	
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -30,9 +30,8 @@
 			<div class="row justify-content-center">
 				<div class="col-md-10">
 					<div class="hero-content text-center">
-						<h1 class="hero-title">Créer un Événement Sportif</h1>
-						<p class="hero-subtitle">Organisez et partagez vos activités
-							sportives</p>
+						<h1 class="hero-title">Modifier un Événement Sportif</h1>
+
 
 					</div>
 				</div>
@@ -44,13 +43,11 @@
 		<div class="card shadow-lg mx-auto" style="max-width: 900px;">
 			<div class="card-header card-header-custom">
 				<h2 class="card-title  mb-0">Détails de l'événement</h2>
-				<p class="card-text text-light-emphasis medium mb-0"
-					style="color: white !important;">Remplissez les informations
-					pour créer votre événement sportif</p>
+
 			</div>
 			<div class="card-body">
 				<form method="post"
-					action="${pageContext.request.contextPath}/createEvent">
+					action="${pageContext.request.contextPath}/EditEvent">
 					<div class="row mb-4">
 						<div class="col-md-6 mb-3 mb-md-0 w-100">
 							<label for="event-name" class="form-label">Nom de
@@ -60,7 +57,7 @@
 								<small class="text-danger">${erreurNom}</small>
 							</c:if>
 							<input type="text" class="form-control" id="event-name"
-								name="event-name">
+								name="event-name" value="${evenement.nomEvenement}">
 						</div>
 
 					</div>
@@ -74,8 +71,8 @@
 							</c:if>
 							<div class="position-relative">
 
-								<input type="date" class="form-control form-control-icon"
-									id="event-date" name="event-date">
+								<input type="date" class="form-control" id="event-date"
+									name="event-date" value="${evenement.dateEvenement}">
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -86,8 +83,8 @@
 							</c:if>
 							<div class="position-relative">
 
-								<input type="time" class="form-control form-control-icon"
-									id="event-time" name="event-time">
+								<input type="time" class="form-control" id="event-time"
+									name="event-time" value="${evenement.heureEvenement}">
 							</div>
 						</div>
 					</div>
@@ -103,8 +100,8 @@
 							</c:if>
 							<div class="position-relative">
 
-								<input type="text" class="form-control form-control-icon"
-									id="event-location" name="event-location">
+								<input type="text" class="form-control" id="event-location"
+									name="event-location" value="${evenement.lieuEvenement}">
 							</div>
 						</div>
 						<div class="col-md-6 mb-3 mb-md-0">
@@ -116,8 +113,9 @@
 							</c:if>
 							<div class="position-relative">
 
-								<input type="number" class="form-control form-control-icon"
-									id="max-participants" name="max-participants">
+
+								<input type="number" class="form-control" id="max-participants"
+									name="max-participants" value="${evenement.nbrMaxParticipants}">
 							</div>
 						</div>
 
@@ -128,20 +126,21 @@
 							de l'événement<span class="text-danger">*</span>
 						</label>
 						<c:if test="${not empty erreurDescription}">
-								<small class="text-danger">${erreurDescription}</small>
-							</c:if>
+							<small class="text-danger">${erreurDescription}</small>
+						</c:if>
 						<textarea class="form-control" name="event-description"
-							id="event-description" rows="5"
-							placeholder="Décrivez votre événement, les règles, ce que les participants doivent apporter, etc."></textarea>
+							id="event-description" rows="5">
+    ${evenement.descriptionEvenement}
+</textarea>
 					</div>
-
+<input type="hidden" name="id" value="${evenement.idEvenement}" />
 
 					<div
 						class="card-footer bg-light d-flex flex-column flex-sm-row gap-2 justify-content-end mt-4 p-3">
 						<a href="${pageContext.request.contextPath}/indexMembre"
 							class="btn btn-primary-custom">Annuler</a>
 
-						<button type="submit" class="btn btn-primary-custom text-white">Créer
+						<button type="submit" class="btn btn-primary-custom text-white">Modifier
 							l'événement</button>
 					</div>
 				</form>

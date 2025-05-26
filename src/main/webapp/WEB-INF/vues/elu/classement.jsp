@@ -40,9 +40,10 @@
 			<h2>Filtres de recherche</h2>
 			<p style="margin-top: 1.25rem;">
 				<em>Vous devez choisir une région ou saisir le code postal de
-					la commune </em>
+					la commune, puis sélectionner le filtre de votre choix </em>
 			</p>
-			<form method="get" action="">
+			<form method="post"
+				action="${pageContext.request.contextPath}/classement">
 				<div class="row filtre-section">
 					<!-- Filtre Région -->
 					<div class="col-md-5">
@@ -51,16 +52,10 @@
 							<c:out value="${regions}" />
 
 							<option value="">Sélectionner une région</option>
-							<%
-							List<Region> regions = (List<Region>) request.getAttribute("regions");
-							for (Region region : regions) {
-							%>
-							<option value="<%=region.getCodeRegion()%>">
-								<%=region.getLibelleRegion()%>
-							</option>
-							<%
-							}
-							%>
+							<c:forEach var="region" items="${regions}">
+								<option value="${region.codeRegion}">${region.libelleRegion}</option>
+							</c:forEach>
+
 						</select>
 					</div>
 
@@ -81,7 +76,7 @@
 
 						<label for="filtre-age" class="form-label">Tranche d'âge :</label>
 						<select id="age" name="age" class="form-select">
-							<option value="" selected>-- Toutes les tranches --</option>
+							<option value="" selected>Toutes les tranches d'âge</option>
 							<option value="1_4">1-4 ans</option>
 							<option value="5_9">5-9 ans</option>
 							<option value="10_14">10-14 ans</option>
@@ -130,182 +125,79 @@
 		</div>
 
 		<%
-		int pageSize = 50; // Nombre d'éléments par page
-		
-	    int page1 = (request.getAttribute("page") != null) ? (int) request.getAttribute("page") : 1;
-
-		String type = (String) request.getAttribute("typeAffichage");
-		String ageParam = request.getParameter("age");
-		String genreParam = request.getParameter("genre");
 		List<Club> listeClubs = (List<Club>) request.getAttribute("listeClubs");
-		 // Récupérer le paramètre page1 depuis l'URL
-	    if (request.getParameter("page") != null) {
-	        try {
-	            page1 = Integer.parseInt(request.getParameter("page"));
-	        } catch (NumberFormatException e) {
-	            page1 = 1; // Valeur par défaut 
-	        }
-	    }
-	   if ("genre".equals(type)) {
-			if (listeClubs != null && !listeClubs.isEmpty()) {
+		String typeAffichage = (String) request.getAttribute("typeAffichage");
+		String genre = (String) request.getAttribute("genre");
+		String age = (String) request.getAttribute("age");
+		if (listeClubs != null && !listeClubs.isEmpty()) {
 		%>
+		<canvas id="graphiqueClubs" width="800" height="600"></canvas>
 
-		<!-- Canvas pour Chart.js -->
-		<canvas id="barChart" width="600" height="400"></canvas>
-
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 		<script>
+        const labels = <%=listeClubs.stream().map(c -> "\"" + c.getLibelleClub().replace("\"", "") + "\"").toList()%>;
+        const data = <%=listeClubs.stream().map(c -> c.getTotalLicencies()).toList()%>;
 
-    const labels = [
-        <%for (int i = 0; i < listeClubs.size(); i++) {
-	out.print("\"" + listeClubs.get(i).getLibelleClub() + "\"");
-	if (i < listeClubs.size() - 1)
-		out.print(",");
-}%>
-    ];
+        const typeAffichage = "<%=typeAffichage%>";
+        const genre = "<%=genre != null ? genre : ""%>";
 
-    const dataValues = [
-        <%for (int i = 0; i < listeClubs.size(); i++) {
-			out.print(listeClubs.get(i).getTotalLicencies());
-			if (i < listeClubs.size() - 1)
-				out.print(",");
-		}%>
-    ];
+        let couleur = 'rgba(54, 162, 235, 0.6)'; // bleu par défaut
+        if (typeAffichage === "genre" && genre.toLowerCase() === "f") {
+            couleur = 'rgba(255, 99, 132, 0.6)'; // rose pour femme
+        }
 
-    //  couleur selon le genre
-    const genre = "<%=genreParam%>";
-    const barColor = genre === "F" ? "rgba(255, 99, 132, 0.7)" : "rgba(54, 162, 235, 0.7)";
+        const maxValue = Math.max(...data);
 
-    //  l'histogramme
-    const ctx = document.getElementById('barChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Nombre de licenciés',
-                data: dataValues,
-                backgroundColor: barColor
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Nombre de licenciés par club'
-                },
-                legend: {
-                    display: false
-                }
+        new Chart(document.getElementById("graphiqueClubs"), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nombre de licenciés',
+                    data: data,
+                    backgroundColor: couleur,
+                    borderColor: couleur.replace('0.6', '1'),
+                    borderWidth: 1
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 2000, //  de l'axe Y
-                    ticks: {
-                        stepSize: 200 // 'espacement des divisions
+            options: {
+                indexAxis: 'y', // ✅ Barres horizontales
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        suggestedMax: maxValue + 10 // marge de lisibilité
                     },
-                    title: {
-                        display: true,
-                        text: 'Nombre de licenciés'
+                    y: {
+                        ticks: {
+                            autoSkip: false,
+                            font: { size: 12 }
+                        }
                     }
                 },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Clubs'
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.x + " licenciés";
+                            }
+                        }
                     }
                 }
             }
-        }
-    });
-</script>
+        });
+    </script>
 
 		<%
-		}
-
-		
-
-		else {
+		} else {
 		%>
 		<p>Aucun club trouvé pour les filtres sélectionnés.</p>
 		<%
 		}
-		}else
-		{
-			
-	        if (listeClubs != null && !listeClubs.isEmpty()) {
-	        	 int totalClubs = listeClubs.size();
-	     	    int totalPages = (int) Math.ceil((double) totalClubs / pageSize);
-	     	    int start = (page1 - 1) * pageSize;
-	     	    int end = Math.min(start + pageSize, totalClubs);
-	     		
-	    %>
-	          <table border="1">
-        <tr>
-            <th>Nom du club</th>
-            <th>Nombre de licenciés</th>
-        </tr>
-        <%
-            for (int i = start; i < end; i++) {
-                Club club = listeClubs.get(i);
-        %>
-            <tr>
-                <td><%= club.getLibelleClub() %></td>
-                <td><%= club.getTotalLicencies() %></td>
-            </tr>
-        <%
-            }
-        %>
-    </table>
-
-    <!-- Liens de pagination -->
-  <div>
-    <%
-         totalPages = (Integer) request.getAttribute("totalPages");
-         page1 = (Integer) request.getAttribute("page1");
-        String region = (String) request.getAttribute("region");
-        String cp = (String) request.getAttribute("cp");
-        String age = (String) request.getAttribute("age");
-        String genre = (String) request.getAttribute("genre");
-
-        String extraParams = "";
-        if (region != null && !region.isEmpty()) extraParams += "&region=" + region;
-        if (cp != null && !cp.isEmpty()) extraParams += "&cp=" + cp;
-        if (age != null && !age.isEmpty()) extraParams += "&age=" + age;
-        if (genre != null && !genre.isEmpty()) extraParams += "&genre=" + genre;
-
-        for (int i = 1; i <= totalPages; i++) {
-            if (i == page1) {
-                out.print("<strong>" + i + "</strong> ");
-            } else {
-                out.print("<a href='classement?page=" + i + extraParams + "'>" + i + "</a> ");
-            }
-        }
-
-    %>
-</div>
-  
-  
-	    <%
-	        } else {
-	    %>
-	        <p>Aucun club trouvé pour les filtres sélectionnés.</p>
-	    <%
-	        }
-		}
-	    %>
-
-		
-
-		<!-- chart pyramide -->
-
-
-
-
-
-
-
+		%>
 	</main>
 
 	<footer class="text-white text-center py-3">

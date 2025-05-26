@@ -23,6 +23,7 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav mx-auto gap-3">
                                 <li class="nav-item">
+                                
                                     <a class="nav-link" href="${pageContext.request.contextPath}/indexElu">Home</a>
                                 </li>
                                 <li class="nav-item">

@@ -41,19 +41,19 @@
 					pour les partager avec votre communauté</p>
 			</div>
 			<div class="card-body">
-				<form method="post">
+			<form method="post" action="${pageContext.request.contextPath}/partagerActu">
 					<div class="mb-4">
 					
 							<label for="actu-name" class="form-label">Titre de l'actualité
 								</label> <input type="text" class="form-control"
-								id="actu-name">
+								id="titre_actu" name="titre_actu">
 						
 					</div>
 				
 					<div class="mb-4">
 						<label for="actu-description" class="form-label">Description
 							</label>
-						<textarea class="form-control" id="actu-description" rows="5"></textarea>
+						<textarea class="form-control" id="actu-description" rows="5" name="descriptionActu"></textarea>
 					</div>
 
 
@@ -68,7 +68,7 @@
 				</form>
 			</div>
 		</div>
-		</div>
+		</div> <!-- 
 	<div class="container py-4">
 		<div class="card shadow-lg mx-auto" style="max-width: 900px;">
 			<div class="card-header card-header-custom">
@@ -78,7 +78,7 @@
 					pour les partager avec votre communauté</p>
 			</div>
 			<div class="card-body">
-				<form method="post">
+			<form method="post" action="${pageContext.request.contextPath}/partagerActu">
 					<div class="mb-4">
 					
 							<label for="conseil-name" class="form-label">Titre
@@ -117,7 +117,7 @@
 					pour les partager avec votre communauté</p>
 			</div>
 			<div class="card-body">
-				<form method="post">
+			<form method="post" action="${pageContext.request.contextPath}/partagerActu">
 					<div class="row mb-4">
 						<div class="col-md-6 mb-3 mb-md-0">
 							<label for="event-name" class="form-label">Nom de la
@@ -169,7 +169,7 @@
 						<button type="submit" class="btn btn-primary-custom text-white">Partager les résultats
 							</button>
 					</div>
-				</form>
+				</form> -->
 			</div>
 		</div>
 
