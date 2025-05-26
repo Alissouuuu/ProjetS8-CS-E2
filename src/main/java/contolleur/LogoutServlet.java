@@ -13,35 +13,29 @@ import java.io.IOException;
  * Servlet implementation class LogoutServlet
  * servlet qui gère les deconnexions des users
  * @author imane
- * @version 1.0
+ * @version 1.2
  */
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public LogoutServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    /**
-     *  déconnecter l'utilisateur
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        // recuperer la session actuelle
-        HttpSession session = request.getSession(false);
-        
-        if (session != null) {
-            // Invalider la session
-            session.invalidate();
-        }
-        
-        // Rediriger vers la page de connexion
-        response.sendRedirect(request.getContextPath() + "/index");
-    }
+
+	// LogoutServlet.java
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	        throws ServletException, IOException {
+	    HttpSession session = request.getSession(false); // pas de création
+	    if (session != null) {
+	        session.invalidate();
+	    }
+
+	    // Empêcher la mise en cache
+	    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	    response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	    response.setDateHeader("Expires", 0); // Proxies
+
+	    response.sendRedirect(request.getContextPath() + "/login");
+	}
 
 }
+
+
+
