@@ -187,7 +187,9 @@ public class ClassementServlet extends HttpServlet {
 				emplacements.put("pageD", "4");
 				emplacements.put("pageE", "5");
 				emplacements.put("pageF", "...");
-				emplacements.put("pageG", "1395");
+				int nbPages = classementCommuneDAO.getNombrePagesToutCritere(clauseWHERE, critereAgeGenre) / 25;
+				nbPages +=1;
+				emplacements.put("pageG", String.valueOf(nbPages));
 				
 				
 				request.setAttribute("classement", classementCommunes);

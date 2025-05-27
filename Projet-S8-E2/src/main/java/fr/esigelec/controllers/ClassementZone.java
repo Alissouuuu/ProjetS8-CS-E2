@@ -67,7 +67,9 @@ public class ClassementZone extends HttpServlet {
 		else {
 			nbPages = classementCommuneDAO.getNombrePages() / 25;
 		}
+		System.out.println("Nombre pages"+nbPages);
 		
+		nbPages+=1;
 		
 		String action = null;
 		String param = null;
@@ -121,7 +123,7 @@ public class ClassementZone extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String choix = (String) StringEscapeUtils.escapeHtml4(request.getParameter("choix"));
-		String nbPages = "1395";
+		int nbPages;
 		if(choix.equals("commune")) {
 			classementCommuneDAO = new ClassementCommuneDAO(dataSource);
 			ArrayList<ClassementCommune> classementCommune = classementCommuneDAO.getClassement(1);
@@ -148,7 +150,9 @@ public class ClassementZone extends HttpServlet {
 		emplacements.put("pageD", "4");
 		emplacements.put("pageE", "5");
 		emplacements.put("pageF", "...");
-		emplacements.put("pageG", "1395");
+		nbPages = classementCommuneDAO.getNombrePages() / 25;
+		nbPages +=1;
+		emplacements.put("pageG", String.valueOf(nbPages));
 		emplacements.put("pageActuelle", "1");
 		
 		request.setAttribute("choix", choix);
@@ -162,7 +166,6 @@ public class ClassementZone extends HttpServlet {
 	public static HashMap<String, String> calculerPagination(int totalPages,String action, String param) {
 	    HashMap<String, String> emplacements = new HashMap<>();
 	    int valeurInt = 1;
-	    totalPages = 1395;
 
 	    if (param != null && !param.isEmpty()) {
 	        int page = Integer.parseInt(param);

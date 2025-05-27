@@ -108,7 +108,7 @@ if(federationsFiltres.size()==0)
 					
 
 					<!-- Filtre Ville -->
-					<div class="col-md-5">
+					<!-- <div class="col-md-5">
 						<label class="form-label">Commune :</label>
 						<select name="commune"
 							class="form-select select-chercheable" id="commune-select">
@@ -117,7 +117,7 @@ if(federationsFiltres.size()==0)
 						<label class="form-label" for="code-postal">Ou son code postal :</label>
 						<input type="text" name="code-postal" id="code-postal" class="form-control">
 					</div>
-				</div>
+				</div> -->
 				
 				<!-- Filtre Fédération -->
 					<div class="col-md-5">
