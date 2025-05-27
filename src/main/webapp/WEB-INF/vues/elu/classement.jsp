@@ -27,6 +27,14 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"
 	integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw=="
 	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script
+	src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 
 </head>
 <body>
@@ -139,6 +147,13 @@
 		String age = (String) request.getAttribute("age");
 		if (listeClubs != null && !listeClubs.isEmpty()) {
 		%>
+		<div class="text-center mt-4">
+				<button class="btn btn-success" style="background-color : #000091 !important;" onclick="exportChartToPDF()">Exporter
+					en PDF</button>
+		
+				<button class="btn btn-success" style="background-color : #000091 !important;" onclick="exportChartDataToExcel()">Exporter
+					en Excel</button>
+			</div>
 		<canvas id="graphiqueClubs" width="800" height="600"></canvas>
 
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -213,5 +228,45 @@
 			<p class="mb-0">© 2025 SportiZone. Tous droits réservés.</p>
 		</div>
 	</footer>
+	<script>
+    async function exportChartToPDF() {
+        const canvas = document.getElementById("graphiqueClubs");
+
+        // Utilisation de html2canvas pour capturer le graphique
+        const canvasImage = await html2canvas(canvas);
+
+        const imageData = canvasImage.toDataURL("image/png");
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF("l", "mm", "a4");
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        // Adapter l'image à la page
+        const imgProps = pdf.getImageProperties(imageData);
+        const pdfWidth = pageWidth - 20;
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imageData, "PNG", 10, 10, pdfWidth, pdfHeight);
+        pdf.save("graphique_licencies.pdf");
+    }
+
+    function exportChartDataToExcel() {
+        const labels = <%=listeClubs.stream().map(c -> "\"" + c.getLibelleClub().replace("\"", "") + "\"").toList()%>;
+        const data = <%=listeClubs.stream().map(c -> c.getTotalLicencies()).toList()%>;
+
+        const rows = [["Nom du club", "Nombre de licenciés"]];
+        for (let i = 0; i < labels.length; i++) {
+            rows.push([labels[i], data[i]]);
+        }
+
+        const worksheet = XLSX.utils.aoa_to_sheet(rows);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Classement Clubs");
+
+        XLSX.writeFile(workbook, "classement_licencies.xlsx");
+    }
+</script>
+	
 </body>
 </html>

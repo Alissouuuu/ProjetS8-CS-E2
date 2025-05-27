@@ -28,8 +28,8 @@
 	<main>
 		<div class="container">
 			<!-- Événements passés -->
-			<div class="row">
-				<div class="col-md-4">
+			<div class="row mb-3">
+				<div class="col-md-5">
 
 					<div class="feature-card">
 						<h3 class="feature-title">Événements passés</h3>
@@ -45,7 +45,7 @@
 						</c:forEach>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-5">
 
 					<div class="feature-card">
 						<h3 class="feature-title">Actualités partagées</h3>
@@ -61,6 +61,11 @@
 						</c:forEach>
 					</div>
 				</div>
+			</div>
+
+
+			<div class="row mt-3">
+
 				<c:forEach var="e" items="${evenementsAVenir}">
 
 					<div class="col-md-4">

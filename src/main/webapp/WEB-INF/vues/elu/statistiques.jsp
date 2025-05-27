@@ -21,6 +21,14 @@
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/styles/styleFlex.css">
 
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script
+	src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 </head>
 <body>
 	<!-- header-->
@@ -85,26 +93,25 @@
 				</div>
 				<!-- filtre federation -->
 
-					<div class="row filtre-section mt-4">
-						<div class="col align-self-start">
-							<label for="filtre-age" class="form-label">Fédération
-								sportive :</label> 
-								<select id="federation" name="federation"
-								class="form-select " style="width: 31.8%">
-								<option value="">Sélectionner une fédération</option>
-								<%
-								List<Federation> federations = (List<Federation>) request.getAttribute("federations");
-								for (Federation federation : federations) {
-								%>
-								<option value="<%=federation.getCodeFederation()%>">
-									<%=federation.getLibelleFedeation()%>
-								</option>
-								<%
-								}
-								%>
-							</select>
-						</div>
+				<div class="row filtre-section mt-4">
+					<div class="col align-self-start">
+						<label for="filtre-age" class="form-label">Fédération
+							sportive :</label> <select id="federation" name="federation"
+							class="form-select " style="width: 31.8%">
+							<option value="">Sélectionner une fédération</option>
+							<%
+							List<Federation> federations = (List<Federation>) request.getAttribute("federations");
+							for (Federation federation : federations) {
+							%>
+							<option value="<%=federation.getCodeFederation()%>">
+								<%=federation.getLibelleFedeation()%>
+							</option>
+							<%
+							}
+							%>
+						</select>
 					</div>
+				</div>
 
 				<!-- Bouton de soumission -->
 				<div class="text-center mt-4">
@@ -112,83 +119,106 @@
 				</div>
 			</form>
 
+			<div class="text-center mt-4">
+				<button class="btn btn-success" style="background-color : #000091 !important;" onclick="exportChartToPDF()">Exporter
+					en PDF</button>
+		
+				<button class="btn btn-success" style="background-color : #000091 !important;" onclick="exportChartDataToExcel()">Exporter
+					en Excel</button>
+			</div>
+			<canvas id="clubChart" width="800" height="400"></canvas>
 
-		<canvas id="clubChart" width="800" height="400"></canvas>
 
-<%
-    List<Club> listeClubs = (List<Club>) request.getAttribute("listeClubs");
-    if (listeClubs != null && !listeClubs.isEmpty()) {
-        StringBuilder clubLabels = new StringBuilder();
-        StringBuilder femmesData = new StringBuilder();
-        StringBuilder hommesData = new StringBuilder();
 
-        for (int i = 0; i < listeClubs.size(); i++) {
-            Club club = listeClubs.get(i);
-            clubLabels.append("\"").append(club.getLibelleClub()).append("\"");
-            femmesData.append(club.getTotalLicenciesFemme());
-            hommesData.append(club.getTotalLicenciesHomme());
+			<%
+			List<Club> listeClubs = (List<Club>) request.getAttribute("listeClubs");
+			if (listeClubs != null && !listeClubs.isEmpty()) {
+				StringBuilder clubLabels = new StringBuilder();
+				StringBuilder femmesData = new StringBuilder();
+				StringBuilder hommesData = new StringBuilder();
 
-            if (i < listeClubs.size() - 1) {
-                clubLabels.append(",");
-                femmesData.append(",");
-                hommesData.append(",");
-            }
-        }
-%>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-      <canvas id="pyramideChart" width="600" height="400"></canvas>
+				for (int i = 0; i < listeClubs.size(); i++) {
+					Club club = listeClubs.get(i);
+					clubLabels.append("\"").append(club.getLibelleClub()).append("\"");
+					femmesData.append(club.getTotalLicenciesFemme());
+					hommesData.append(club.getTotalLicenciesHomme());
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+					if (i < listeClubs.size() - 1) {
+				clubLabels.append(",");
+				femmesData.append(",");
+				hommesData.append(",");
+					}
+				}
+			%>
+			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+			<script
+				src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"
+				integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw=="
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+			<script
+				src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"
+				integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw=="
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+			<canvas id="pyramideChart" width="600" height="400"></canvas>
 
-<script>
-    const ctx = document.getElementById('clubChart').getContext('2d');
-    const clubChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [<%= clubLabels.toString() %>],
-            datasets: [
-                {
-                    label: 'Femmes',
-                    data: [<%= femmesData.toString() %>],
-                    backgroundColor: 'rgba(255, 99, 132, 0.7)' // rose
-                },
-                {
-                    label: 'Hommes',
-                    data: [<%= hommesData.toString() %>],
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)' // bleu
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' },
-                title: { display: true, text: 'Nombre de licenciés par club' }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Nombre de licenciés'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Clubs'
-                    }
-                }
-            }
-        }
-    });
-</script>
+			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<%
-    }
-%>
+			<script>
+				const ctx = document.getElementById('clubChart').getContext(
+						'2d');
+				const clubChart = new Chart(ctx, {
+					type : 'bar',
+					data : {
+						labels : [
+			<%=clubLabels.toString()%>
+				],
+						datasets : [ {
+							label : 'Femmes',
+							data : [
+			<%=femmesData.toString()%>
+				],
+							backgroundColor : 'rgba(255, 99, 132, 0.7)' // rose
+						}, {
+							label : 'Hommes',
+							data : [
+			<%=hommesData.toString()%>
+				],
+							backgroundColor : 'rgba(54, 162, 235, 0.7)' // bleu
+						} ]
+					},
+					options : {
+						responsive : true,
+						plugins : {
+							legend : {
+								position : 'top'
+							},
+							title : {
+								display : true,
+								text : 'Nombre de licenciés par club'
+							}
+						},
+						scales : {
+							y : {
+								beginAtZero : true,
+								title : {
+									display : true,
+									text : 'Nombre de licenciés'
+								}
+							},
+							x : {
+								title : {
+									display : true,
+									text : 'Clubs'
+								}
+							}
+						}
+					}
+				});
+			</script>
+
+			<%
+			}
+			%>
 			</table>
 
 
@@ -216,5 +246,44 @@
 			<p class="mb-0">© 2025 SportiZone. Tous droits réservés.</p>
 		</div>
 	</footer>
+	<script>
+  async function exportChartToPDF() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    const canvas = document.getElementById('clubChart');
+    const imageData = canvas.toDataURL('image/png');
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgProps = pdf.getImageProperties(imageData);
+    const imgWidth = pageWidth - 20; // Marges
+    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+    pdf.addImage(imageData, 'PNG', 10, 20, imgWidth, imgHeight);
+    pdf.save('statistiques_clubs.pdf');
+  }
+function exportChartDataToExcel() {
+    // Récupère les données du graphique
+    const labels = clubChart.data.labels;
+    const femmesData = clubChart.data.datasets[0].data;
+    const hommesData = clubChart.data.datasets[1].data;
+
+    // Prépare les données pour Excel
+    const rows = [["Club", "Femmes", "Hommes"]];
+    for (let i = 0; i < labels.length; i++) {
+        rows.push([labels[i], femmesData[i], hommesData[i]]);
+    }
+
+    // Convertit en feuille Excel
+    const worksheet = XLSX.utils.aoa_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Statistiques Clubs");
+
+    // Télécharge le fichier
+    XLSX.writeFile(workbook, "statistiques_clubs.xlsx");
+}
+</script>
+
 </body>
 </html>

@@ -1,104 +1,128 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!-- taglib : équivalent des import en html ici JSTL -->
 
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        
-        <title>Sportizone</title>
-        
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-        crossorigin=""/>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"> 
-        
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styleMember.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styleHeader.css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/styles/styleFlex.css">
-        
-    </head>
-    <body>
-    	<jsp:include page="/WEB-INF/header.jsp" />
-    	
-    
-    	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-		<main>
+<title>Sportizone</title>
+
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+	integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+	crossorigin="" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+
+<link
+	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+	rel="stylesheet" />
+
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/styles/styleMember.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/styles/styleHeader.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/styles/styleFlex.css">
+
+</head>
+<body>
+	<jsp:include page="/WEB-INF/header.jsp" />
+
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+	<main>
+
+		<div class="container">
 			<h2>Filtres de recherche</h2>
+
+			<p style="margin-top: 1.25rem;">
+				<em>Vous devez choisir une région, un département ou saisir le code postal de
+					la commune, puis sélectionner la fédération de votre choix </em>
+			</p>
 			
-			<div class = "container">
 			<form id="form" method="get" action="#">
 				<div class="row mt-4">
-				
+
 					<!-- Filtre Région -->
 					<div class="col-md-4">
-						<label class="form-label">Région :</label> 
-						<select id="region" name="searchRegion" class="form-select js-select2">
+						<label class="form-label">Région :</label> <select id="region"
+							name="searchRegion" class="form-select js-select2">
 							<option>-- Sélectionner une région --</option>
 						</select>
 					</div>
 
 					<!-- Filtre Département -->
 					<div class="col-md-4">
-						<label class="form-label">Département :</label> 
-						<select id="departement" name="searchDepartement" class="form-select js-select2">
+						<label class="form-label">Département :</label> <select
+							id="departement" name="searchDepartement"
+							class="form-select js-select2">
 							<option>-- Sélectionner un département --</option>
 						</select>
 					</div>
 
 					<!-- Filtre Ville -->
 					<div class="col-md-4">
-						<label class="form-label">Commune :</label> 
-						<select id="commune" name="searchVille" class="form-select js-select2">
+						<label class="form-label">Commune :</label> <select id="commune"
+							name="searchVille" class="form-select js-select2">
 							<option>-- Sélectionner une commune --</option>
-								<c:forEach var="ville" items="${villes}">
-						          	<option value="${ville}">${ville}</option>
-						        </c:forEach>
+							<c:forEach var="ville" items="${villes}">
+								<option value="${ville}">${ville}</option>
+							</c:forEach>
 						</select>
 					</div>
 				</div>
-				
+
 				<!-- filtre federation -->
-				<div class="filtre-section mt-4 row" >
-				<div class="col-md-4 align-self-start">
-					<label class="form-label">Fédération sportive :</label> 
-						<select id="federation" name="searchFederation" class="form-select js-select2f">
-						<option >-- Sélectionner une fédération --</option>
-					        <c:forEach var="federation" items="${federations}">
-					          	<option value="${federation}">${federation}</option>
-					        </c:forEach>						
-					</select>
-				</div>
-					
-				<!-- Checkbox Rechercher autour de moi -->
-				<div class="col-md-4 d-flex justify-content-center align-items-center">
-					<label style="visibility: hidden;"></label> 
-					
-					<div class="form-check form-switch" >
-						<input class="form-check-input" type="checkbox" role="switch" id="useGeoLoc">
-						<label class="form-check-label" for="useGeoLoc">Rechercher autour de moi</label>
+				<div class="filtre-section mt-4 row">
+					<div class="col-md-4 align-self-start">
+						<label class="form-label">Fédération sportive :</label> <select
+							id="federation" name="searchFederation"
+							class="form-select js-select2f">
+							<option>-- Sélectionner une fédération --</option>
+							<c:forEach var="federation" items="${federations}">
+								<option value="${federation}">${federation}</option>
+							</c:forEach>
+						</select>
 					</div>
-					
-				</div>			
-				
-				
-				<div class="col-md-4">
-				<label class="form-label" style="margin-right:2rem;">Rayon  :</label> <label id="rangeValue" style="">
-					<span id="rayonValue">0</span> Km</label>
-					<!-- Balise span = div sans saut de ligne, balise inline -->
-					 <input type="range" class="form-range" min="0" max="30" step="5" value="0" name="rayon" id="rayon">
-					 
-			    <!-- afficher la valeur du range-input -->
-			    <script>
+
+					<!-- Checkbox Rechercher autour de moi -->
+					<div
+						class="col-md-4 d-flex justify-content-center align-items-center">
+						<label style="visibility: hidden;"></label>
+
+						<div class="form-check form-switch">
+							<input class="form-check-input" type="checkbox" role="switch"
+								id="useGeoLoc"> <label class="form-check-label"
+								for="useGeoLoc">Rechercher autour de moi</label>
+						</div>
+
+					</div>
+
+
+					<div class="col-md-4">
+						<label class="form-label" style="margin-right: 2rem;">Rayon
+							:</label> <label id="rangeValue" style=""> <span id="rayonValue">0</span>
+							Km
+						</label>
+						<!-- Balise span = div sans saut de ligne, balise inline -->
+						<input type="range" class="form-range" min="0" max="30" step="5"
+							value="0" name="rayon" id="rayon">
+
+						<!-- afficher la valeur du range-input -->
+						<script>
 			    const slider = document.getElementById("rayon"); // On récupère l'input du rayon
 				  const output = document.getElementById("rayonValue");// On récupère la valeur du slider
 				
@@ -110,19 +134,23 @@
 				    output.textContent = this.value; // On met à jour la valeur du span avec la valeur du slider
 				  });
 			    </script>
-			</div>				
+					</div>
 
+
+					<!-- khas shi 7el l spacing please -->
+					<div class="col-md-4"></div>
+				</div>
+				<!-- Bouton de soumission -->
+				<div class="text-center mt-4">
+					<button type="submit" class="btn btn-primary">Rechercher</button>
+				</div>
+				<p style="margin-top: 1.25rem;">
+				<em>Astuce : Vous pouvez activer la fonction 'Rechercher autour de moi' qu'avec le filtre commune </em>
+			</p>
+			</form>
 			
-			<!-- khas shi 7el l spacing please -->
-				<div class="col-md-4"></div>
-			</div>
-			<!-- Bouton de soumission -->
-			<div class="text-center mt-4">
-				<button type="submit" class="btn btn-primary">Rechercher</button>
-			</div>
-		</form>
-		
-		<script>
+
+			<script>
 		  $(document).ready(function() { // Permet d'excécuter ce qu'il y a à l'interieur une fois que la page est chargée
 			  $('.js-select2').select2({
 
@@ -144,8 +172,8 @@
 
 		  });
 		</script>
-		
-		<script>
+
+			<script>
 		// Ici le filtrage pour la fédération rechercher ce qui contient l'input et pas qui commence par l'input
 		  $(document).ready(function() { // Permet d'excécuter ce qu'il y a à l'interieur une fois que la page est chargée
 		    $('.js-select2f').select2({ // Permet de cibler tous les éléments qui ont le tag select2
@@ -153,31 +181,34 @@
 		    });
 		  });
 		</script>
-	</div>
-	
-	<p></p>
-	
-	<div id="divCarte" class = "mb-3" style="width: 1000px; height: 600px; margin: auto;"></div>
+		</div>
 
-        
-        <!-- Fichiers JavaScript Leaflet -->
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
-        <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+		<p></p>
+
+		<div id="divCarte" class="mb-3"
+			style="width: 1000px; height: 600px; margin: auto;"></div>
+
+
+		<!-- Fichiers JavaScript Leaflet -->
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+			integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+			crossorigin=""></script>
+		<script
+			src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
 	</main>
-        
-       	<footer class="text-white text-center py-3">
-			<div class="container">
-				<p class="mb-0">© 2025 SportiZone. Tous droits réservés.</p>
-			</div>
-		</footer>	
-        
-        <!-- Bootstrap JS -->
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-	
-		<script >
+
+	<footer class="text-white text-center py-3">
+		<div class="container">
+			<p class="mb-0">© 2025 SportiZone. Tous droits réservés.</p>
+		</div>
+	</footer>
+
+	<!-- Bootstrap JS -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script>
 		// Gestion des requêtes AJAX (Asynchronous Javascript And XML) des dropdown
 		// Asynchronous => on ne recharge pas la page 
 		
@@ -245,8 +276,8 @@
 				  .catch(err => console.error(err));
 				});
 		</script>
-		
-		<script>
+
+	<script>
 		
 		// Fonction qui permet de gerer les popup des gros clusterw 
 		function ajouterClusterPopup(clusterGroup) {
@@ -541,7 +572,7 @@
 
    		</script>
 
-		
-		
-    </body>
+
+
+</body>
 </html>

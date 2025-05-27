@@ -156,8 +156,7 @@ public class InscriptionServlet extends HttpServlet {
 			inserted = userDAO.create(user);
 
 			if (inserted) {
-				request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription-success.jsp").forward(request,
-						response);
+				request.getRequestDispatcher("/WEB-INF/vues/connexion/inscription-success.jsp").forward(request,response);
 				return;
 			} else {
 				request.setAttribute("erreur", "Erreur lors de l'enregistrement. Réessayez.");
