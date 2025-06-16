@@ -60,7 +60,7 @@ public class ChargementFiltres extends HttpServlet {
 		request.setAttribute("departements", departements);
 		request.setAttribute("federations", federations);
 		
-		RequestDispatcher dispatcher= request.getRequestDispatcher("./WEB-INF/vues/elu/classement.jsp");
+		RequestDispatcher dispatcher= request.getRequestDispatcher("./WEB-INF/vues/elu/classementFiltres.jsp");
 		/*PrintWriter out = response.getWriter();
 		out.println("");
 		out.println("Taille liste régions : "+regions.size());

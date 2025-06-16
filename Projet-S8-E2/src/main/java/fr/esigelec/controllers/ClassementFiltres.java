@@ -21,10 +21,10 @@ import fr.esigelec.models.ClassementCommune;
 import fr.esigelec.models.ClassementRegion;
 
 /**
- * Servlet implementation class ClassementServlet
+ * Servlet implementation class ClassementFiltres
  */
-@WebServlet("/ClassementServlet")
-public class ClassementServlet extends HttpServlet {
+@WebServlet("/ClassementFiltres")
+public class ClassementFiltres extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	@Resource(name="jdbc/club_sport")
 	DataSource dataSource;
@@ -33,7 +33,7 @@ public class ClassementServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ClassementServlet() {
+    public ClassementFiltres() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,7 +42,7 @@ public class ClassementServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/vues/elu/classement.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/vues/elu/classementFiltres.jsp");
 		dispatcher.forward(request, response);
 			
 	}

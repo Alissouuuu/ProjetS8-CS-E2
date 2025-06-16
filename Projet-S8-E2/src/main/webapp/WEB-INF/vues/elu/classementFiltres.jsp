@@ -70,7 +70,7 @@ if(federationsFiltres.size()==0)
 		<!-- Formulaire de recherche -->
 		<div class="container">
 			<h2>Filtres de recherche</h2>
-			<form method="post" action="./ClassementServlet">
+			<form method="post" action="./ClassementFiltres">
 				<div class="row filtre-section">
 					<!-- Filtre Région -->
 					<div class="col-md-5">

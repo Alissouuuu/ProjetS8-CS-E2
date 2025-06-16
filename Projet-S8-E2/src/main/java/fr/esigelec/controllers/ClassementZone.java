@@ -123,18 +123,21 @@ public class ClassementZone extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String choix = (String) StringEscapeUtils.escapeHtml4(request.getParameter("choix"));
-		int nbPages;
+		int nbPages=1;
+		HashMap<String,String> emplacements = new HashMap<>();
 		if(choix.equals("commune")) {
 			classementCommuneDAO = new ClassementCommuneDAO(dataSource);
 			ArrayList<ClassementCommune> classementCommune = classementCommuneDAO.getClassement(1);
 			request.setAttribute("classement", classementCommune);
+			nbPages = classementCommuneDAO.getNombrePages() / 25;
+			nbPages +=1;
 		}
 		else if(choix.equals("region")) {
 			classementRegionDAO = new ClassementRegionDAO(dataSource);
 			ArrayList<ClassementRegion> classementRegion = classementRegionDAO.getClassement(1);
 			request.setAttribute("classement", classementRegion);
 		}
-		HashMap<String,String> emplacements = new HashMap<>();
+		
 		emplacements.put("etatBtnPrecedent", "disabled");
 		emplacements.put("etatBtnPageA", "active");
 		emplacements.put("etatBtnPageB", "");
@@ -150,8 +153,7 @@ public class ClassementZone extends HttpServlet {
 		emplacements.put("pageD", "4");
 		emplacements.put("pageE", "5");
 		emplacements.put("pageF", "...");
-		nbPages = classementCommuneDAO.getNombrePages() / 25;
-		nbPages +=1;
+		
 		emplacements.put("pageG", String.valueOf(nbPages));
 		emplacements.put("pageActuelle", "1");
 		
